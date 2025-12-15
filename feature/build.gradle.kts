@@ -63,7 +63,7 @@ kotlin {
 
                 implementation(libs.lifecycle.viewmodel)
 
-                implementation(project(":shared:core"))
+                implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:domain"))
                 implementation(project(":shared:data"))
             }
