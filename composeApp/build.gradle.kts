@@ -46,9 +46,9 @@ kotlin {
 
             implementation(libs.navigation.compose)
 
+            implementation(project(":shared:core:designSystem"))
             implementation(project(":shared:data"))
             implementation(project(":shared:domain"))
-            implementation(project(":shared:core"))
             implementation(project(":feature"))
         }
         commonTest.dependencies {

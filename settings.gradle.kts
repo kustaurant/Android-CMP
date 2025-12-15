@@ -34,6 +34,6 @@ plugins {
 
 include(":shared:data")
 include(":shared:domain")
-include(":shared:core")
+include(":shared:core:designSystem")
 include(":composeApp")
 include(":feature")
