@@ -1,16 +1,16 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
+
     androidLibrary {
-        namespace = "com.kus.feature"
+        namespace = "com.kus.designsystem"
         compileSdk = 36
         minSdk = 26
 
@@ -23,7 +23,8 @@ kotlin {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
-    val xcfName = "featureKit"
+
+    val xcfName = "designSystemKit"
 
     iosX64 {
         binaries.framework {
@@ -48,24 +49,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-                implementation(compose.ui)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
-                implementation(libs.androidx.lifecycle.runtimeCompose)
-
-                implementation(libs.koin.compose)
-                implementation(libs.koin.compose.viewmodel)
-
-                implementation(libs.navigation.compose)
-
-                implementation(libs.lifecycle.viewmodel)
-
-                implementation(project(":shared:core"))
-                implementation(project(":shared:domain"))
-                implementation(project(":shared:data"))
+                implementation(libs.kotlin.stdlib)
+                // Add KMP dependencies here
             }
         }
 
@@ -77,10 +62,6 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(compose.preview)
-                implementation(libs.androidx.activity.compose)
-
-                implementation(libs.koin.android)
             }
         }
 
@@ -96,10 +77,10 @@ kotlin {
             dependencies {
             }
         }
+
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(libs.kotlinx.coroutinesSwing)
             }
         }
     }
