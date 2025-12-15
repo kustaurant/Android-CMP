@@ -5,10 +5,11 @@ import androidx.compose.ui.window.application
 import com.kus.data.firstLaunch.di.desktopFirstLaunchModule
 import com.kus.kustaurant.di.initKoin
 
-fun main()  {
-    initKoin{
-        modules(desktopFirstLaunchModule)
-    }
+fun main() {
+    initKoin(
+        additionalModules = listOf(desktopFirstLaunchModule)
+    )
+
     application {
         Window(
             onCloseRequest = ::exitApplication,
