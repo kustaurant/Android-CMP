@@ -1,4 +1,4 @@
-package com.kus.feature.splash.ui
+package com.kus.splash.ui
 
 data class SplashUiState(
     val isLoading : Boolean = true,

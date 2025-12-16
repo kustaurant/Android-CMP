@@ -1,4 +1,4 @@
-package com.kus.feature.splash.navigation
+package com.kus.splash.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable

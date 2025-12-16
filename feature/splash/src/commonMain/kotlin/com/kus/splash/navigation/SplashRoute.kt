@@ -1,12 +1,12 @@
-package com.kus.feature.splash.navigation
+package com.kus.splash.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kus.feature.splash.ui.SplashDestination
-import com.kus.feature.splash.ui.SplashScreen
-import com.kus.feature.splash.ui.SplashViewModel
+import com.kus.splash.ui.SplashDestination
+import com.kus.splash.ui.SplashScreen
+import com.kus.splash.ui.SplashViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
