@@ -25,7 +25,7 @@ class SplashViewModel(
     init {
         viewModelScope.launch {
             val minDelay = async {
-                delay(350)
+                delay(650)
             }
 
             val firstLaunch = async {
