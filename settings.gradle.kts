@@ -32,8 +32,19 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-include(":shared:data")
-include(":shared:domain")
-include(":shared:core")
+include(":uiShowcase")
 include(":composeApp")
-include(":feature")
+
+include(":core:designSystem")
+
+include(":designSystemApp")
+
+include(":feature:login")
+include(":feature:onBoarding")
+include(":feature:splash")
+include(":feature:home")
+
+include(":data:firstLaunch")
+include(":data:network")
+
+include(":domain:firstLaunch")

@@ -13,6 +13,7 @@ import com.kus.onboarding.navigatioin.Onboarding
 import com.kus.onboarding.navigatioin.onboardingNavGraph
 import com.kus.splash.navigation.Splash
 import com.kus.splash.navigation.splashNavGraph
+import homeNavGraph
 
 @Composable
 fun KusNavHost(
@@ -77,6 +78,16 @@ fun KusNavHost(
                 // TODO
             },
             onShowMessage = onShowMessage
+        )
+
+
+        homeNavGraph(
+            navigateToTier = {
+                // TODO
+            },
+            navigateToEvaluate = {
+                // TODO
+            }
         )
     }
 }

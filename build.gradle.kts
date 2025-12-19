@@ -8,4 +8,6 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
     alias(libs.plugins.androidLint) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.android.test) apply false
+    alias(libs.plugins.kotlin.android) apply false
 }
