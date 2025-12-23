@@ -10,7 +10,7 @@ class KusApplication : Application() {
         super.onCreate()
         initKoin(
             config = { androidContext(this@KusApplication) },
-            listOf(androidFirstLaunchModule,)
+            additionalModules = listOf(androidFirstLaunchModule)
         )
     }
 }

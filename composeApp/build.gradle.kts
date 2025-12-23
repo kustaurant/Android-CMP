@@ -66,8 +66,25 @@ kotlin {
         }
         val desktopMain by getting {
             dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.ui)
+                implementation(compose.material3)
                 implementation(compose.desktop.currentOs)
-                implementation(libs.kotlinx.coroutinesSwing)
+                implementation(compose.components.uiToolingPreview)
+
+
+                implementation(project(":core:designSystem"))
+
+                implementation(project(":data:network"))
+                implementation(project(":data:firstLaunch"))
+
+                implementation(project(":feature:onBoarding"))
+                implementation(project(":feature:splash"))
+                implementation(project(":feature:login"))
+                implementation(project(":feature:home"))
+
+                implementation(project(":domain:firstLaunch"))
             }
         }
     }

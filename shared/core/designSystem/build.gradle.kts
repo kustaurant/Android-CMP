@@ -1,12 +1,15 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidLint)
 }
 
 kotlin {
+
     androidLibrary {
-        namespace = "com.kus.domain.firstLaunch"
+        namespace = "com.kus.designsystem"
         compileSdk = 36
         minSdk = 26
 
@@ -20,7 +23,7 @@ kotlin {
         }
     }
 
-    val xcfName = "shared:domain:firstLaunchKit"
+    val xcfName = "designSystemKit"
 
     iosX64 {
         binaries.framework {
@@ -46,8 +49,14 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.kotlinx.coroutines.core)
-                api(libs.koin.core)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.ui)
+                implementation(compose.material3)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
             }
         }
 
@@ -58,7 +67,8 @@ kotlin {
         }
 
         androidMain {
-            dependencies { 
+            dependencies {
+                implementation(compose.preview)
             }
         }
 

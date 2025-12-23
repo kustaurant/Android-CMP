@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
@@ -10,16 +8,6 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-
-            implementation(libs.google.material)
-            implementation(libs.androidx.core.splashscreen)
-        }
-
-
         val desktopMain by getting {
             dependencies {
                 implementation(project(":core:designSystem"))
