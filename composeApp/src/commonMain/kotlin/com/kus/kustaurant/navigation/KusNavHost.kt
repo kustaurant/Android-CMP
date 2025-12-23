@@ -7,13 +7,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.kus.login.navigation.Login
-import com.kus.login.navigation.loginNavGraph
-import com.kus.onboarding.navigatioin.Onboarding
-import com.kus.onboarding.navigatioin.onboardingNavGraph
-import com.kus.splash.navigation.Splash
-import com.kus.splash.navigation.splashNavGraph
-import homeNavGraph
+import com.kus.feature.home.navigation.homeNavGraph
+import com.kus.feature.login.navigation.Login
+import com.kus.feature.login.navigation.loginNavGraph
+import com.kus.feature.onboarding.navigatioin.Onboarding
+import com.kus.feature.onboarding.navigatioin.onboardingNavGraph
+import com.kus.feature.splash.navigation.Splash
+import com.kus.feature.splash.navigation.splashNavGraph
 
 @Composable
 fun KusNavHost(

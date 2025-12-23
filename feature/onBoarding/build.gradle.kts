@@ -81,7 +81,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.kus.onBoarding"
+    namespace = "com.kus.feature.onBoarding"
     compileSdk = 36
     defaultConfig { minSdk = 26 }
 }

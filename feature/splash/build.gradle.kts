@@ -81,7 +81,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.kus.splash"
+    namespace = "com.kus.feature.splash"
     compileSdk = 36
     defaultConfig { minSdk = 26 }
 }

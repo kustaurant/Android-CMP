@@ -79,7 +79,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.kus.login"
+    namespace = "com.kus.feature.home"
     compileSdk = 36
     defaultConfig { minSdk = 26 }
 }

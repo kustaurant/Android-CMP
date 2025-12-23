@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kustaurant">
         <profileable
-            android:shell="true"
+            android:shell="false"
             tools:targetApi="29" />
 
         <activity

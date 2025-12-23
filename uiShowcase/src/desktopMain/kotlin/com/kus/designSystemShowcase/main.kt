@@ -3,7 +3,7 @@ package com.kus.designSystemShowcase
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import com.kus.splash.ui.SplashScreen
+import com.kus.feature.splash.ui.SplashScreen
 
 // ./gradlew :designSystemShowcase:run
 
