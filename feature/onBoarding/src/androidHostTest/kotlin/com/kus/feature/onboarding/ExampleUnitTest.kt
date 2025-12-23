@@ -1,4 +1,4 @@
-package com.kus.onboarding
+package com.kus.feature.onboarding
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

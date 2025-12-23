@@ -1,4 +1,4 @@
-package com.kus.splash
+package com.kus.feature.splash
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

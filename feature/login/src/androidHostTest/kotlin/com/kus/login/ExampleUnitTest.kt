@@ -1,4 +1,4 @@
-package com.kus.login
+package com.kus.feature.login
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

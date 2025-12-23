@@ -1,4 +1,4 @@
-package com.kus.splash
+package com.kus.feature.splash
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

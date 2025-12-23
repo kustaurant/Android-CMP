@@ -1,4 +1,4 @@
-package com.kus.onboarding
+package com.kus.feature.onboarding
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

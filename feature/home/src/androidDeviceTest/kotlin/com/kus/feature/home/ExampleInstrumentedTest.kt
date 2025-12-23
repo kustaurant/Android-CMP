@@ -1,4 +1,4 @@
-package com.kus.feature.home
+package com.kus.feature.feature.home
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

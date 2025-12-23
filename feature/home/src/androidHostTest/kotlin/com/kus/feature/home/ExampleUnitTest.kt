@@ -1,4 +1,4 @@
-package com.kus.feature.home
+package com.kus.feature.feature.home
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
