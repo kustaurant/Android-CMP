@@ -9,7 +9,6 @@ fun main() {
     initKoin(
         additionalModules = listOf(desktopFirstLaunchModule)
     )
-
     application {
         Window(
             onCloseRequest = ::exitApplication,

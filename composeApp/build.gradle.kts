@@ -33,6 +33,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+
+            implementation(libs.google.material)
+            implementation(libs.androidx.core.splashscreen)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -46,18 +49,42 @@ kotlin {
 
             implementation(libs.navigation.compose)
 
-            implementation(project(":shared:core:designSystem"))
-            implementation(project(":shared:data"))
-            implementation(project(":shared:domain"))
-            implementation(project(":feature"))
+            implementation(project(":core:designSystem"))
+
+            implementation(project(":data:network"))
+            implementation(project(":data:firstLaunch"))
+
+            implementation(project(":feature:onBoarding"))
+            implementation(project(":feature:splash"))
+            implementation(project(":feature:login"))
+            implementation(project(":feature:home"))
+
+            implementation(project(":domain:firstLaunch"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         val desktopMain by getting {
             dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.ui)
+                implementation(compose.material3)
                 implementation(compose.desktop.currentOs)
-                implementation(libs.kotlinx.coroutinesSwing)
+                implementation(compose.components.uiToolingPreview)
+
+
+                implementation(project(":core:designSystem"))
+
+                implementation(project(":data:network"))
+                implementation(project(":data:firstLaunch"))
+
+                implementation(project(":feature:onBoarding"))
+                implementation(project(":feature:splash"))
+                implementation(project(":feature:login"))
+                implementation(project(":feature:home"))
+
+                implementation(project(":domain:firstLaunch"))
             }
         }
     }
@@ -82,6 +109,12 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+        }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
     compileOptions {

@@ -8,8 +8,8 @@ import org.koin.android.ext.koin.androidContext
 class KusApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        initKoin (
-            config = {androidContext(this@KusApplication)},
+        initKoin(
+            config = { androidContext(this@KusApplication) },
             additionalModules = listOf(androidFirstLaunchModule)
         )
     }
