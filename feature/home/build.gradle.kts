@@ -78,6 +78,11 @@ kotlin {
     }
 }
 
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+}
+
 android {
     namespace = "com.kus.feature.home"
     compileSdk = 36

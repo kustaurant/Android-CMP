@@ -9,7 +9,7 @@ plugins {
 kotlin {
     androidTarget()
 
-    val xcfName = "feature:loginKit"
+    val xcfName = "feature:tierKit"
 
     iosX64 {
         binaries.framework {
@@ -84,7 +84,7 @@ compose.resources {
 }
 
 android {
-    namespace = "com.kus.feature.login"
+    namespace = "com.kus.feature.tier"
     compileSdk = 36
     defaultConfig { minSdk = 26 }
 }

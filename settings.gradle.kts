@@ -48,3 +48,7 @@ include(":data:firstLaunch")
 include(":data:network")
 
 include(":domain:firstLaunch")
+include(":feature:community")
+include(":feature:draw")
+include(":feature:tier")
+include(":feature:my")

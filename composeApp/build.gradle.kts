@@ -54,10 +54,14 @@ kotlin {
             implementation(project(":data:network"))
             implementation(project(":data:firstLaunch"))
 
+            implementation(project(":feature:community"))
+            implementation(project(":feature:draw"))
+            implementation(project(":feature:home"))
+            implementation(project(":feature:login"))
             implementation(project(":feature:onBoarding"))
             implementation(project(":feature:splash"))
-            implementation(project(":feature:login"))
-            implementation(project(":feature:home"))
+            implementation(project(":feature:tier"))
+            implementation(project(":feature:my"))
 
             implementation(project(":domain:firstLaunch"))
         }
@@ -78,11 +82,6 @@ kotlin {
 
                 implementation(project(":data:network"))
                 implementation(project(":data:firstLaunch"))
-
-                implementation(project(":feature:onBoarding"))
-                implementation(project(":feature:splash"))
-                implementation(project(":feature:login"))
-                implementation(project(":feature:home"))
 
                 implementation(project(":domain:firstLaunch"))
             }
