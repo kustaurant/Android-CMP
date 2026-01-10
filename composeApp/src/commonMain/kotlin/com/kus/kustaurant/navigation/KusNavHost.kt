@@ -1,55 +1,68 @@
 package com.kus.kustaurant.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.kus.feature.community.navigation.communityNavGraph
+import com.kus.feature.draw.navigation.drawNavGraph
+import com.kus.feature.home.navigation.Home
 import com.kus.feature.home.navigation.homeNavGraph
 import com.kus.feature.login.navigation.Login
 import com.kus.feature.login.navigation.loginNavGraph
+import com.kus.feature.my.navigation.myNavGraph
 import com.kus.feature.onboarding.navigatioin.Onboarding
 import com.kus.feature.onboarding.navigatioin.onboardingNavGraph
 import com.kus.feature.splash.navigation.Splash
 import com.kus.feature.splash.navigation.splashNavGraph
+import com.kus.feature.tier.navigation.tierNavGraph
 
 @Composable
 fun KusNavHost(
     navController: NavHostController,
     durationMillis: Int,
-    bottomBarState: MutableState<Boolean>,
     onShowMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
-        startDestination = Splash,
+        startDestination = Home,
+
         enterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(durationMillis)
-            )
+            fadeIn(animationSpec = tween(durationMillis)) +
+                    scaleIn(
+                        initialScale = 0.98f,
+                        animationSpec = tween(durationMillis)
+                    )
         },
         exitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(durationMillis)
-            )
+            fadeOut(animationSpec = tween(durationMillis)) +
+                    scaleOut(
+                        targetScale = 0.98f,
+                        animationSpec = tween(durationMillis)
+                    )
         },
+
         popEnterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(durationMillis)
-            )
+            fadeIn(animationSpec = tween(durationMillis)) +
+                    scaleIn(
+                        initialScale = 0.98f,
+                        animationSpec = tween(durationMillis)
+                    )
         },
         popExitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(durationMillis)
-            )
+            fadeOut(animationSpec = tween(durationMillis)) +
+                    scaleOut(
+                        targetScale = 0.98f,
+                        animationSpec = tween(durationMillis)
+                    )
         },
+
         modifier = modifier
     ) {
         splashNavGraph(
@@ -75,19 +88,22 @@ fun KusNavHost(
 
         loginNavGraph(
             navigateToHome = {
-                // TODO
+                navController.navigate(Home) {
+                    popUpTo(Login) { inclusive = true }
+                    launchSingleTop = true
+                }
             },
             onShowMessage = onShowMessage
         )
 
-
         homeNavGraph(
-            navigateToTier = {
-                // TODO
-            },
-            navigateToEvaluate = {
-                // TODO
-            }
+            navigateToTier = { /* TODO */ },
+            navigateToEvaluate = { /* TODO */ }
         )
+
+        drawNavGraph(onShowMessage = onShowMessage)
+        tierNavGraph(onShowMessage = onShowMessage)
+        communityNavGraph(onShowMessage = onShowMessage)
+        myNavGraph(onShowMessage = onShowMessage)
     }
 }

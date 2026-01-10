@@ -6,6 +6,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import com.kus.designsystem.color.KusColor.Signature1
 
 @Composable
 internal expect fun platformDynamicColorScheme(
@@ -14,8 +15,14 @@ internal expect fun platformDynamicColorScheme(
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = Color(0xFF1E2024),
+        primary = Signature1,
         onPrimary = White,
+
+        background = White,
+        onBackground = Color.Black,
+
+        surface = White,
+        onSurface = Color.Black,
     )
 
 @Composable

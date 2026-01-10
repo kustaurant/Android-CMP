@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kus.designsystem.color.KusColor.Signature1
 import com.kus.designsystem.util.noRippleClickable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-val Signature1 = Color(0xFF43AB38)
 private val UnselectedStroke = Color(0xFFAAAAAA)
 
 @Composable
