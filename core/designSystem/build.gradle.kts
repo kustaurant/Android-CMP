@@ -61,6 +61,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
             }
+            resources.srcDirs("src/commonMain/composeResources")
         }
 
         commonTest {

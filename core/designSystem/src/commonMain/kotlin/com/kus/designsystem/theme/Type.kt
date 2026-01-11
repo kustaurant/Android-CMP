@@ -1,7 +1,5 @@
 package com.kus.designsystem.theme
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.TextStyle
@@ -12,27 +10,48 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import kustaurant.core.designsystem.generated.resources.Res
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import kustaurant.core.designsystem.generated.resources.pretendard_bold
+import kustaurant.core.designsystem.generated.resources.pretendard_medium
+import kustaurant.core.designsystem.generated.resources.pretendard_regular
+import kustaurant.core.designsystem.generated.resources.pretendard_semibold
 import org.jetbrains.compose.resources.Font
 
-val Pretendard = FontFamily(
-    Font(
-        resource = Res.font.pretendard_regular,
-        weight = FontWeight.Normal,
+private val PretendardRegular: FontFamily
+    @Composable
+    get() =
+        FontFamily(Font(Res.font.pretendard_regular, FontWeight.Normal))
+
+private val PretendardMedium: FontFamily
+    @Composable
+    get() =
+        FontFamily(Font(Res.font.pretendard_medium, FontWeight.Medium))
+
+private val PretendardSemiBold: FontFamily
+    @Composable
+    get() =
+        FontFamily(Font(Res.font.pretendard_semibold, FontWeight.SemiBold))
+
+private val PretendardBold: FontFamily
+    @Composable
+    get() =
+        FontFamily(Font(Res.font.pretendard_bold, FontWeight.Bold))
+
+private fun KusTextStyle(
+    fontFamily: FontFamily,
+    fontSize: TextUnit,
+    lineHeight: TextUnit = 1.28.em,
+    letterSpacing: TextUnit = 0.02.em,
+): TextStyle = TextStyle(
+    fontFamily = fontFamily,
+    fontSize = fontSize,
+    lineHeight = lineHeight,
+    letterSpacing = letterSpacing,
+    lineHeightStyle = LineHeightStyle(
+        alignment = LineHeightStyle.Alignment.Center,
+        trim = LineHeightStyle.Trim.None
     ),
-    Font(
-        resource = Res.font.pretendard_medium,
-        weight = FontWeight.Medium
-    ),
-    Font(
-        resource = Res.font.pretendard_semibold,
-        weight = FontWeight.SemiBold
-    ),
-    Font(
-        resource = Res.font.pretendard_bold,
-        weight = FontWeight.Bold
-    )
 )
+
 @Immutable
 class KusTypography(
     val type20b: TextStyle,
@@ -54,23 +73,8 @@ class KusTypography(
     val type10r: TextStyle,
 )
 
-private fun KusTextStyle(
-    fontFamily: FontFamily,
-    fontSize: TextUnit,
-    lineHeight: TextUnit = 1.28.em,
-    letterSpacing: TextUnit = 0.02.em,
-): TextStyle = TextStyle(
-    fontFamily = fontFamily,
-    fontSize = fontSize,
-    lineHeight = lineHeight,
-    letterSpacing = letterSpacing,
-    lineHeightStyle = LineHeightStyle(
-        alignment = LineHeightStyle.Alignment.Center,
-        trim = LineHeightStyle.Trim.None
-    ),
-)
-
-fun KusTypography() = KusTypography(
+@Composable
+fun createKusTypography() = KusTypography(
     type20b = KusTextStyle(
         fontFamily = PretendardBold,
         fontSize = 20.sp,
@@ -140,24 +144,3 @@ fun KusTypography() = KusTypography(
         fontSize = 10.sp,
     ),
 )
-
-@Preview(showBackground = true)
-@Composable
-fun KusTypographyPreview() {
-    KusTheme {
-        Column {
-            Text("type20b - KusTheme", style = KusTheme.typography.type20b)
-            Text("type13b - KusTheme", style = KusTheme.typography.type13b)
-            Text("type18sb - KusTheme", style = KusTheme.typography.type18sb)
-            Text("type17sb - KusTheme", style = KusTheme.typography.type17sb)
-            Text("type18m - KusTheme", style = KusTheme.typography.type18m)
-            Text("type16m - KusTheme", style = KusTheme.typography.type16m)
-            Text("type15m - KusTheme", style = KusTheme.typography.type15m)
-            Text("type12m - KusTheme", style = KusTheme.typography.type12m)
-            Text("type11m - KusTheme", style = KusTheme.typography.type11m)
-            Text("type14r - KusTheme", style = KusTheme.typography.type14r)
-            Text("type13r - KusTheme", style = KusTheme.typography.type13r)
-            Text("type12r - KusTheme", style = KusTheme.typography.type12r)
-        }
-    }
-}

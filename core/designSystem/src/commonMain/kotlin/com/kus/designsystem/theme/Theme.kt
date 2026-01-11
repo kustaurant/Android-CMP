@@ -45,7 +45,7 @@ fun KusTheme(
     content: @Composable () -> Unit
 ) {
     val colors = KusLightColors()
-    val typography = KusTypography()
+    val typography = createKusTypography()
 
     ProvideKusColorsAndTypography(
         colors = colors,
