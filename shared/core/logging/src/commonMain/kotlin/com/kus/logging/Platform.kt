@@ -1,3 +1,3 @@
-package com.kus.designsystem
+package com.kus.logging
 
 expect fun platform(): String
