@@ -6,9 +6,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kus.feature.community.navigation.communityNavGraph
 import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.home.navigation.Home
@@ -21,6 +24,7 @@ import com.kus.feature.onboarding.navigatioin.onboardingNavGraph
 import com.kus.feature.splash.navigation.Splash
 import com.kus.feature.splash.navigation.splashNavGraph
 import com.kus.feature.tier.navigation.tierNavGraph
+import com.kus.logging.KusLog
 
 @Composable
 fun KusNavHost(

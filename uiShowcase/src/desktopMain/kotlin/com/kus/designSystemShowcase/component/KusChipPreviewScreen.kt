@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.kus.designsystem.component.KusChip
-
 @Composable
 fun KusChipPreviewScreen(
     modifier: Modifier = Modifier

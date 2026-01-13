@@ -10,8 +10,8 @@ kotlin {
     sourceSets {
         val desktopMain by getting {
             dependencies {
-                implementation(project(":core:designSystem"))
-                implementation(project(":feature:splash"))
+                implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:feature:splash"))
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)

@@ -113,11 +113,11 @@ private fun NavHostController.navigateToTab(key: String) {
     }
 }
 
-private fun shouldShowBottomBar(currentRoute: String?): Boolean = when {
-    currentRoute?.contains("Splash") == true -> false
-    currentRoute?.contains("Onboarding") == true -> false
-    currentRoute?.contains("Login") == true -> false
-    else -> true
+private fun shouldShowBottomBar(currentRoute: String?): Boolean {
+    val route = currentRoute ?: return true
+    val hiddenRoutes = listOf("Splash", "Onboarding", "Login")
+
+    return hiddenRoutes.none { route.contains(it) }
 }
 
 private fun NavOptionsBuilder.tabOptions(navController: NavHostController) {
