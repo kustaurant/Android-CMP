@@ -10,7 +10,7 @@ import com.kus.feature.splash.ui.SplashScreen
 fun main() = application {
     Window(onCloseRequest = ::exitApplication, title = "DesignSystem Showcase") {
         MaterialTheme {
-            SplashScreen()
+            KusChipPreviewScreen()
         }
     }
 }

@@ -7,23 +7,13 @@ plugins {
 }
 
 kotlin {
-
     androidLibrary {
         namespace = "com.kus.designsystem"
         compileSdk = 36
         minSdk = 26
-
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
     }
 
-    val xcfName = "designSystemKit"
+    val xcfName = "shared:core:designSystemKit"
 
     iosX64 {
         binaries.framework {
@@ -69,14 +59,6 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(compose.preview)
-            }
-        }
-
-        getByName("androidDeviceTest") {
-            dependencies {
-                implementation(libs.androidx.runner)
-                implementation(libs.androidx.core)
-                implementation(libs.androidx.testExt.junit)
             }
         }
 
