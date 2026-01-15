@@ -34,8 +34,7 @@ plugins {
 
 
 include(":composeApp")
-
-include(":shared:uiShowcase")
+include(":uiShowcase")
 
 include(":shared:core:designSystem")
 
