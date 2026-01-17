@@ -25,6 +25,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven("https://repository.map.naver.com/archive/maven")
     }
 }
 
@@ -53,3 +54,4 @@ include(":shared:feature:my")
 
 include(":shared:domain:firstLaunch")
 include(":shared:core:logging")
+include(":shared:domain:model")
