@@ -106,9 +106,6 @@ private fun KusCategoryImageButtonSelectablePreview() {
     var isSelected by remember { mutableStateOf(false) }
 
     KusTheme {
-        Column(Modifier.fillMaxSize()) {
-
-        }
         KusCategoryImageButton(
             categoryName = "전체",
             categoryImage = vectorResource(Res.drawable.ic_like),
