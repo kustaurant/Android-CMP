@@ -33,6 +33,8 @@ import kustaurant.core.designsystem.generated.resources.ic_saved
 import kustaurant.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @Composable
 fun KusRestThumbnail(
@@ -80,12 +82,20 @@ fun KusRestThumbnail(
                     modifier = Modifier.size(80.dp)
                 )
             } else {
-//                AsyncImage(
-//                    model = restThumbnail,
-//                    contentDescription = null,
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier.size(80.dp)
-//                )
+                KamelImage(
+                    resource = asyncPainterResource(restThumbnail),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(80.dp),
+                    onFailure = {
+                        Image(
+                            imageVector = vectorResource(Res.drawable.ic_kus_blank),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(80.dp)
+                        )
+                    }
+                )
             }
 
             Icon(
