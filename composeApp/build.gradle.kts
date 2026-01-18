@@ -46,23 +46,29 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-
             implementation(libs.navigation.compose)
 
-            implementation(project(":core:designSystem"))
+            implementation(project(":shared:core:designSystem"))
+            implementation(project(":shared:core:logging"))
 
-            implementation(project(":data:network"))
-            implementation(project(":data:firstLaunch"))
+            implementation(project(":shared:data:network"))
+            implementation(project(":shared:data:firstLaunch"))
 
-            implementation(project(":feature:onBoarding"))
-            implementation(project(":feature:splash"))
-            implementation(project(":feature:login"))
-            implementation(project(":feature:home"))
+            implementation(project(":shared:feature:community"))
+            implementation(project(":shared:feature:draw"))
+            implementation(project(":shared:feature:home"))
+            implementation(project(":shared:feature:login"))
+            implementation(project(":shared:feature:onBoarding"))
+            implementation(project(":shared:feature:splash"))
+            implementation(project(":shared:feature:tier"))
+            implementation(project(":shared:feature:my"))
 
-            implementation(project(":domain:firstLaunch"))
+            implementation(project(":shared:domain:firstLaunch"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        iosMain.dependencies { 
         }
         val desktopMain by getting {
             dependencies {
@@ -74,17 +80,12 @@ kotlin {
                 implementation(compose.components.uiToolingPreview)
 
 
-                implementation(project(":core:designSystem"))
+                implementation(project(":shared:core:designSystem"))
 
-                implementation(project(":data:network"))
-                implementation(project(":data:firstLaunch"))
+                implementation(project(":shared:data:network"))
+                implementation(project(":shared:data:firstLaunch"))
 
-                implementation(project(":feature:onBoarding"))
-                implementation(project(":feature:splash"))
-                implementation(project(":feature:login"))
-                implementation(project(":feature:home"))
-
-                implementation(project(":domain:firstLaunch"))
+                implementation(project(":shared:domain:firstLaunch"))
             }
         }
     }
