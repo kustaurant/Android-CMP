@@ -1,8 +1,43 @@
+import com.codingfeline.buildkonfig.gradle.BuildKonfigExtension
+import java.util.Properties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
+    alias(libs.plugins.buildkonfig)
 }
+
+extensions.configure<BuildKonfigExtension>("buildkonfig") {
+    packageName = "com.kus.core.config"
+    exposeObjectWithName = "BuildKonfig"
+
+    val secretsProps = Properties().apply {
+        val f = rootProject.file("secrets/sdks.properties")
+        if (f.exists()) f.inputStream().use { load(it) }
+    }
+
+    fun resolveKey(
+        key: String,
+        defaultValue: String? = null,
+        required: Boolean = false,
+    ): String {
+        val fromProps = secretsProps.getProperty(key)
+        val fromEnv = System.getenv(key)
+        val resolved = (fromEnv ?: fromProps ?: defaultValue)?.replace("\"", "")
+
+        if (required && resolved.isNullOrBlank()) {
+            error("$key is missing. Set it in secrets/sdks.properties or environment variable.")
+        }
+        return resolved ?: ""
+    }
+
+    defaultConfigs {
+        buildConfigField(Type.STRING, "API_BASE_URL", resolveKey("API_BASE_URL", required = true))
+    }
+}
+
 
 kotlin {
     androidLibrary {
@@ -10,9 +45,7 @@ kotlin {
         compileSdk = 36
         minSdk = 26
 
-        withHostTestBuilder {
-        }
-
+        withHostTestBuilder {}
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }.configure {
@@ -41,7 +74,7 @@ kotlin {
             baseName = xcfName
         }
     }
-
+    
     sourceSets {
         commonMain {
             dependencies {
