@@ -47,6 +47,8 @@ kotlin {
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
+
+                resources.srcDirs("src/commonMain/designsystem/composeResources")
             }
         }
 
