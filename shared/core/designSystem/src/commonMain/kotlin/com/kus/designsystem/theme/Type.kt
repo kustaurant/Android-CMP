@@ -9,11 +9,11 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import kustaurant.core.designsystem.generated.resources.Res
-import kustaurant.core.designsystem.generated.resources.pretendard_bold
-import kustaurant.core.designsystem.generated.resources.pretendard_medium
-import kustaurant.core.designsystem.generated.resources.pretendard_regular
-import kustaurant.core.designsystem.generated.resources.pretendard_semibold
+import kustaurant.shared.core.designsystem.generated.resources.Res
+import kustaurant.shared.core.designsystem.generated.resources.pretendard_bold
+import kustaurant.shared.core.designsystem.generated.resources.pretendard_medium
+import kustaurant.shared.core.designsystem.generated.resources.pretendard_regular
+import kustaurant.shared.core.designsystem.generated.resources.pretendard_semibold
 import org.jetbrains.compose.resources.Font
 
 private val PretendardRegular: FontFamily
