@@ -25,8 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import kustaurant.core.designsystem.generated.resources.Res
-import kustaurant.core.designsystem.generated.resources.ic_like
+import kustaurant.shared.core.designsystem.generated.resources.Res
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -112,58 +111,58 @@ fun KusButton(
     }
 }
 
-@Preview
-@Composable
-private fun KusButtonPreview() {
-    KusTheme {
-        KusButton(
-            buttonName = "랜덤 뽑기",
-            enabled = false,
-            roundedCornerShape = RoundedCornerShape(50.dp),
-            modifier = Modifier.fillMaxWidth(),
-            borderColor = KusTheme.colors.c_E0E0E0,
-            onClick = {},
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun KusButtonPreview2() {
-    KusTheme {
-        KusButton(
-            buttonName = "다시 뽑기",
-            enabled = true,
-            roundedCornerShape = RoundedCornerShape(100.dp),
-            modifier = Modifier,
-            textStyle = KusTheme.typography.type14r,
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-            icon = vectorResource(Res.drawable.ic_like),
-            onClick = {},
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun KusButtonPreview3() {
-    KusTheme {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            KusButton(
-                buttonName = "카테고리 재설정",
-                enabled = true,
-                roundedCornerShape = RoundedCornerShape(100.dp),
-                modifier = Modifier,
-                textStyle = KusTheme.typography.type14r,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-                contentColor = KusTheme.colors.c_43AB38,
-                containerColor = Color.White,
-                isShadowVisible = true,
-                onClick = {},
-            )
-        }
-    }
-}
+//@Preview
+//@Composable
+//private fun KusButtonPreview() {
+//    KusTheme {
+//        KusButton(
+//            buttonName = "랜덤 뽑기",
+//            enabled = false,
+//            roundedCornerShape = RoundedCornerShape(50.dp),
+//            modifier = Modifier.fillMaxWidth(),
+//            borderColor = KusTheme.colors.c_E0E0E0,
+//            onClick = {},
+//        )
+//    }
+//}
+//
+//@Preview
+//@Composable
+//private fun KusButtonPreview2() {
+//    KusTheme {
+//        KusButton(
+//            buttonName = "다시 뽑기",
+//            enabled = true,
+//            roundedCornerShape = RoundedCornerShape(100.dp),
+//            modifier = Modifier,
+//            textStyle = KusTheme.typography.type14r,
+//            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+//            icon = vectorResource(Res.drawable.ic_like),
+//            onClick = {},
+//        )
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//private fun KusButtonPreview3() {
+//    KusTheme {
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            verticalArrangement = Arrangement.Center,
+//        ) {
+//            KusButton(
+//                buttonName = "카테고리 재설정",
+//                enabled = true,
+//                roundedCornerShape = RoundedCornerShape(100.dp),
+//                modifier = Modifier,
+//                textStyle = KusTheme.typography.type14r,
+//                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+//                contentColor = KusTheme.colors.c_43AB38,
+//                containerColor = Color.White,
+//                isShadowVisible = true,
+//                onClick = {},
+//            )
+//        }
+//    }
+//}

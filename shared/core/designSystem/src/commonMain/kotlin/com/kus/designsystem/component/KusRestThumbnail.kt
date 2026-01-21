@@ -25,12 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import kustaurant.core.designsystem.generated.resources.Res
-import kustaurant.core.designsystem.generated.resources.ic_check
-import kustaurant.core.designsystem.generated.resources.ic_kus_blank
-import kustaurant.core.designsystem.generated.resources.ic_location
-import kustaurant.core.designsystem.generated.resources.ic_saved
-import kustaurant.core.designsystem.generated.resources.ic_unsaved
+import kustaurant.shared.core.designsystem.generated.resources.Res
+//import kustaurant.core.designsystem.generated.resources.ic_check
+//import kustaurant.core.designsystem.generated.resources.ic_kus_blank
+//import kustaurant.core.designsystem.generated.resources.ic_location
+//import kustaurant.core.designsystem.generated.resources.ic_saved
+//import kustaurant.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import io.kamel.image.KamelImage
@@ -234,21 +234,21 @@ fun KusRestThumbnail(
     }
 }
 
-@Preview
-@Composable
-fun KusRestThumbnailPreview() {
-    KusTheme {
-        KusRestThumbnail(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            tier = 3,
-            restName = "꾸아 건대점",
-            restAlliance = "어디대 학생증 제시하면 10% 할인이 된다네요 대박 개쩔어",
-            categories = arrayListOf("한식", "분식", "가성비"),
-            location = "서울 성동구",
-            isSaved = true,
-            isEvaluated = true,
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun KusRestThumbnailPreview() {
+//    KusTheme {
+//        KusRestThumbnail(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 16.dp),
+//            tier = 3,
+//            restName = "꾸아 건대점",
+//            restAlliance = "어디대 학생증 제시하면 10% 할인이 된다네요 대박 개쩔어",
+//            categories = arrayListOf("한식", "분식", "가성비"),
+//            location = "서울 성동구",
+//            isSaved = true,
+//            isEvaluated = true,
+//        )
+//    }
+//}

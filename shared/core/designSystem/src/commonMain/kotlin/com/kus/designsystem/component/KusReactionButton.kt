@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import kustaurant.core.designsystem.generated.resources.Res
-import kustaurant.core.designsystem.generated.resources.ic_dislike
-import kustaurant.core.designsystem.generated.resources.ic_like
+import kustaurant.shared.core.designsystem.generated.resources.Res
+//import kustaurant.core.designsystem.generated.resources.ic_dislike
+//import kustaurant.core.designsystem.generated.resources.ic_like
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
