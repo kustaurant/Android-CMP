@@ -1,5 +1,3 @@
-import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.include
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
@@ -55,6 +53,7 @@ kotlin {
 
                 implementation(project(":shared:domain:firstLaunch"))
             }
+            resources.srcDirs("src/commonMain/composeResources")
         }
 
         commonTest {

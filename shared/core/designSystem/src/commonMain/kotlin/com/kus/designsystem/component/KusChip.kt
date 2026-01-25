@@ -1,81 +1,71 @@
 package com.kus.designsystem.component
-  
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.kus.designsystem.color.KusColor.Signature1
-import com.kus.designsystem.util.noRippleClickable
+import com.kus.designsystem.theme.KusTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-private val UnselectedStroke = Color(0xFFAAAAAA)
-
+/**
+ * 티어표 상단 필터 칩
+ *
+ * @param modifier chip 영역 수정자
+ * @param chipName chip 이름
+ * @param isSelected chip 선택 유무
+ * @param onClick chip 클릭 시 호출 되는 콜백 함수
+ */
 @Composable
 fun KusChip(
-    text: String,
+    modifier: Modifier = Modifier,
+    chipName: String,
+    isSelected: Boolean = false,
     onClick: () -> Unit,
-    selected: Boolean,
-    isSelectable: Boolean,
-    modifier: Modifier = Modifier
 ) {
-    val strokeColor = if (selected) Signature1 else UnselectedStroke
-    val bgColor = if (selected) Signature1.copy(alpha = 0.2f) else Color.Transparent
+    val roundedCornerShape = RoundedCornerShape(100.dp)
+    val mainColor =
+        if (isSelected) KusTheme.colors.c_43AB38
+        else KusTheme.colors.c_AAAAAA
+    val backgroundColor =
+        if (isSelected) KusTheme.colors.c_43AB38.copy(alpha = 0.2f)
+        else Color.White
 
-    Surface(
-        modifier = modifier.then(
-            if (isSelectable) Modifier.noRippleClickable(onClick) else Modifier
-        ),
-        shape = RoundedCornerShape(16.dp),
-        color = bgColor,
-        border = BorderStroke(1.dp, strokeColor)
+    Box(
+        modifier = modifier
+            .background(backgroundColor, roundedCornerShape)
+            .border(1.dp, mainColor, roundedCornerShape)
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .clickable(onClick = onClick),
     ) {
-        Box(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text,
-                color = strokeColor,
-                fontSize = 14.sp
-            )
-        }
+        Text(
+            text = chipName,
+            style = KusTheme.typography.type14r,
+            color = mainColor,
+        )
     }
 }
 
-
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun PreviewKusChip() {
-    var isSelected1 by remember { mutableStateOf(true) }
-    var isSelected2 by remember { mutableStateOf(true) }
+private fun KusChipPreview() {
+    var isSelected by remember { mutableStateOf(false) }
 
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    KusTheme {
         KusChip(
-            text = "Selectable",
-            selected = isSelected1,
-            isSelectable = true,
-            onClick = { isSelected1 = !isSelected1 }
-        )
-
-        KusChip(
-            text = "Locked (selected but not clickable)",
-            selected = isSelected2,
-            isSelectable = false,
-            onClick = { isSelected2 = !isSelected2 } // 호출 안 됨
+            chipName = "전체",
+            isSelected = isSelected,
+            onClick = { isSelected = !isSelected },
         )
     }
 }
