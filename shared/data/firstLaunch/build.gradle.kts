@@ -55,6 +55,7 @@ kotlin {
 
                 implementation(project(":shared:domain:firstLaunch"))
             }
+            resources.srcDirs("src/commonMain/composeResources")
         }
 
         commonTest {

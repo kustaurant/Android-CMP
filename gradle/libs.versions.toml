@@ -33,6 +33,7 @@ material = "1.12.0"
 uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.4.1"
 napier = "2.7.1"
+kamel = "0.9.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -84,6 +85,8 @@ androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomato
 androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
 
 napier-log = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
+
+kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
