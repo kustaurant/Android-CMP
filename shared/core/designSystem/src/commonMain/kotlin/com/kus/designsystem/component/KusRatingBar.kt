@@ -20,6 +20,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import kustaurant.shared.core.designsystem.generated.resources.Res
+import kustaurant.shared.core.designsystem.generated.resources.ic_empty_star
+import kustaurant.shared.core.designsystem.generated.resources.ic_filled_star
+import kustaurant.shared.core.designsystem.generated.resources.ic_half_star
 //import kustaurant.core.designsystem.generated.resources.ic_empty_star
 //import kustaurant.core.designsystem.generated.resources.ic_filled_star
 //import kustaurant.core.designsystem.generated.resources.ic_half_star
