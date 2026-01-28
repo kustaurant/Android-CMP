@@ -1,15 +1,10 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
-    alias(libs.plugins.androidLint)
+    alias(libs.plugins.androidLibrary)
 }
 
 kotlin {
-    androidLibrary {
-        namespace = "com.kus.logging"
-        compileSdk = 36
-        minSdk = 26
-    }
+    androidTarget()
 
     val xcfName = "shared:core:loggingKit"
 
@@ -42,20 +37,22 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(libs.napier.log)
             }
         }
 
         iosMain {
             dependencies {
-                implementation(libs.napier.log)
             }
         }
+    }
+}
 
-        val desktopMain by getting {
-            dependencies {
-                implementation(libs.napier.log)
-            }
-        }
+android {
+    namespace = "com.kus.core.logging"
+
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }

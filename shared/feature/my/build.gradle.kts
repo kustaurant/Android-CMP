@@ -85,6 +85,10 @@ compose.resources {
 
 android {
     namespace = "com.kus.feature.my"
-    compileSdk = 36
-    defaultConfig { minSdk = 26 }
+
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
 }

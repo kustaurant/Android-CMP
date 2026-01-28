@@ -1,9 +1,11 @@
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.serialization) 
 }
 
 kotlin {
@@ -31,6 +33,17 @@ kotlin {
 
     jvm("desktop")
 
+    cocoapods {
+        version = "1.0.0"
+        summary = "tierKit"
+        homepage = "https://your.domain"
+        ios.deploymentTarget = "12.0"
+
+        pod("NMapsMap") {
+            version = "3.23.0"
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -52,6 +65,10 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(project(":shared:core:designSystem"))
+
+                implementation(project(":shared:domain:model"))
+                implementation(project(":shared:domain:tier"))
+
                 implementation(project(":shared:data:network"))
             }
         }
@@ -65,8 +82,8 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(compose.preview)
+                implementation(libs.naver.maps)
                 implementation(libs.androidx.activity.compose)
-
                 implementation(libs.koin.android)
             }
         }
@@ -85,6 +102,10 @@ compose.resources {
 
 android {
     namespace = "com.kus.feature.tier"
-    compileSdk = 36
-    defaultConfig { minSdk = 26 }
+
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
 }
