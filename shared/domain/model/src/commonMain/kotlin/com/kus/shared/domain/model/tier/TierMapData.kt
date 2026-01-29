@@ -1,9 +1,8 @@
 package com.kus.shared.domain.model.tier
 
 data class TierMapData(
-    val polygonCoords: List<GeoPoint>,
-    val solidLines: List<List<GeoPoint>>,
-    val dashedLines: List<List<GeoPoint>>,
+    val solidPolygonCoordsList: List<List<GeoPoint>>,
+    val dashedPolygonCoordsList: List<List<GeoPoint>>,
     val favoriteTierRestaurants: List<TierRestaurant>,
     val tieredTierRestaurants: List<TierRestaurant>,
     val nonTieredRestaurants: List<NonTieredRestaurantGroup>,

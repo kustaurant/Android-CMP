@@ -47,7 +47,10 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
 
+                implementation(libs.bundles.ktor)
+
                 implementation(project(":shared:domain:tier"))
+                implementation(project(":shared:domain:model"))
                 implementation(project(":shared:data:network"))
             }
         }
