@@ -40,6 +40,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -76,11 +78,11 @@ fun TierScreen(
     val scope = rememberCoroutineScope()
     val viewModel: TierViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    
-    LaunchedEffect(Unit) {
-        viewModel.fetchFirstRestaurants()
-    }
 
+    val density = LocalDensity.current
+    var categoryRowHeightDp by remember { mutableStateOf(0.dp) }
+
+    LaunchedEffect(Unit) { viewModel.fetchFirstRestaurants() }
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onTabSelected(tabs[pagerState.currentPage])
     }
@@ -101,39 +103,47 @@ fun TierScreen(
         ) {
             TierCenterTabs(
                 selectedIndex = pagerState.currentPage,
-                onSelect = { index ->
-                    scope.launch { pagerState.animateScrollToPage(index) }
-                }
+                onSelect = { index -> scope.launch { pagerState.animateScrollToPage(index) } }
             )
         }
 
-        TierSelectedCategoryRow(
-            selectedCategories = uiState.selectedCategories.toList(),
-            onFilterClick = onFilterClick,
-            onChipClick = { viewModel.setShowBottomSheet(true) },
-        )
+        Box(Modifier.fillMaxSize()) {
 
+            HorizontalPager(
+                state = pagerState,
+                userScrollEnabled = false,
+                modifier = Modifier.fillMaxSize(),
+            ) { page ->
+                when (tabs[page]) {
+                    TierTab.LIST -> TierListScreen(
+                        viewModel = viewModel,
+                        onNavigateTierCategory = onNavigateTierCategory,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = categoryRowHeightDp)
+                    )
 
-        HorizontalPager(
-            state = pagerState,
-            userScrollEnabled = false,
-            modifier = Modifier.fillMaxSize(),
-        ) { page ->
-            when (tabs[page]) {
-                TierTab.LIST -> TierListScreen(
-                    viewModel = viewModel,
-                    onNavigateTierCategory = onNavigateTierCategory,
-                    onFilterClick = onFilterClick
-                )
-
-                TierTab.MAP -> TierMapScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    state = uiState.mapUiState,
-                    onMapTapped = { viewModel.onMapTapped() },
-                    onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
-                    onBottomSheetClick = { id -> /* navigate detail */ },
-                )
+                    TierTab.MAP -> TierMapScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        state = uiState.mapUiState,
+                        onMapTapped = { viewModel.onMapTapped() },
+                        onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
+                        onBottomSheetClick = { id -> },
+                    )
+                }
             }
+
+            TierSelectedCategoryRow(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .onSizeChanged { size ->
+                        categoryRowHeightDp = with(density) { size.height.toDp() }
+                    },
+                selectedCategories = uiState.selectedCategories.toList(),
+                onFilterClick = onFilterClick,
+                onChipClick = { viewModel.setShowBottomSheet(true) },
+            )
         }
     }
 }
@@ -175,7 +185,6 @@ private fun TierCenterTabs(
         }
     }
 }
-
 
 @Composable
 fun TierSelectedCategoryRow(
@@ -255,7 +264,7 @@ private fun FadingEdgeLazyRow(
         }
     }
 
-    val fadePx = with(androidx.compose.ui.platform.LocalDensity.current) { fadeWidth.toPx() }
+    val fadePx = with(LocalDensity.current) { fadeWidth.toPx() }
 
     LazyRow(
         state = state,
@@ -263,9 +272,7 @@ private fun FadingEdgeLazyRow(
             .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
             .drawWithContent {
                 drawContent()
-
                 val w = size.width
-                val h = size.height
 
                 val left = if (showLeftFade) fadePx else 0f
                 val right = if (showRightFade) fadePx else 0f
@@ -352,7 +359,6 @@ fun TierListScreen(
     modifier: Modifier = Modifier,
     viewModel: TierViewModel,
     onNavigateTierCategory: () -> Unit = {},
-    onFilterClick : () -> Unit = {},
     onRestaurantClick: (TierRestaurant) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -509,13 +515,7 @@ private fun TierFilterChipItem(
 expect fun TierMapScreen(
     modifier: Modifier = Modifier,
     state: TierMapUiState,
-
-    // 지도 클릭 -> 바텀시트 닫기
     onMapTapped: () -> Unit,
-
-    // 마커 클릭 -> 선택 + 바텀시트 열기 (id만 올려도 됨)
     onRestaurantSelected: (restaurantId: Long) -> Unit,
-
-    // 바텀시트 클릭 -> 상세 이동
     onBottomSheetClick: (restaurantId: Long) -> Unit,
 )
