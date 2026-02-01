@@ -26,13 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import kustaurant.shared.core.designsystem.generated.resources.Res
-//import kustaurant.core.designsystem.generated.resources.ic_check
-//import kustaurant.core.designsystem.generated.resources.ic_kus_blank
-//import kustaurant.core.designsystem.generated.resources.ic_location
-//import kustaurant.core.designsystem.generated.resources.ic_saved
-//import kustaurant.core.designsystem.generated.resources.ic_unsaved
-import org.jetbrains.compose.resources.vectorResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.core.designsystem.generated.resources.ic_check
@@ -40,6 +33,7 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_kus_logo
 import kustaurant.shared.core.designsystem.generated.resources.ic_location
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun KusRestThumbnail(
@@ -81,7 +75,7 @@ fun KusRestThumbnail(
         ) {
             if (restThumbnail.isNullOrBlank()) {
                 Image(
-                    imageVector = vectorResource(Res.drawable.ic_kus_logo),
+                    painterResource(Res.drawable.ic_kus_logo),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(80.dp)
@@ -94,7 +88,7 @@ fun KusRestThumbnail(
                     modifier = Modifier.size(80.dp),
                     onFailure = {
                         Image(
-                            imageVector = vectorResource(Res.drawable.ic_kus_logo),
+                            painterResource(Res.drawable.ic_kus_logo),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(80.dp)
@@ -104,7 +98,7 @@ fun KusRestThumbnail(
             }
 
             Icon(
-                imageVector = vectorResource(savedModel),
+                painterResource(savedModel),
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp)
@@ -130,7 +124,7 @@ fun KusRestThumbnail(
 
                 if (isEvaluated) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.ic_check),
+                        painterResource(Res.drawable.ic_check),
                         contentDescription = null,
                         modifier = Modifier.padding(start = 6.dp),
                         tint = Color.Unspecified
@@ -143,7 +137,7 @@ fun KusRestThumbnail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = vectorResource(Res.drawable.ic_location),
+                    painterResource(Res.drawable.ic_location),
                     contentDescription = null,
                     modifier = Modifier.size(12.dp),
                     tint = KusTheme.colors.c_AAAAAA
