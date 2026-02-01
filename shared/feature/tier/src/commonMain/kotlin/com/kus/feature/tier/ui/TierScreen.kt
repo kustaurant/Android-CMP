@@ -2,7 +2,6 @@ package com.kus.feature.tier.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -40,11 +38,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kus.designsystem.component.KusChip
 import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.shared.domain.model.tier.TierRestaurant
@@ -79,9 +77,6 @@ fun TierScreen(
     val viewModel: TierViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val density = LocalDensity.current
-    var categoryRowHeightDp by remember { mutableStateOf(0.dp) }
-
     LaunchedEffect(Unit) { viewModel.fetchFirstRestaurants() }
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onTabSelected(tabs[pagerState.currentPage])
@@ -108,38 +103,37 @@ fun TierScreen(
         }
 
         Box(Modifier.fillMaxSize()) {
-
             HorizontalPager(
                 state = pagerState,
                 userScrollEnabled = false,
                 modifier = Modifier.fillMaxSize(),
             ) { page ->
                 when (tabs[page]) {
-                    TierTab.LIST -> TierListScreen(
-                        viewModel = viewModel,
-                        onNavigateTierCategory = onNavigateTierCategory,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = categoryRowHeightDp)
-                    )
+                    TierTab.LIST -> {
+                        TierListScreen(
+                            viewModel = viewModel,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 44.dp)
+                        )
+                    }
 
-                    TierTab.MAP -> TierMapScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        state = uiState.mapUiState,
-                        onMapTapped = { viewModel.onMapTapped() },
-                        onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
-                        onBottomSheetClick = { id -> },
-                    )
+                    TierTab.MAP -> {
+                        TierMapScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            state = uiState.mapUiState,
+                            onMapTapped = { viewModel.onMapTapped() },
+                            onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
+                            onBottomSheetClick = { id -> },
+                        )
+                    }
                 }
             }
 
             TierSelectedCategoryRow(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .onSizeChanged { size ->
-                        categoryRowHeightDp = with(density) { size.height.toDp() }
-                    },
+                    .fillMaxWidth(),
                 selectedCategories = uiState.selectedCategories.toList(),
                 onFilterClick = onFilterClick,
                 onChipClick = { viewModel.setShowBottomSheet(true) },
@@ -153,8 +147,6 @@ private fun TierCenterTabs(
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
 ) {
-    val indicatorColor = KusTheme.colors.c_43AB38
-
     TabRow(
         selectedTabIndex = selectedIndex,
         containerColor = Color.Transparent,
@@ -164,7 +156,7 @@ private fun TierCenterTabs(
                 modifier = Modifier
                     .tabIndicatorOffset(tabPositions[selectedIndex])
                     .height(2.dp),
-                color = indicatorColor
+                color = KusTheme.colors.c_43AB38
             )
         },
         divider = {},
@@ -199,7 +191,7 @@ fun TierSelectedCategoryRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 12.dp),
+            .padding(top = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Spacer(modifier = Modifier.width(16.dp))
@@ -217,17 +209,16 @@ fun TierSelectedCategoryRow(
             fadeWidth = fadeWidth,
             modifier = Modifier
                 .weight(1f)
-                .height(32.dp)
                 .padding(end = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(end = 0.dp),
         ) {
             items(selectedCategories, key = { it }) { label ->
-                TierFilterChipItem(
-                    text = label,
-                    selected = true,
+                KusChip(
+                    chipName = label,
+                    isSelected = true,
                     onClick = { onChipClick(label) },
-                    modifier = Modifier.height(32.dp),
+                    modifier = modifier.height(32.dp)
                 )
             }
         }
@@ -358,7 +349,6 @@ private fun TierAiToggleRow(
 fun TierListScreen(
     modifier: Modifier = Modifier,
     viewModel: TierViewModel,
-    onNavigateTierCategory: () -> Unit = {},
     onRestaurantClick: (TierRestaurant) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -480,34 +470,6 @@ private fun InfiniteScrollEffect(
                 onLoadMore()
             }
         }
-    }
-}
-
-@Composable
-private fun TierFilterChipItem(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val shape = RoundedCornerShape(18.dp)
-
-    val borderColor = if (selected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_AAAAAA
-    val bgColor = if (selected) KusTheme.colors.c_43AB38.copy(alpha = 0.12f) else Color.Transparent
-    val textColor = if (selected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_AAAAAA
-
-    Box(
-        modifier = modifier
-            .border(1.dp, borderColor, shape)
-            .background(bgColor, shape)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 7.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = KusTheme.typography.type12m.copy(color = textColor)
-        )
     }
 }
 

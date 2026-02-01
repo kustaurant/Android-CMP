@@ -5,6 +5,7 @@ import com.kus.shared.domain.model.tier.TierRestaurant
 import com.kus.shared.domain.model.tier.filter.Cuisine
 import com.kus.shared.domain.model.tier.filter.Location
 import com.kus.shared.domain.model.tier.filter.Situation
+import kotlinx.serialization.Serializable
 
 enum class TierPhase { Idle, Refreshing, Paging }
 
@@ -14,6 +15,7 @@ data class TierPageState(
     val isLastPage: Boolean = false,
 )
 
+@Serializable
 data class TierFilterState(
     val cuisines: Set<Cuisine> = setOf(Cuisine.ALL),
     val situations: Set<Situation> = setOf(Situation.ALL),

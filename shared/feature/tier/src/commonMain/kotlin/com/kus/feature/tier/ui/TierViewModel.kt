@@ -94,12 +94,14 @@ class TierViewModel(
             // val data = getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations)
             //val data = mockTierMapData()
             //_uiState.update { cur ->
-            //   cur.copy(
-             //       mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
-            //    )
+             //  cur.copy(
+            //        mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
+             //   )
             //}
         }
     }
+
+
 
     fun onTabSelected(tab: TierTab) {
         _uiState.update { it.copy(selectedTab = tab) }
