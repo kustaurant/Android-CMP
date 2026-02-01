@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 
@@ -32,7 +33,7 @@ import com.kus.designsystem.theme.KusTheme
 fun KusCategoryImageButton(
     modifier: Modifier = Modifier,
     categoryName: String,
-    categoryImage: ImageVector,
+    categoryImage: Painter,
     isSelected: Boolean = false,
     onClick: () -> Unit,
 ) {
@@ -41,7 +42,11 @@ fun KusCategoryImageButton(
         if (isSelected) KusTheme.colors.c_43AB38
         else KusTheme.colors.c_F5F5F5
 
-    Box {
+    Box(
+        modifier = modifier
+            .padding(2.dp)
+            .wrapContentSize(),
+    ) {
         if (isSelected) {
             Box(
                 modifier = Modifier
@@ -55,7 +60,7 @@ fun KusCategoryImageButton(
         }
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .border(width = 1.dp, color = borderColor, shape = roundedCornerShape)
                 .clip(roundedCornerShape)
                 .background(KusTheme.colors.c_F5F5F5)
@@ -64,7 +69,7 @@ fun KusCategoryImageButton(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                imageVector = categoryImage,
+                painter = categoryImage,
                 contentDescription = null,
                 modifier = Modifier.size(60.dp),
             )
