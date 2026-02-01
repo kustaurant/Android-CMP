@@ -16,25 +16,21 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusChip
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.tier.ui.TierFilterState
-import com.kus.shared.domain.model.tier.filter.Cuisine
-import com.kus.shared.domain.model.tier.filter.Location
-import com.kus.shared.domain.model.tier.filter.Situation
-import com.kus.shared.domain.tier.rule.TierFilterRule
+import com.kus.feature.tier.ui.config.TierCategoryUiConfig
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TierCategorySelectScreen(
@@ -43,86 +39,13 @@ fun TierCategorySelectScreen(
     onBack: () -> Unit = {},
     onApply: (TierFilterState) -> Unit = {},
 ) {
-    val cuisineAll = Cuisine.ALL
-    val cuisinePartnership = Cuisine.PARTNERSHIP
-    val cuisineItems = remember {
-        listOf(
-            Cuisine.ALL,
-            Cuisine.KOREAN,
-            Cuisine.JAPANESE,
-            Cuisine.CHINESE,
-            Cuisine.WESTERN,
-            Cuisine.ASIAN,
-            Cuisine.MEAT,
-            Cuisine.CHICKEN,
-            Cuisine.SEAFOOD,
-            Cuisine.BURGER_PIZZA,
-            Cuisine.BUNSIK,
-            Cuisine.PUB,
-            Cuisine.CAFE_DESSERT,
-            Cuisine.BAKERY,
-            Cuisine.SALAD,
-            Cuisine.PARTNERSHIP,
-        )
+    val viewModel: TierCategorySelectViewModel = koinViewModel()
+
+    LaunchedEffect(initial) {
+        viewModel.initIfNeeded(initial)
     }
 
-    val situationAll = Situation.ALL
-    val situationItems = remember {
-        listOf(
-            Situation.ALL,
-            Situation.SOLO,
-            Situation.TWO_TO_FOUR,
-            Situation.FIVE_OR_MORE,
-            Situation.COMPANY_DINNER,
-            Situation.DELIVERY,
-            Situation.LATE_NIGHT,
-            Situation.INVITE_FRIENDS,
-            Situation.DATE,
-            Situation.BLIND_DATE
-        )
-    }
-
-    val locationAll = Location.ALL
-    val locationItems = remember {
-        listOf(
-            Location.ALL,
-            Location.KONKUK_TO_JUNGMUN,
-            Location.JUNGMUN_TO_EODAE,
-            Location.BACK_GATE,
-            Location.FRONT_GATE,
-            Location.GUUI_STATION
-        )
-    }
-
-    val initialNormalized = remember(initial) { initial.normalized() }
-
-    var selectedCuisines by rememberSaveable {
-        mutableStateOf(initialNormalized.cuisines.ifEmpty { setOf(cuisineAll) })
-    }
-    var selectedSituations by rememberSaveable {
-        mutableStateOf(initialNormalized.situations.ifEmpty { setOf(situationAll) })
-    }
-    var selectedLocations by rememberSaveable {
-        mutableStateOf(initialNormalized.locations.ifEmpty { setOf(locationAll) })
-    }
-
-    val currentFilter = remember(selectedCuisines, selectedSituations, selectedLocations) {
-        TierFilterState(
-            cuisines = selectedCuisines,
-            situations = selectedSituations,
-            locations = selectedLocations,
-        ).normalized()
-    }
-
-    val hasChanges = remember(currentFilter, initialNormalized) {
-        currentFilter != initialNormalized
-    }
-
-    val isAllGroupsSelected = remember(selectedCuisines, selectedSituations, selectedLocations) {
-        selectedCuisines.isNotEmpty() && selectedSituations.isNotEmpty() && selectedLocations.isNotEmpty()
-    }
-
-    val applyEnabled = hasChanges && isAllGroupsSelected
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -153,49 +76,30 @@ fun TierCategorySelectScreen(
 
             CategorySection(
                 title = "음식",
-                items = cuisineItems,
-                isSelected = { it in selectedCuisines },
+                items = TierCategoryUiConfig.cuisineItems,
+                isSelected = { it in state.selectedCuisines },
                 labelOf = { it.toLabel() },
-                onToggle = { item ->
-                    selectedCuisines = TierFilterRule.toggleWithAllAndExclusive(
-                        current = selectedCuisines,
-                        clicked = item,
-                        all = cuisineAll,
-                        exclusive = setOf(cuisinePartnership),
-                    )
-                }
+                onToggle = { item -> viewModel.toggleCuisine(item) }
             )
 
             Spacer(Modifier.height(22.dp))
 
             CategorySection(
                 title = "상황",
-                items = situationItems,
-                isSelected = { it in selectedSituations },
+                items = TierCategoryUiConfig.situationItems,
+                isSelected = { it in state.selectedSituations },
                 labelOf = { it.toLabel() },
-                onToggle = { item ->
-                    selectedSituations = TierFilterRule.toggleWithAll(
-                        current = selectedSituations,
-                        clicked = item,
-                        all = situationAll
-                    )
-                }
+                onToggle = { item -> viewModel.toggleSituation(item) }
             )
 
             Spacer(Modifier.height(22.dp))
 
             CategorySection(
                 title = "위치",
-                items = locationItems,
-                isSelected = { it in selectedLocations },
+                items = TierCategoryUiConfig.locationItems,
+                isSelected = { it in state.selectedLocations },
                 labelOf = { it.toLabel() },
-                onToggle = { item ->
-                    selectedLocations = TierFilterRule.toggleWithAll(
-                        current = selectedLocations,
-                        clicked = item,
-                        all = locationAll
-                    )
-                }
+                onToggle = { item -> viewModel.toggleLocation(item) }
             )
 
             Spacer(Modifier.height(28.dp))
@@ -206,26 +110,27 @@ fun TierCategorySelectScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
-            val activeColor = KusTheme.colors.c_43AB38
-            val inactiveColor = KusTheme.colors.c_E0E0E0
-
-            val container = if (applyEnabled) activeColor else inactiveColor
-            val border = if (applyEnabled) activeColor else inactiveColor
+            val container =
+                if (state.applyEnabled)
+                    KusTheme.colors.c_43AB38
+                else
+                    KusTheme.colors.c_E0E0E0
 
             KusButton(
-                enabled = applyEnabled,
+                enabled = state.applyEnabled,
                 buttonName = "적용하기",
                 roundedCornerShape = RoundedCornerShape(50.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .height(32.dp),
                 containerColor = container,
-                borderColor = border,
-                onClick = { onApply(currentFilter) }
+                borderColor = container,
+                onClick = { onApply(viewModel.buildResult()) }
             )
         }
     }
 }
+
 
 @Composable
 private fun <T> CategorySection(
