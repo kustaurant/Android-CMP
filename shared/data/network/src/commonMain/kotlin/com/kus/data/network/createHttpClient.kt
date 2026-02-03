@@ -17,6 +17,8 @@ fun createHttpClient(
     isDebug: Boolean = true,
     additionalConfig: HttpClientConfig<*>.() -> Unit = {}
 ): HttpClient = HttpClient(engine) {
+    expectSuccess = true
+
     if (isDebug) {
         install(Logging) {
             logger = Logger.SIMPLE

@@ -1,7 +1,9 @@
 package com.kus.kustaurant.di
 
 import com.kus.data.firstLaunch.di.firstLaunchDataModule
+import com.kus.data.login.di.authDataModule
 import com.kus.domain.firstLaunch.di.firstLaunchDomainModule
+import com.kus.domain.login.di.authDomainModule
 import com.kus.feature.onboarding.di.onboardingModule
 import com.kus.feature.splash.di.splashModule
 import org.koin.core.context.startKoin
@@ -18,9 +20,11 @@ fun initKoin(
         modules(
             // domain
             firstLaunchDomainModule,
+            authDomainModule,
 
             // data (repository 등 공통)
             firstLaunchDataModule,
+            authDataModule,
 
             // feature
             splashModule,

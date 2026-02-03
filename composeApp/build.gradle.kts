@@ -34,6 +34,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.naver.maps)
+            implementation(libs.naver.oauth)
 
             implementation(libs.google.material)
             implementation(libs.androidx.core.splashscreen)
@@ -50,12 +51,12 @@ kotlin {
             implementation(libs.navigation.compose)
 
             implementation(project(":shared:core:designSystem"))
-            implementation(project(":shared:core:config"))
             implementation(project(":shared:core:logging"))
 
             implementation(project(":shared:data:network"))
             implementation(project(":shared:data:firstLaunch"))
             implementation(project(":shared:data:tier"))
+            implementation(project(":shared:data:auth"))
 
             implementation(project(":shared:feature:community"))
             implementation(project(":shared:feature:draw"))
@@ -68,6 +69,7 @@ kotlin {
 
             implementation(project(":shared:domain:firstLaunch"))
             implementation(project(":shared:domain:tier"))
+            implementation(project(":shared:domain:auth"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
