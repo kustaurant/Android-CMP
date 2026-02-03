@@ -34,6 +34,9 @@ uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.4.1"
 napier = "2.7.1"
 kamel = "0.9.4"
+naverMaps = "3.23.0"
+buildkonfig = "0.15.1"
+naverOauth = "5.11.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -88,6 +91,9 @@ napier-log = { group = "io.github.aakira", name = "napier", version.ref = "napie
 
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }
 
+naver-maps = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMaps" }
+naver-oauth = { group = "com.navercorp.nid", name = "oauth", version.ref = "naverOauth" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -100,6 +106,8 @@ androidLint = { id = "com.android.lint", version.ref = "agp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-test = { id = "com.android.test", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 
 [bundles]
 ktor = [
