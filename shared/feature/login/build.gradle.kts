@@ -52,6 +52,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:presentation"))
                 implementation(project(":shared:data:network"))
             }
         }
@@ -65,8 +66,8 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(compose.preview)
-                implementation(libs.androidx.activity.compose)
-
+                implementation(libs.androidx.activity.compose) 
+                implementation(libs.naver.oauth)
                 implementation(libs.koin.android)
             }
         }
