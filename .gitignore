@@ -19,7 +19,6 @@ captures
 node_modules/
 .xcconfig
 
-
 # CocoaPods
 Pods/
 **/Pods/
@@ -30,7 +29,10 @@ DerivedData/
 *.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
 *.xcuserstate
+*.car
+
 
 # Build
 build/
+
 
