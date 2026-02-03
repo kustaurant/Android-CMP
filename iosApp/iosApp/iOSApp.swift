@@ -1,4 +1,6 @@
 import SwiftUI
+import NMapsMap
+
 
 @main
 struct iOSApp: App {

@@ -19,6 +19,7 @@ fun NavGraphBuilder.tierNavGraph(
     initialProvider: () -> TierFilterState,
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
     popBackStackWithResult: (TierFilterState) -> Unit,
+    onBackButtonClick : () -> Unit = {}
 ) {
     composable<Tier> { entry ->
         val resultJson by entry.savedStateHandle
@@ -39,7 +40,7 @@ fun NavGraphBuilder.tierNavGraph(
     composable<TierCategorySelect> {
         TierCategorySelectScreen(
             initial = initialProvider(),
-            onBack = { /* pop */ },
+            onBack = { onBackButtonClick() },
             onApply = { result -> popBackStackWithResult(result) }
         )
     }

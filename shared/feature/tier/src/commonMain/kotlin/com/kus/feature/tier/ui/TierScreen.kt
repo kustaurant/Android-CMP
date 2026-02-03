@@ -45,6 +45,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusChip
 import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.util.noRippleClickable
+import com.kus.feature.tier.ui.map.TierMapScreen
+import com.kus.feature.tier.ui.map.rememberMapInstance
+import com.kus.feature.tier.ui.popup.TierInfoPopup
 import com.kus.shared.domain.model.tier.TierRestaurant
 import kotlinx.coroutines.launch
 import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
@@ -69,13 +72,14 @@ fun TierScreen(
     onSearchClick: () -> Unit = {},
     onAlarmClick: () -> Unit = {},
     onFilterClick: () -> Unit = {},
-    onNavigateTierCategory: () -> Unit = {},
+    onNavigateRestaurantDetail: () -> Unit = {},
 ) {
     val tabs = remember { TierTab.entries }
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
     val viewModel: TierViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val sharedMapInstance = rememberMapInstance()
 
     LaunchedEffect(Unit) { viewModel.fetchFirstRestaurants() }
     LaunchedEffect(pagerState.currentPage) {
@@ -122,9 +126,13 @@ fun TierScreen(
                         TierMapScreen(
                             modifier = Modifier.fillMaxSize(),
                             state = uiState.mapUiState,
+                            mapInstance = sharedMapInstance,
                             onMapTapped = { viewModel.onMapTapped() },
                             onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
                             onBottomSheetClick = { id -> },
+                            onCameraIdle = { camera ->
+                                viewModel.onCameraIdle(camera)
+                            }
                         )
                     }
                 }
@@ -473,11 +481,4 @@ private fun InfiniteScrollEffect(
     }
 }
 
-@Composable
-expect fun TierMapScreen(
-    modifier: Modifier = Modifier,
-    state: TierMapUiState,
-    onMapTapped: () -> Unit,
-    onRestaurantSelected: (restaurantId: Long) -> Unit,
-    onBottomSheetClick: (restaurantId: Long) -> Unit,
-)
+

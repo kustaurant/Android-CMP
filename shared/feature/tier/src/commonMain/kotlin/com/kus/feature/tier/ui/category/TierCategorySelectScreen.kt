@@ -18,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusButton
@@ -32,6 +34,7 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TierCategorySelectScreen(
     modifier: Modifier = Modifier,
@@ -39,6 +42,8 @@ fun TierCategorySelectScreen(
     onBack: () -> Unit = {},
     onApply: (TierFilterState) -> Unit = {},
 ) {
+    BackHandler { onBack() }
+
     val viewModel: TierCategorySelectViewModel = koinViewModel()
 
     LaunchedEffect(initial) {

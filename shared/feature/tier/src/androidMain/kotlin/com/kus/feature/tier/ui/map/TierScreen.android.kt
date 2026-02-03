@@ -1,28 +1,34 @@
-package com.kus.feature.tier.ui
+package com.kus.feature.tier.ui.map
 
-import android.os.Bundle
+import android.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.kus.core.designsystem.R
 import com.kus.designsystem.theme.KusTheme
+import com.kus.feature.tier.ui.UiState
 import com.kus.shared.domain.model.tier.TierMapData
 import com.kus.shared.domain.model.tier.TierRestaurant
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
@@ -33,23 +39,38 @@ import com.naver.maps.map.overlay.PolylineOverlay
 actual fun TierMapScreen(
     modifier: Modifier,
     state: TierMapUiState,
+    mapInstance: Any,
     onMapTapped: () -> Unit,
     onRestaurantSelected: (Long) -> Unit,
     onBottomSheetClick: (Long) -> Unit,
+    onCameraIdle: (MapCameraState) -> Unit,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val density = LocalDensity.current
 
-    val mapView = remember { MapView(context).apply { onCreate(Bundle()) } }
+    val mapView = (mapInstance as MapHolder).mapView
     var naverMap by remember { mutableStateOf<NaverMap?>(null) }
-    val outlineColorInt = KusTheme.colors.c_43AB38.toArgb()
 
+    var isMapLoaded by remember { mutableStateOf(mapInstance.isLoaded) }
+    var isMapReadyToShow by remember { mutableStateOf(false) }
+
+    val outlineColorInt = KusTheme.colors.c_43AB38.toArgb()
     val polygonOverlays = remember { mutableStateListOf<PolygonOverlay>() }
     val polylineOverlays = remember { mutableStateListOf<PolylineOverlay>() }
     val restaurantMarkers = remember { mutableStateListOf<Marker>() }
 
-    var currentZoom by remember { mutableIntStateOf(11) }
-    var lastBounds by remember { mutableStateOf<List<Double>?>(null) }
+    var currentZoom by remember {
+        mutableIntStateOf(mapInstance.lastCameraPosition?.zoom?.toInt() ?: 11)
+    }
+
+    // ✅ 리스너가 최신 state/람다를 보도록 보장
+    val latestState by rememberUpdatedState(state)
+    val latestOnRestaurantSelected by rememberUpdatedState(onRestaurantSelected)
+    val latestOnMapTapped by rememberUpdatedState(onMapTapped)
+    val mapAlpha by animateFloatAsState(if (isMapReadyToShow) 1f else 0f)
+
+
 
     DisposableEffect(lifecycleOwner, mapView) {
         val obs = LifecycleEventObserver { _, event ->
@@ -71,50 +92,101 @@ actual fun TierMapScreen(
             naverMap = map
             map.uiSettings.isZoomControlEnabled = false
 
-            map.setOnMapClickListener { _, _ ->
-                onMapTapped()
+            map.setOnMapClickListener { _, _ -> latestOnMapTapped() }
+
+            if (mapInstance.isLoaded) {
+                isMapLoaded = true
             }
 
-            map.addOnCameraChangeListener { _, _ ->
-                val newZoom = map.cameraPosition.zoom.toInt()
-                if (newZoom != currentZoom) {
-                    currentZoom = newZoom
-                    val data = (state.map as? UiState.Success)?.data
-                    if (data != null) {
-                        updateMap(
-                            map = map,
-                            mapData = data,
-                            currentZoom = currentZoom,
-                            polygonOverlays = polygonOverlays,
-                            polylineOverlays = polylineOverlays,
-                            restaurantMarkers = restaurantMarkers,
-                            onRestaurantSelected = onRestaurantSelected,
-                            outlineColor = outlineColorInt,
-                        )
-                    }
-                }
+            map.addOnLoadListener {
+                isMapLoaded = true
+                mapInstance.isLoaded = true
+            }
+
+            // ✅ 카메라 Idle일 때만 줌 기반 마커/오버레이 갱신
+            map.addOnCameraIdleListener {
+                val pos = map.cameraPosition
+                currentZoom = pos.zoom.toInt()
+
+                mapInstance.lastCameraPosition = pos
+
+                onCameraIdle(
+                    MapCameraState(
+                        latitude = pos.target.latitude,
+                        longitude = pos.target.longitude,
+                        zoom = pos.zoom,
+                        tilt = pos.tilt,
+                        bearing = pos.bearing
+                    )
+                )
+
+                val data = (latestState.map as? UiState.Success)?.data ?: return@addOnCameraIdleListener
+                updateMap(
+                    map = map,
+                    mapData = data,
+                    currentZoom = currentZoom,
+                    polygonOverlays = mapInstance.polygonOverlays,
+                    polylineOverlays = mapInstance.polylineOverlays,
+                    restaurantMarkers = mapInstance.restaurantMarkers,
+                    onRestaurantSelected = latestOnRestaurantSelected,
+                    outlineColor = outlineColorInt,
+                )
             }
         }
     }
 
-    LaunchedEffect(naverMap, state.map) {
+    // ✅ "map 로드 완료" + "데이터 준비" 된 다음에만 카메라 이동
+    LaunchedEffect(naverMap, isMapLoaded, state.map) {
         val map = naverMap ?: return@LaunchedEffect
+        if (!isMapLoaded) return@LaunchedEffect
         val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
 
-        updateMap(
-            map = map,
-            mapData = data,
-            currentZoom = currentZoom,
-            polygonOverlays = polygonOverlays,
-            polylineOverlays = polylineOverlays,
-            restaurantMarkers = restaurantMarkers,
-            onRestaurantSelected = onRestaurantSelected,
-            outlineColor = outlineColorInt,
-        )
+        map.minZoom = data.minZoom.toDouble()
 
-        if (lastBounds != data.visibleBounds) {
-            lastBounds = data.visibleBounds
-            moveCameraToVisibleBounds(map, data.visibleBounds)
+        val isBoundsChanged = mapInstance.lastBounds != data.visibleBounds
+
+        if (data.visibleBounds.size < 4) {
+            isMapReadyToShow = true
+            return@LaunchedEffect
+        }
+
+        // bounds 변경시에만 카메라 이동
+        if (isBoundsChanged) {
+            // 2. 새로운 영역으로 이동하기 전에 holder 값 업데이트
+            mapInstance.lastBounds = data.visibleBounds
+            isMapReadyToShow = false
+
+            mapView.post {
+                moveCameraToBoundsAndClampZoomOnce(
+                    map = map,
+                    visibleBounds = data.visibleBounds,
+                    paddingPx = with(density) { 16.dp.roundToPx() },
+                    minZoom = data.minZoom.toDouble()
+                )
+
+                // 2) 이동 완료(Idle) 1회 감지 후 표시
+                var done = false
+                val oneShotIdle = object : NaverMap.OnCameraIdleListener {
+                    override fun onCameraIdle() {
+                        if (done) return
+                        done = true
+                        map.removeOnCameraIdleListener(this)
+                        isMapReadyToShow = true
+                    }
+                }
+                map.addOnCameraIdleListener(oneShotIdle)
+
+                // 무한로딩 방지: idle이 안 오면 강제 표시
+                mapView.postDelayed({
+                    if (!done) {
+                        map.removeOnCameraIdleListener(oneShotIdle)
+                        isMapReadyToShow = true
+                    }
+                }, 700)
+            }
+        } else if (!isMapReadyToShow) {
+            // bounds 동일이면 바로 표시
+            isMapReadyToShow = true
         }
     }
 
@@ -131,24 +203,27 @@ actual fun TierMapScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(mapAlpha),
             factory = { mapView },
         )
+
+        if (!isMapReadyToShow) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
 
         val visible = state.isShowBottomSheet && selectedRestaurant != null
 
         AnimatedVisibility(
             visible = visible,
             modifier = Modifier.align(Alignment.BottomCenter),
-            enter = slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight }
-            ) + fadeIn(),
-            exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> fullHeight }
-            ) + fadeOut()
+            enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
         ) {
             val r = selectedRestaurant ?: return@AnimatedVisibility
-
             TierRestaurantBottomSheetCard(
                 restaurant = r,
                 onClick = { onBottomSheetClick(r.restaurantId) }
@@ -156,6 +231,31 @@ actual fun TierMapScreen(
         }
     }
 }
+
+private fun moveCameraToBoundsAndClampZoomOnce(
+    map: NaverMap,
+    visibleBounds: List<Double>,
+    paddingPx: Int,
+    minZoom: Double,
+) {
+    if (visibleBounds.size < 4) return
+
+    val bounds = LatLngBounds(
+        LatLng(visibleBounds[2], visibleBounds[0]),
+        LatLng(visibleBounds[3], visibleBounds[1])
+    )
+
+    // 1) bounds 맞추기
+    map.moveCamera(CameraUpdate.fitBounds(bounds, paddingPx))
+
+    // 2) 결과 줌이 minZoom보다 작으면 즉시 보정 (Idle 기다리지 않고 바로)
+    val z = map.cameraPosition.zoom
+    if (z < minZoom) {
+        map.moveCamera(CameraUpdate.scrollAndZoomTo(bounds.center, minZoom))
+    }
+}
+
+
 
 private fun updateMap(
     map: NaverMap,
@@ -277,22 +377,22 @@ private fun createRestaurantMarker(
 
 private fun getMarkerIcon(restaurant: TierRestaurant): OverlayImage {
     return if (restaurant.isFavorite) {
-        OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_saved)
+        OverlayImage.fromResource(R.drawable.ic_saved)
     } else {
         if(restaurant.isTempTier) {
             when (restaurant.mainTier) {
-                1 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_temp_tier_1)
-                2 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_temp_tier_2)
-                3 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_temp_tier_3)
-                4 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_temp_tier_4)
+                1 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_1)
+                2 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_2)
+                3 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_3)
+                4 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_4)
                 else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_map_marker)
             }
         } else {
             when (restaurant.mainTier) {
-                1 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_tier_1)
-                2 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_tier_2)
-                3 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_tier_3)
-                4 -> OverlayImage.fromResource(com.kus.core.designsystem.R.drawable.ic_tier_4)
+                1 -> OverlayImage.fromResource(R.drawable.ic_tier_1)
+                2 -> OverlayImage.fromResource(R.drawable.ic_tier_2)
+                3 -> OverlayImage.fromResource(R.drawable.ic_tier_3)
+                4 -> OverlayImage.fromResource(R.drawable.ic_tier_4)
                 else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_map_marker)
             }
         }
@@ -309,6 +409,6 @@ private fun moveCameraToVisibleBounds(map: NaverMap, visibleBounds: List<Double>
 }
 
 object PolygonColors {
-    val POLYGON_SELECTED = android.graphics.Color.argb(59, 67, 171, 56)
-    val POLYGON_UNSELECTED = android.graphics.Color.argb(31, 67, 171, 56)
+    val POLYGON_SELECTED = Color.argb(59, 67, 171, 56)
+    val POLYGON_UNSELECTED = Color.argb(31, 67, 171, 56)
 }

@@ -1,6 +1,6 @@
 package com.kus.feature.tier.ui
 
-import com.kus.shared.domain.model.tier.TierMapData
+import com.kus.feature.tier.ui.map.TierMapUiState
 import com.kus.shared.domain.model.tier.TierRestaurant
 import com.kus.shared.domain.model.tier.filter.Cuisine
 import com.kus.shared.domain.model.tier.filter.Location
@@ -75,12 +75,4 @@ data class TierUiState(
     val categoryChangeMap: Boolean = true,
 
     val mapUiState: TierMapUiState = TierMapUiState(),
-)
-
-data class TierMapUiState(
-    val map: UiState<TierMapData> = UiState.Loading,
-
-    // 바텀시트 제어
-    val isShowBottomSheet: Boolean = false,
-    val selectedRestaurantId: Long? = null,
 )

@@ -2,6 +2,7 @@ package com.kus.feature.tier.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kus.feature.tier.ui.map.MapCameraState
 import com.kus.shared.domain.model.tier.TierRestaurant
 import com.kus.shared.domain.model.tier.filter.Cuisine
 import com.kus.shared.domain.model.tier.filter.Location
@@ -94,10 +95,16 @@ class TierViewModel(
             // val data = getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations)
             //val data = mockTierMapData()
             //_uiState.update { cur ->
-             //  cur.copy(
-            //        mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
+             //   cur.copy(
+             //       mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
              //   )
             //}
+        }
+    }
+
+    fun onCameraIdle(camera: MapCameraState) {
+        _uiState.update { cur ->
+            cur.copy(mapUiState = cur.mapUiState.copy(cameraState = camera))
         }
     }
 

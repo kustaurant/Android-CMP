@@ -1,4 +1,4 @@
-package com.kus.feature.tier.ui
+package com.kus.feature.tier.ui.map
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
