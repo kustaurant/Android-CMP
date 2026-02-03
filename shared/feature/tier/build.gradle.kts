@@ -13,12 +13,6 @@ kotlin {
 
     val xcfName = "shared:feature:tierKit"
 
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
-
     iosArm64 {
         binaries.framework {
             baseName = xcfName
@@ -38,9 +32,13 @@ kotlin {
         summary = "tierKit"
         homepage = "https://your.domain"
         ios.deploymentTarget = "12.0"
-
+        podfile = rootProject.file("iosApp/Podfile")
         pod("NMapsMap") {
-            version = "3.23.0"
+            version = "3.19.0"
+        }
+
+        pod("NMapsGeometry") {
+            version = "1.0.2"
         }
     }
 
@@ -63,8 +61,14 @@ kotlin {
                 implementation(libs.lifecycle.viewmodel)
 
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kamel.image.default)
+
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.compose.ui.backhandler)
 
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:logging"))
+                implementation(project(":shared:core:serialization"))
 
                 implementation(project(":shared:domain:model"))
                 implementation(project(":shared:domain:tier"))
@@ -90,6 +94,7 @@ kotlin {
 
         iosMain {
             dependencies {
+                implementation(project(":shared:core:designSystem"))
             }
         }
     }
