@@ -50,6 +50,7 @@ include(":shared:feature:community")
 include(":shared:feature:draw")
 include(":shared:feature:tier")
 include(":shared:feature:my")
+include(":shared:feature:detail")
 
 include(":shared:domain:firstLaunch")
 include(":shared:core:logging")
