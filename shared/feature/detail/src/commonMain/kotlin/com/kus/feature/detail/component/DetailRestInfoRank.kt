@@ -47,7 +47,7 @@ fun DetailRestInfoRank(
         ) {
             Text(
                 text = mainTier.toString(),
-                style = KusTheme.typography.type17sb.copy(
+                style = KusTheme.typography.type26sb.copy(
                     color = KusTheme.colors.c_FFFFFF
                 )
             )
