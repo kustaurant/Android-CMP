@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import kustaurant.shared.core.designsystem.generated.resources.Res
@@ -24,7 +24,7 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_dislike
 import kustaurant.shared.core.designsystem.generated.resources.ic_like
 //import kustaurant.core.designsystem.generated.resources.ic_dislike
 //import kustaurant.core.designsystem.generated.resources.ic_like
-import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -65,7 +65,7 @@ fun KusReactionButton(
     ) {
         // 좋아요 버튼
         ReactionButtonItem(
-            iconRes = vectorResource(Res.drawable.ic_like),
+            iconRes = painterResource(Res.drawable.ic_like),
             text = likeText,
             selected = isLikeSelected,
             enabled = enabled,
@@ -75,7 +75,7 @@ fun KusReactionButton(
 
         // 싫어요 버튼
         ReactionButtonItem(
-            iconRes = vectorResource(Res.drawable.ic_dislike),
+            iconRes = painterResource(Res.drawable.ic_dislike),
             text = dislikeText,
             selected = isDislikeSelected,
             enabled = enabled,
@@ -87,7 +87,7 @@ fun KusReactionButton(
 
 @Composable
 private fun ReactionButtonItem(
-    iconRes: ImageVector,
+    iconRes: Painter,
     text: String,
     selected: Boolean,
     enabled: Boolean,
@@ -118,7 +118,7 @@ private fun ReactionButtonItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = iconRes,
+            painter = iconRes,
             contentDescription = contentDescription,
             modifier = Modifier.size(16.dp),
             tint = iconColor
