@@ -31,9 +31,10 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun DetailReviewItem(
     review: DetailReview,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 14.dp)
     ) {
         ReviewContent(
