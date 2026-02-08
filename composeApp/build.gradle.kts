@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -48,10 +49,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(project(":shared:core:designSystem"))
             implementation(project(":shared:core:config"))
             implementation(project(":shared:core:logging"))
+            implementation(project(":shared:core:serialization"))
 
             implementation(project(":shared:data:network"))
             implementation(project(":shared:data:firstLaunch"))

@@ -42,7 +42,7 @@ kotlin {
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
-                implementation(libs.kamel.image)
+                implementation(libs.kamel.image.default)
 
                 resources.srcDirs("src/commonMain/composeResources")
             }

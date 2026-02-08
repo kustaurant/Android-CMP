@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.community.navigation.Community
 import com.kus.feature.draw.navigation.Draw
 import com.kus.feature.home.navigation.Home
@@ -25,7 +26,6 @@ import com.kus.feature.tier.navigation.Tier
 import com.kus.kustaurant.navigation.BottomTab
 import com.kus.kustaurant.navigation.KusBottomBar
 import com.kus.kustaurant.navigation.KusNavHost
-import com.kus.kustaurant.theme.KusTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -78,12 +78,7 @@ fun SetNavigation() {
         },
         modifier = Modifier.systemBarsPadding(),
     ) { padding ->
-        KusNavHost(
-            navController = navController,
-            durationMillis = durationMillis,
-            onShowMessage = onShowMessage,
-            modifier = Modifier.padding(padding),
-        )
+        KusNavHost(navController, durationMillis, onShowMessage, Modifier.padding(padding))
     }
 }
 

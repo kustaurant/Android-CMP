@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.kus.designsystem.color.KusColor.Cement2
-import com.kus.designsystem.color.KusColor.Cement4
-import com.kus.designsystem.color.KusColor.Signature1
+import com.kus.designsystem.theme.C_43AB38
+import com.kus.designsystem.theme.C_AAAAAA
+import com.kus.designsystem.theme.C_EAEAEA
 import com.kus.designsystem.util.noRippleClickable
 
 @Composable
@@ -30,11 +30,11 @@ fun BottomBar(
     selectedKey: String,
     onItemClick: (key: String) -> Unit,
     modifier: Modifier = Modifier,
-    selectedTint: Color = Signature1,
-    labelUnselected: Color = Cement4,
+    selectedTint: Color = C_43AB38,
+    labelUnselected: Color = C_AAAAAA,
 ) {
     Column(modifier) {
-        Surface(color = Cement2) {
+        Surface(color = C_EAEAEA) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
