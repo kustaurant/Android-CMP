@@ -11,14 +11,14 @@ data object Home
 fun NavGraphBuilder.homeNavGraph(
     navigateToSearch: () -> Unit,
     navigateToAlert: () -> Unit,
-    navigateToTier: () -> Unit,
+    navigateToTier: (String) -> Unit,
     navigateToDetail: (Long) -> Unit,
 ) {
     composable<Home> {
         HomeRoute(
             onSearchNavigate = navigateToSearch,
             onAlertNavigate = navigateToAlert,
-            onTierNavigate = { navigateToTier() },
+            onTierNavigate = navigateToTier,
             onRestaurantDetailNavigate = navigateToDetail,
         )
     }

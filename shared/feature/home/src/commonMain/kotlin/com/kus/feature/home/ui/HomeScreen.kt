@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import com.kus.designsystem.component.KusCategoryImageButton
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.home.component.HomeBannerPager
+import com.kus.feature.home.component.HomeRestaurants
 import com.kus.feature.home.component.KusSearchBoxWithNoAction
 import com.kus.feature.home.model.Category
 import kustaurant.shared.feature.home.generated.resources.Res
@@ -35,7 +37,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun HomeRoute(
     onSearchNavigate: () -> Unit,
     onAlertNavigate: () -> Unit,
-    onTierNavigate: (Category) -> Unit,
+    onTierNavigate: (String) -> Unit,
     onRestaurantDetailNavigate: (Long) -> Unit,
     viewModel: HomeViewModel = viewModel(),
 ) {
@@ -52,7 +54,7 @@ fun HomeRoute(
 private fun HomeScreen(
     onSearchBoxClick: () -> Unit,
     onAlertButtonClick: () -> Unit,
-    onCategoryClick: (Category) -> Unit,
+    onCategoryClick: (String) -> Unit,
     onRestaurantClick: (Long) -> Unit,
 ) {
     val paddedModifier = Modifier.padding(horizontal = 20.dp)
@@ -61,23 +63,27 @@ private fun HomeScreen(
         modifier = Modifier.fillMaxSize().background(KusTheme.colors.c_FFFFFF).padding(top = 16.dp),
     ) {
         stickyHeader() {
-            HomeTitleSection(
-                onLogoClick = {},
-                onAlertButtonClick = onAlertButtonClick,
-                modifier = paddedModifier,
-            )
+            Column(
+                modifier = Modifier
+                    .background(KusTheme.colors.c_FFFFFF)
+                    .then(paddedModifier),
+            ) {
+                HomeTitleSection(
+                    onLogoClick = {},
+                    onAlertButtonClick = onAlertButtonClick,
+                )
 
-            Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(8.dp))
 
-            KusSearchBoxWithNoAction(
-                onSearchBoxClick = onSearchBoxClick,
-                modifier = paddedModifier,
-            )
+                KusSearchBoxWithNoAction(
+                    onSearchBoxClick = onSearchBoxClick,
+                )
+
+                Spacer(Modifier.height(18.dp))
+            }
         }
 
         item {
-            Spacer(Modifier.height(18.dp))
-
             HomeBannerPager(
                 imageUrls = listOf("", "", ""),
             )
@@ -103,11 +109,36 @@ private fun HomeScreen(
                             categoryName = category.title,
                             categoryImage = painterResource(category.image),
                             modifier = Modifier.weight(1f),
-                            onClick = {},
+                            onClick = { onCategoryClick(category.id) },
                         )
                     }
                 }
             }
+        }
+
+        item {
+
+            Spacer(Modifier.height(40.dp))
+
+            HomeRestaurants(
+                title = "인증된 건대 TOP 맛집",
+                subtitle = "가장 높은 평가를 받은 맛집을 알려드립니다.",
+                restaurants = listOf(1,2,3,4,5),
+                onRestaurantClick = onRestaurantClick,
+            )
+
+            Spacer(Modifier.height(40.dp))
+        }
+
+        item {
+            HomeRestaurants(
+                title = "나를 위한 건대 맛집",
+                subtitle = "즐겨찾기를 바탕으로 다른 맛집을 추천해 드립니다",
+                restaurants = listOf(1,2,3,4,5),
+                onRestaurantClick = onRestaurantClick,
+            )
+
+            Spacer(Modifier.height(40.dp))
         }
     }
 }

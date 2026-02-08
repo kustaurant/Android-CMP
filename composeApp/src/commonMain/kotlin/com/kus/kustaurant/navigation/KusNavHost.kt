@@ -101,8 +101,10 @@ fun KusNavHost(
         )
 
         homeNavGraph(
+            navigateToSearch = { },
+            navigateToAlert = { },
             navigateToTier = { /* TODO */ },
-            navigateToEvaluate = { /* TODO */ }
+            navigateToDetail = { },
         )
 
         drawNavGraph(onShowMessage = onShowMessage)
