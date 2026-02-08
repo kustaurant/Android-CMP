@@ -8,7 +8,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 /**
  * 쿠스토랑 top bar
@@ -27,9 +29,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 @Composable
 fun KusTopBar(
     modifier: Modifier = Modifier,
-    leftIcon: ImageVector? = null,
-    rightFirstIcon: ImageVector? = null,
-    rightSecondIcon: ImageVector? = null,
+    leftIcon: DrawableResource? = null,
+    rightFirstIcon: DrawableResource? = null,
+    rightSecondIcon: DrawableResource? = null,
+    iconTint: Color? = null,
     onLeftClicked: () -> Unit = {},
     onRightFirstClicked: () -> Unit = {},
     onRightSecondClicked: () -> Unit = {},
@@ -38,6 +41,8 @@ fun KusTopBar(
     rightSecondIconModifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {
+    val iconTintColor: Color = iconTint ?: Color.Unspecified
+
     Box(
         modifier = modifier
     ) {
@@ -59,8 +64,9 @@ fun KusTopBar(
                     .then(leftIconModifier)
             ) {
                 Icon(
-                    imageVector = leftIcon,
-                    contentDescription = null
+                    painter = painterResource(leftIcon),
+                    contentDescription = null,
+                    tint = iconTintColor
                 )
             }
         }
@@ -76,8 +82,9 @@ fun KusTopBar(
                     modifier = rightFirstIconModifier
                 ) {
                     Icon(
-                        imageVector = rightFirstIcon,
-                        contentDescription = null
+                        painter = painterResource(rightFirstIcon),
+                        contentDescription = null,
+                        tint = iconTintColor
                     )
                 }
             }
@@ -87,8 +94,9 @@ fun KusTopBar(
                     modifier = rightSecondIconModifier
                 ) {
                     Icon(
-                        imageVector = rightSecondIcon,
-                        contentDescription = null
+                        painter = painterResource(rightSecondIcon),
+                        contentDescription = null,
+                        tint = iconTintColor
                     )
                 }
             }

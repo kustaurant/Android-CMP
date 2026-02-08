@@ -60,7 +60,9 @@ fun KusButton(
     isShadowVisible: Boolean = false,
     onClick: () -> Unit,
 ) {
-    Box {
+    Box(
+        modifier = modifier
+    ) {
         if (isShadowVisible) {
             Box(
                 modifier = Modifier
@@ -76,7 +78,7 @@ fun KusButton(
         Button(
             onClick = onClick,
             enabled = enabled,
-            modifier = Modifier,
+            modifier = Modifier.fillMaxWidth(),
             shape = roundedCornerShape,
             colors = ButtonDefaults.buttonColors(
                 containerColor = containerColor,
@@ -88,7 +90,7 @@ fun KusButton(
             contentPadding = contentPadding,
         ) {
             Row(
-                modifier = modifier,
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
