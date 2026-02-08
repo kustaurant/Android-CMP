@@ -62,6 +62,7 @@ kotlin {
             implementation(project(":shared:feature:splash"))
             implementation(project(":shared:feature:tier"))
             implementation(project(":shared:feature:my"))
+            implementation(project(":shared:feature:search"))
 
             implementation(project(":shared:domain:firstLaunch"))
         }
