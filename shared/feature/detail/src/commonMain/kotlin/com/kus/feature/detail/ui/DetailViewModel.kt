@@ -181,7 +181,7 @@ class DetailViewModel : ViewModel() {
                 restaurantAddress = "서울시 광진구 어딘가 222-22, 304호",
                 isOpen = true,
                 businessHours = "오늘 10:00~20:00",
-                naverMapUrl = "map.naver.com/2222",
+                naverMapUrl = "https://map.naver.com/p/entry/place/12785886?c=20.00,0,0,0,dh",
                 situationList = arrayListOf("혼밥", "배달"),
                 partnershipInfo = "학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!!",
                 evaluationCount = 100,

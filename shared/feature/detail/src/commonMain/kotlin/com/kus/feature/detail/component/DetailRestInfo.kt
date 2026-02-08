@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.feature.detail.generated.resources.Res
@@ -34,6 +36,9 @@ fun DetailRestInfo(
     naverMapUrl: String = "",
     partnershipInfo: String = "",
 ) {
+    val uriHandler = LocalUriHandler.current
+    val hasNaverMapUrl = naverMapUrl.isNotBlank()
+
     Column(
         modifier = modifier.fillMaxWidth()
             .background(
@@ -123,6 +128,11 @@ fun DetailRestInfo(
             ),
             textDecoration = TextDecoration.Underline,
             modifier = Modifier.padding(top = 17.dp, bottom = 16.dp)
+                .noRippleClickable {
+                    if (hasNaverMapUrl) {
+                        uriHandler.openUri(naverMapUrl)
+                    }
+                }
         )
     }
 }
