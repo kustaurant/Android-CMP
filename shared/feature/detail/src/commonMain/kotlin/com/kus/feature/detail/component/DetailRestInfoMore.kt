@@ -28,9 +28,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import kustaurant.shared.feature.detail.generated.resources.Res
-import kustaurant.shared.feature.detail.generated.resources.img_rest_example
+import kustaurant.shared.core.designsystem.generated.resources.ic_location
+import kustaurant.shared.feature.detail.generated.resources.ic_file_check
 import org.jetbrains.compose.resources.painterResource
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
+import kustaurant.shared.feature.detail.generated.resources.Res as DetailRes
 
 @Composable
 fun DetailRestInfoMore(
@@ -41,14 +43,15 @@ fun DetailRestInfoMore(
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     val textMeasurer = rememberTextMeasurer()
-    val contentStyle = when (title) {
-        "제휴정보" -> KusTheme.typography.type14m.copy(
-            color = KusTheme.colors.c_AAAAAA
-        )
-        else -> KusTheme.typography.type14m.copy(
-            color = KusTheme.colors.c_666666
-        )
+    val isPartnerInfo = title == "제휴정보"
+    val iconRes = if (isPartnerInfo) {
+        DetailRes.drawable.ic_file_check
+    } else {
+        CoreRes.drawable.ic_location
     }
+    val titleStyle =
+        if (isPartnerInfo) KusTheme.typography.type14m.copy(color = KusTheme.colors.c_AAAAAA)
+        else KusTheme.typography.type14m.copy(color = KusTheme.colors.c_666666)
     val seeMoreStyle = KusTheme.typography.type14b.copy(
         color = KusTheme.colors.c_AAAAAA,
         textDecoration = TextDecoration.Underline
@@ -61,8 +64,8 @@ fun DetailRestInfoMore(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(Res.drawable.img_rest_example),
-            modifier = Modifier.size(20.dp),
+            painter = painterResource(iconRes),
+            modifier = Modifier.size(16.dp),
             contentDescription = null
         )
 
@@ -89,7 +92,7 @@ fun DetailRestInfoMore(
 
                     val baseResult = textMeasurer.measure(
                         text = AnnotatedString(content),
-                        style = contentStyle,
+                        style = titleStyle,
                         constraints = Constraints(maxWidth = maxWidthPx),
                         maxLines = 2
                     )
@@ -122,7 +125,7 @@ fun DetailRestInfoMore(
                         }
                         val result = textMeasurer.measure(
                             text = annotated,
-                            style = contentStyle,
+                            style = titleStyle,
                             constraints = Constraints(maxWidth = maxWidthPx),
                             maxLines = 2
                         )
@@ -154,7 +157,7 @@ fun DetailRestInfoMore(
                     ClickableText(
                         text = displayText,
                         modifier = Modifier.padding(top = 2.dp),
-                        style = contentStyle,
+                        style = titleStyle,
                     ) { offset ->
                         val annotations = displayText.getStringAnnotations("more", offset, offset)
                         if (annotations.isNotEmpty()) {
@@ -164,7 +167,7 @@ fun DetailRestInfoMore(
                 } else {
                     Text(
                         text = content,
-                        style = contentStyle,
+                        style = titleStyle,
                         maxLines = if (enableSeeMore && !isExpanded) 2 else Int.MAX_VALUE,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(top = 2.dp),
