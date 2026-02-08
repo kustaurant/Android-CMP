@@ -175,7 +175,7 @@ class DetailViewModel : ViewModel() {
                 mainTier = 1,
                 isTempTier = false,
                 restaurantCuisine = "한식",
-                restaurantCuisineImgUrl = "https://kustaurant.com/img/home/%EA%B3%A0%EA%B8%B0.png",
+                restaurantCuisineImgUrl = "https://kustaurant.s3.ap-northeast-2.amazonaws.com/common/cuisine-icon/카페디저트.svg",
                 restaurantPosition = "건입~중문",
                 restaurantName = "제주곤이칼국수 건대점",
                 restaurantAddress = "서울시 광진구 어딘가 222-22, 304호",
@@ -186,9 +186,9 @@ class DetailViewModel : ViewModel() {
                 partnershipInfo = "학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!!",
                 evaluationCount = 100,
                 restaurantScore = 4.4,
-                isEvaluated = false,
-                isFavorite = false,
-                favoriteCount = 0,
+                isEvaluated = true,
+                isFavorite = true,
+                favoriteCount = 44,
                 restaurantMenuList = listOf(
                     DetailRestaurantMenu(
                         menuId = 1,
