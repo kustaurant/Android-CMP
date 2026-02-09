@@ -1,0 +1,9 @@
+source 'https://cdn.cocoapods.org'
+platform :ios, '13.0'
+use_frameworks! :linkage => :dynamic
+
+target 'iosApp' do
+  pod 'appKit', :path => '../shared/appKit'
+  pod 'NaverBridge', :path => '../iosNaverBridge'
+end
+
