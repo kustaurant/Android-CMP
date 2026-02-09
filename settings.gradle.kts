@@ -37,8 +37,11 @@ plugins {
 include(":composeApp")
 include(":uiShowcase")
 
+include(":shared:appKit")
+
 include(":shared:core:designSystem")
 include(":shared:core:presentation")
+include(":shared:core:serialization")
 include(":shared:core:logging")
 include(":shared:core:config")
 

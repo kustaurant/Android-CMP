@@ -68,7 +68,9 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        commonMain.dependencies { }
+        commonMain.dependencies {
+            api(libs.koin.core)
+        }
     }
 }
 

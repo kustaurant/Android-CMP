@@ -38,6 +38,7 @@ kotlin {
 
             implementation(libs.google.material)
             implementation(libs.androidx.core.splashscreen)
+            implementation(project(":shared:core:config"))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -49,9 +50,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
+            implementation(libs.koin.compose)
 
             implementation(project(":shared:core:designSystem"))
             implementation(project(":shared:core:logging"))
+            implementation(project(":shared:core:config"))
+            implementation(project(":shared:core:serialization"))
 
             implementation(project(":shared:data:network"))
             implementation(project(":shared:data:firstLaunch"))
@@ -74,7 +78,13 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        iosMain.dependencies { 
+        iosMain.dependencies {
+            implementation(project(":shared:appKit"))
+
+            implementation(project(":shared:domain:auth"))
+            implementation(project(":shared:data:auth"))
+
+            implementation(project(":shared:core:config"))
         }
         val desktopMain by getting {
             dependencies {
@@ -85,8 +95,8 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.components.uiToolingPreview)
 
-
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:config"))
 
                 implementation(project(":shared:data:network"))
                 implementation(project(":shared:data:firstLaunch"))
@@ -102,7 +112,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.kus.kustaurant"
+        applicationId = "com.kust.kustaurant"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

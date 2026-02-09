@@ -133,7 +133,7 @@ class TierViewModel(
             TierTab.MAP -> {
                 val need = force ||
                         s.categoryChangeMap ||
-                        s.mapUiState.map !is UiState.Success<Unit>
+                        s.mapUiState.map !is UiState.Success
 
                 if (need) {
                     fetchMap()
