@@ -2,7 +2,6 @@ package com.kus.feature.tier.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -40,12 +38,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kus.designsystem.component.KusChip
 import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.util.noRippleClickable
+import com.kus.feature.tier.ui.map.TierMapPlatform
+import com.kus.feature.tier.ui.popup.TierInfoPopup
 import com.kus.shared.domain.model.tier.TierRestaurant
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.launch
 import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
@@ -55,6 +59,7 @@ import kustaurant.shared.feature.tier.generated.resources.Res
 import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_off
 import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_on
 import kustaurant.shared.feature.tier.generated.resources.ic_filter
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 enum class TierTab(val title: String) {
@@ -69,18 +74,17 @@ fun TierScreen(
     onSearchClick: () -> Unit = {},
     onAlarmClick: () -> Unit = {},
     onFilterClick: () -> Unit = {},
-    onNavigateTierCategory: () -> Unit = {},
+    onNavigateRestaurantDetail: () -> Unit = {},
 ) {
     val tabs = remember { TierTab.entries }
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
     val viewModel: TierViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    
-    LaunchedEffect(Unit) {
-        viewModel.fetchFirstRestaurants()
-    }
+    val mapPlatform: TierMapPlatform = koinInject()
+    val sharedMapInstance = mapPlatform.rememberMapInstance()
 
+    LaunchedEffect(Unit) { viewModel.fetchFirstRestaurants() }
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onTabSelected(tabs[pagerState.currentPage])
     }
@@ -101,39 +105,50 @@ fun TierScreen(
         ) {
             TierCenterTabs(
                 selectedIndex = pagerState.currentPage,
-                onSelect = { index ->
-                    scope.launch { pagerState.animateScrollToPage(index) }
-                }
+                onSelect = { index -> scope.launch { pagerState.animateScrollToPage(index) } }
             )
         }
 
-        TierSelectedCategoryRow(
-            selectedCategories = uiState.selectedCategories.toList(),
-            onFilterClick = onFilterClick,
-            onChipClick = { viewModel.setShowBottomSheet(true) },
-        )
+        Box(Modifier.fillMaxSize()) {
+            HorizontalPager(
+                state = pagerState,
+                userScrollEnabled = false,
+                modifier = Modifier.fillMaxSize(),
+            ) { page ->
+                when (tabs[page]) {
+                    TierTab.LIST -> {
+                        TierListScreen(
+                            viewModel = viewModel,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 44.dp)
+                        )
+                    }
 
-
-        HorizontalPager(
-            state = pagerState,
-            userScrollEnabled = false,
-            modifier = Modifier.fillMaxSize(),
-        ) { page ->
-            when (tabs[page]) {
-                TierTab.LIST -> TierListScreen(
-                    viewModel = viewModel,
-                    onNavigateTierCategory = onNavigateTierCategory,
-                    onFilterClick = onFilterClick
-                )
-
-                TierTab.MAP -> TierMapScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    state = uiState.mapUiState,
-                    onMapTapped = { viewModel.onMapTapped() },
-                    onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
-                    onBottomSheetClick = { id -> /* navigate detail */ },
-                )
+                    TierTab.MAP -> {
+                        mapPlatform.TierMapScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            state = uiState.mapUiState,
+                            mapInstance = sharedMapInstance,
+                            onMapTapped = { viewModel.onMapTapped() },
+                            onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
+                            onBottomSheetClick = { id -> },
+                            onCameraIdle = { camera ->
+                                viewModel.onCameraIdle(camera)
+                            }
+                        )
+                    }
+                }
             }
+
+            TierSelectedCategoryRow(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth(),
+                selectedCategories = uiState.selectedCategories.toList(),
+                onFilterClick = onFilterClick,
+                onChipClick = { viewModel.setShowBottomSheet(true) },
+            )
         }
     }
 }
@@ -143,8 +158,6 @@ private fun TierCenterTabs(
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
 ) {
-    val indicatorColor = KusTheme.colors.c_43AB38
-
     TabRow(
         selectedTabIndex = selectedIndex,
         containerColor = Color.Transparent,
@@ -154,7 +167,7 @@ private fun TierCenterTabs(
                 modifier = Modifier
                     .tabIndicatorOffset(tabPositions[selectedIndex])
                     .height(2.dp),
-                color = indicatorColor
+                color = KusTheme.colors.c_43AB38
             )
         },
         divider = {},
@@ -176,7 +189,6 @@ private fun TierCenterTabs(
     }
 }
 
-
 @Composable
 fun TierSelectedCategoryRow(
     selectedCategories: List<String>,
@@ -190,7 +202,7 @@ fun TierSelectedCategoryRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 12.dp),
+            .padding(top = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Spacer(modifier = Modifier.width(16.dp))
@@ -208,17 +220,16 @@ fun TierSelectedCategoryRow(
             fadeWidth = fadeWidth,
             modifier = Modifier
                 .weight(1f)
-                .height(32.dp)
                 .padding(end = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(end = 0.dp),
         ) {
             items(selectedCategories, key = { it }) { label ->
-                TierFilterChipItem(
-                    text = label,
-                    selected = true,
+                KusChip(
+                    chipName = label,
+                    isSelected = true,
                     onClick = { onChipClick(label) },
-                    modifier = Modifier.height(32.dp),
+                    modifier = modifier.height(32.dp)
                 )
             }
         }
@@ -255,7 +266,7 @@ private fun FadingEdgeLazyRow(
         }
     }
 
-    val fadePx = with(androidx.compose.ui.platform.LocalDensity.current) { fadeWidth.toPx() }
+    val fadePx = with(LocalDensity.current) { fadeWidth.toPx() }
 
     LazyRow(
         state = state,
@@ -263,9 +274,7 @@ private fun FadingEdgeLazyRow(
             .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
             .drawWithContent {
                 drawContent()
-
                 val w = size.width
-                val h = size.height
 
                 val left = if (showLeftFade) fadePx else 0f
                 val right = if (showRightFade) fadePx else 0f
@@ -351,8 +360,6 @@ private fun TierAiToggleRow(
 fun TierListScreen(
     modifier: Modifier = Modifier,
     viewModel: TierViewModel,
-    onNavigateTierCategory: () -> Unit = {},
-    onFilterClick : () -> Unit = {},
     onRestaurantClick: (TierRestaurant) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -399,60 +406,91 @@ fun TierListScreen(
             }
 
             is UiState.Failure -> {
-                Box(
+                Column(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    KamelImage(
+                        resource = asyncPainterResource("ic_kus_disable.png"),
+                        contentDescription = "disabled image"
+                    )
+
+                    Spacer(Modifier.height(26.dp))
+
                     Text(
-                        text = state.message,
-                        style = KusTheme.typography.type14r.copy(color = KusTheme.colors.c_AAAAAA)
+                        text = "알 수 없는 오류가 발생했어요.\n 잠시후 다시 시도해주세요.",
+                        style = KusTheme.typography.type17sb,
+                        color = KusTheme.colors.c_AAAAAA
                     )
                 }
             }
 
             is UiState.Success -> {
                 val list = state.data
+                if(list.isEmpty()){
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        KamelImage(
+                            resource = asyncPainterResource("ic_kus_disable.png"),
+                            contentDescription = "disabled image"
+                        )
 
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 18.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(
-                        items = list,
-                        key = { it.restaurantId }
-                    ) { restaurant ->
-                        KusRestThumbnail(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onRestaurantClick(restaurant) },
-                            tier = restaurant.mainTier,
-                            restName = restaurant.restaurantName,
-                            restThumbnail = restaurant.restaurantImgUrl,
-                            restAlliance = restaurant.partnershipInfo,
-                            categories = arrayListOf(restaurant.restaurantCuisine),
-                            location = restaurant.restaurantPosition,
-                            isSaved = restaurant.isFavorite,
-                            isEvaluated = restaurant.isEvaluated,
-                            onClick = { onRestaurantClick(restaurant) }
+                        Spacer(Modifier.height(26.dp))
+
+                        Text(
+                            text = "카테고리에 해당하는 음식점이 없어요.",
+                            style = KusTheme.typography.type17sb,
+                            color = KusTheme.colors.c_AAAAAA
                         )
                     }
-
-                    item {
-                        if (uiState.pageState.phase == TierPhase.Paging) {
-                            Box(
+                } else {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 18.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        items(
+                            items = list,
+                            key = { it.restaurantId }
+                        ) { restaurant ->
+                            KusRestThumbnail(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 14.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
+                                    .clickable { onRestaurantClick(restaurant) },
+                                tier = restaurant.mainTier,
+                                restName = restaurant.restaurantName,
+                                restThumbnail = restaurant.restaurantImgUrl,
+                                restAlliance = restaurant.partnershipInfo,
+                                categories = arrayListOf(restaurant.restaurantCuisine),
+                                location = restaurant.restaurantPosition,
+                                isSaved = restaurant.isFavorite,
+                                isEvaluated = restaurant.isEvaluated,
+                                onClick = { onRestaurantClick(restaurant) }
+                            )
+                        }
+
+                        item {
+                            if (uiState.pageState.phase == TierPhase.Paging) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 14.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
                             }
                         }
                     }
                 }
             }
+
+            else -> {}
         }
     }
 }
@@ -477,45 +515,4 @@ private fun InfiniteScrollEffect(
     }
 }
 
-@Composable
-private fun TierFilterChipItem(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val shape = RoundedCornerShape(18.dp)
 
-    val borderColor = if (selected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_AAAAAA
-    val bgColor = if (selected) KusTheme.colors.c_43AB38.copy(alpha = 0.12f) else Color.Transparent
-    val textColor = if (selected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_AAAAAA
-
-    Box(
-        modifier = modifier
-            .border(1.dp, borderColor, shape)
-            .background(bgColor, shape)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 7.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = KusTheme.typography.type12m.copy(color = textColor)
-        )
-    }
-}
-
-@Composable
-expect fun TierMapScreen(
-    modifier: Modifier = Modifier,
-    state: TierMapUiState,
-
-    // 지도 클릭 -> 바텀시트 닫기
-    onMapTapped: () -> Unit,
-
-    // 마커 클릭 -> 선택 + 바텀시트 열기 (id만 올려도 됨)
-    onRestaurantSelected: (restaurantId: Long) -> Unit,
-
-    // 바텀시트 클릭 -> 상세 이동
-    onBottomSheetClick: (restaurantId: Long) -> Unit,
-)

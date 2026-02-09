@@ -6,8 +6,10 @@ import com.kus.shared.domain.model.tier.filter.Location
 import com.kus.shared.domain.model.tier.filter.Situation
 
 data class TierCategoryUiState(
-    val cuisines: Set<Cuisine> = setOf(Cuisine.ALL),
-    val situations: Set<Situation> = setOf(Situation.ALL),
-    val locations: Set<Location> = setOf(Location.ALL),
     val initial: TierFilterState = TierFilterState(),
+    val selectedCuisines: Set<Cuisine> = setOf(Cuisine.ALL),
+    val selectedSituations: Set<Situation> = setOf(Situation.ALL),
+    val selectedLocations: Set<Location> = setOf(Location.ALL),
+    val current: TierFilterState = TierFilterState(),
+    val applyEnabled: Boolean = false,
 )
