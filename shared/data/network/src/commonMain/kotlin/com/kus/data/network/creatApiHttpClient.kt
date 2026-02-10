@@ -57,13 +57,17 @@ fun creatApiHttpClient(
             }
 
             loadTokens {
-                tokenManager.loadAccessToken()?.let { access ->
+                tokenManager.loadAccessToken()
+                    .takeIf {it.isNotBlank() }
+                    ?.let { access ->
                     BearerTokens(accessToken = access, refreshToken = "")
                 }
             }
 
             refreshTokens {
-                tokenManager.refreshAndGetNewAccessToken()?.let { newAccess ->
+                tokenManager.refreshAndGetNewAccessToken()
+                    .takeIf{it.isNotBlank()}
+                    ?.let { newAccess ->
                     BearerTokens(accessToken = newAccess, refreshToken = "")
                 }
             }
