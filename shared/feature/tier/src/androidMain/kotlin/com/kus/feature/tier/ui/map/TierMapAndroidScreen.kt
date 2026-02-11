@@ -53,9 +53,6 @@ fun TierMapAndroidScreen(
     var isMapReadyToShow by remember { mutableStateOf(false) }
 
     val outlineColorInt = KusTheme.colors.c_43AB38.toArgb()
-    val polygonOverlays = remember { mutableStateListOf<PolygonOverlay>() }
-    val polylineOverlays = remember { mutableStateListOf<PolylineOverlay>() }
-    val restaurantMarkers = remember { mutableStateListOf<Marker>() }
 
     var currentZoom by remember {
         mutableIntStateOf(mapInstance.lastCameraPosition?.zoom?.toInt() ?: 11)
@@ -65,7 +62,6 @@ fun TierMapAndroidScreen(
     val latestOnRestaurantSelected by rememberUpdatedState(onRestaurantSelected)
     val latestOnMapTapped by rememberUpdatedState(onMapTapped)
     val mapAlpha by animateFloatAsState(if (isMapReadyToShow) 1f else 0f)
-
 
 
     DisposableEffect(lifecycleOwner, mapView) {
@@ -145,6 +141,17 @@ fun TierMapAndroidScreen(
             isMapReadyToShow = true
             return@LaunchedEffect
         }
+
+        updateMap(
+            map = map,
+            mapData = data,
+            currentZoom = map.cameraPosition.zoom.toInt(),
+            polygonOverlays = mapInstance.polygonOverlays,
+            polylineOverlays = mapInstance.polylineOverlays,
+            restaurantMarkers = mapInstance.restaurantMarkers,
+            onRestaurantSelected = latestOnRestaurantSelected,
+            outlineColor = outlineColorInt,
+        )
 
         // bounds 변경시에만 카메라 이동
         if (isBoundsChanged) {

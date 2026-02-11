@@ -3,7 +3,7 @@ package com.kus.shared.data.tier.remote.response
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NonTieredRestaurantGroupResponse(
+data class NonTieredRestaurantsResponse(
     val zoom: Int,
-    val tierRestaurants: List<RestaurantResponse>
+    val restaurants: List<RestaurantResponse> = emptyList()
 )

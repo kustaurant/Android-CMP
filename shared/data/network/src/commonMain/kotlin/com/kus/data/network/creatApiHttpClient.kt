@@ -9,11 +9,13 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.http.encodedPath
+import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -21,8 +23,13 @@ fun creatApiHttpClient(
     engine: HttpClientEngine,
     tokenManager: TokenManager,
     isDebug: Boolean = true,
+    baseUrl: String,
     additionalConfig: HttpClientConfig<*>.() -> Unit = {}
 ): HttpClient = HttpClient(engine = engine) {
+    defaultRequest {
+        url.takeFrom(baseUrl)
+    }
+
     expectSuccess = false
 
     if (isDebug) {

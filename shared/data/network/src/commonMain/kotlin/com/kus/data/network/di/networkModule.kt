@@ -19,6 +19,7 @@ val networkModule = module {
         creatApiHttpClient(
             engine = provideEngine(),
             tokenManager = get(),
+            baseUrl = get(named("BASE_URL")),
             isDebug = true
         )
     }

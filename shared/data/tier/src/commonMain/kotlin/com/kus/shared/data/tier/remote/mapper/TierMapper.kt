@@ -1,7 +1,7 @@
 package com.kus.shared.data.tier.remote.mapper
 
 import com.kus.shared.data.tier.remote.response.GeoPointResponse
-import com.kus.shared.data.tier.remote.response.NonTieredRestaurantGroupResponse
+import com.kus.shared.data.tier.remote.response.NonTieredRestaurantsResponse
 import com.kus.shared.data.tier.remote.response.RestaurantResponse
 import com.kus.shared.data.tier.remote.response.TierMapDataResponse
 import com.kus.shared.domain.model.tier.GeoPoint
@@ -28,19 +28,36 @@ fun RestaurantResponse.toDomain(): TierRestaurant =
         isTempTier = isTempTier,
     )
 
-fun NonTieredRestaurantGroupResponse.toDomain(): NonTieredRestaurantGroup =
+fun NonTieredRestaurantsResponse.toDomain(): NonTieredRestaurantGroup =
     NonTieredRestaurantGroup(
         zoom = zoom,
-        tierRestaurants = tierRestaurants.map { it.toDomain() }
+        tierRestaurants = restaurants.map {
+            TierRestaurant(
+                restaurantId = it.restaurantId,
+                restaurantRanking = it.restaurantRanking ?: 0,
+                restaurantName = it.restaurantName,
+                restaurantCuisine = it.restaurantCuisine,
+                restaurantPosition = it.restaurantPosition,
+                restaurantImgUrl = it.restaurantImgUrl,
+                mainTier = -1,
+                isEvaluated = it.isEvaluated,
+                isFavorite = it.isFavorite,
+                longitude = it.longitude,
+                latitude = it.latitude,
+                partnershipInfo = it.partnershipInfo ?: "",
+                restaurantScore = it.restaurantScore?.takeIf { s -> !s.isNaN() } ?: 0.0,
+                isTempTier = it.isTempTier,
+            )
+        }
     )
 
 fun TierMapDataResponse.toDomain(): TierMapData {
     return TierMapData(
-        solidPolygonCoordsList = solidLines.map { it.toDomainClosed() },
-        dashedPolygonCoordsList = dashedLines.map { it.toDomainClosed() },
+        solidPolygonCoordsList = solidPolygonCoordsList.map { it.toDomainClosed() },
+        dashedPolygonCoordsList = dashedPolygonCoordsList.map { it.toDomainClosed() },
 
-        favoriteTierRestaurants = favoriteTierRestaurants.map { it.toDomain() },
-        tieredTierRestaurants = tieredTierRestaurants.map { it.toDomain() },
+        favoriteTierRestaurants = favoriteRestaurants.map { it.toDomain() },
+        tieredTierRestaurants = tieredRestaurants.map { it.toDomain() },
         nonTieredRestaurants = nonTieredRestaurants.map { it.toDomain() },
 
         minZoom = minZoom,
@@ -60,6 +77,6 @@ private fun List<GeoPointResponse>.toDomainClosed(): List<GeoPoint> {
 
 fun GeoPointResponse.toDomain(): GeoPoint =
     GeoPoint(
-        latitude = y,
-        longitude = x
+        longitude = longitude,
+        latitude = latitude,
     )

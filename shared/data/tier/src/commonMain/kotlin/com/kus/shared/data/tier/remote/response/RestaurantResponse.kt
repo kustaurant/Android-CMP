@@ -19,6 +19,6 @@ data class RestaurantResponse(
     val isEvaluated: Boolean,
     val isFavorite: Boolean,
     val cuisineImgUrl: String = "",
-    val tierImgUrl: String = "",
+    val tierImgUrl: String? = "",
     val isTempTier: Boolean,
 )

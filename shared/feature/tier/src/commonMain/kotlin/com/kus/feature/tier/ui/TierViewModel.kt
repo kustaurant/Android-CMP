@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TierViewModel(
-//    private val getTierRestaurantListUseCase: GetTierRestaurantListUseCase,
-//    private val getTierRestaurantMapUseCase: GetTierRestaurantMapUseCase,
+   private val getTierRestaurantListUseCase: GetTierRestaurantListUseCase,
+    private val getTierRestaurantMapUseCase: GetTierRestaurantMapUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TierUiState())
     val uiState: StateFlow<TierUiState> = _uiState.asStateFlow()
@@ -77,7 +77,7 @@ class TierViewModel(
                 listState = UiState.Loading,
             )
         }
-        mockLoadRestaurantList(1)
+        loadRestaurantList(1)
     }
 
 
@@ -92,13 +92,12 @@ class TierViewModel(
         }
 
         viewModelScope.launch {
-             //val data = getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations)
-            //val data = mockTierMapData()
-            //_uiState.update { cur ->
-            //    cur.copy(
-            //        mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
-            //    )
-            //}
+            val data = getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations)
+            _uiState.update { cur ->
+                cur.copy(
+                    mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
+                )
+            }
         }
     }
 
@@ -225,14 +224,15 @@ class TierViewModel(
                 emptyList()
             }
 
-            val last = fetched.isEmpty() || to >= all.size
+            val last = fetched.size < 30
 
             _uiState.update { cur ->
                 val currentList = (cur.listState as? UiState.Success)?.data ?: emptyList()
                 val merged = if (requestedPage == 1) fetched else currentList + fetched
+                val deduped = merged.distinctBy { it.restaurantId }
 
                 cur.copy(
-                    listState = UiState.Success(merged),
+                    listState = UiState.Success(deduped),
                     pageState = cur.pageState.copy(
                         phase = TierPhase.Idle,
                         page = requestedPage,
@@ -252,57 +252,57 @@ class TierViewModel(
         val isPartnership = filter.isPartnership
 
         viewModelScope.launch {
-//            runCatching {
-//                // 변경: CategoryIdMapper 제거
-//                // UseCase에 도메인 타입 그대로 전달
-//                getTierRestaurantListUseCase(
-//                    cuisines = filter.cuisines,
-//                    situations = filter.situations,
-//                    locations = filter.locations,
-//                    page = requestedPage
-//                )
-//            }.onSuccess { tierListData ->
-//                val fetched = tierListData.map {
-//                    TierRestaurant(
-//                        restaurantId = it.restaurantId,
-//                        restaurantRanking = it.restaurantRanking ?: 0,
-//                        restaurantName = it.restaurantName,
-//                        restaurantCuisine = it.restaurantCuisine,
-//                        restaurantPosition = it.restaurantPosition,
-//                        restaurantImgUrl = it.restaurantImgUrl,
-//                        mainTier = if (isPartnership) -1 else it.mainTier,
-//                        partnershipInfo = it.partnershipInfo,
-//                        isFavorite = it.isFavorite,
-//                        x = it.x,
-//                        y = it.y,
-//                        isEvaluated = it.isEvaluated,
-//                        restaurantScore = it.restaurantScore.takeIf { s -> !s.isNaN() } ?: 0.0
-//                    )
-//                }
-//
-//                val last = fetched.isEmpty()
-//
-//                _uiState.update { cur ->
-//                    val currentList = (cur.listState as? UiState.Success)?.data ?: emptyList()
-//                    val merged = if (requestedPage == 1) fetched else currentList + fetched
-//
-//                    cur.copy(
-//                        listState = UiState.Success(merged),
-//                        pageState = cur.pageState.copy(
-//                            phase = TierPhase.Idle,
-//                            page = requestedPage,
-//                            isLastPage = last
-//                        )
-//                    )
-//                }
-//            }.onFailure { e ->
-//                _uiState.update {
-//                    it.copy(
-//                        listState = UiState.Failure(e.message ?: "loadRestaurantList error"),
-//                        pageState = it.pageState.copy(phase = TierPhase.Idle)
-//                    )
-//                }
-//            }
+            runCatching {
+                getTierRestaurantListUseCase(
+                    cuisines = filter.cuisines,
+                    situations = filter.situations,
+                    locations = filter.locations,
+                    page = requestedPage
+                )
+            }.onSuccess { tierListData ->
+                val fetched = tierListData.map {
+                    TierRestaurant(
+                        restaurantId = it.restaurantId,
+                        restaurantRanking = it.restaurantRanking,
+                        restaurantName = it.restaurantName,
+                        restaurantCuisine = it.restaurantCuisine,
+                        restaurantPosition = it.restaurantPosition,
+                        restaurantImgUrl = it.restaurantImgUrl,
+                        mainTier = if (isPartnership) -1 else it.mainTier,
+                        partnershipInfo = it.partnershipInfo,
+                        isFavorite = it.isFavorite,
+                        longitude = it.longitude,
+                        latitude = it.latitude,
+                        isEvaluated = it.isEvaluated,
+                        restaurantScore = it.restaurantScore.takeIf { s -> !s.isNaN() } ?: 0.0,
+                        isTempTier = it.isTempTier
+                    )
+               }
+
+                val last = fetched.isEmpty()
+
+                _uiState.update { cur ->
+                    val currentList = (cur.listState as? UiState.Success)?.data ?: emptyList()
+                    val merged = if (requestedPage == 1) fetched else currentList + fetched
+                    val deduped = merged.distinctBy { it.restaurantId }
+
+                    cur.copy(
+                        listState = UiState.Success(deduped),
+                        pageState = cur.pageState.copy(
+                            phase = TierPhase.Idle,
+                            page = requestedPage,
+                            isLastPage = last
+                        )
+                    )
+                }
+            }.onFailure { e ->
+                _uiState.update {
+                    it.copy(
+                        listState = UiState.Failure(UiError.Message(e.message ?: "loadRestaurantList error")),
+                        pageState = it.pageState.copy(phase = TierPhase.Idle)
+                    )
+                }
+            }
         }
     }
 }

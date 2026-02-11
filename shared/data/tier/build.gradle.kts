@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -47,6 +48,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
 
+                implementation(libs.kotlinx.serialization.json)
                 implementation(libs.bundles.ktor)
 
                 implementation(project(":shared:domain:tier"))

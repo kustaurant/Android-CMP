@@ -10,6 +10,8 @@ import com.kus.feature.login.di.featureLoginModule
 import com.kus.feature.onboarding.di.onboardingModule
 import com.kus.feature.splash.di.splashModule
 import com.kus.feature.tier.di.tierFeatureModule
+import com.kus.shared.data.tier.di.tierDataModule
+import com.kus.shared.domain.tier.di.tierDomainModule
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -29,11 +31,13 @@ fun initKoin(
             // domain
             firstLaunchDomainModule,
             authDomainModule,
+            tierDomainModule,
 
             // data (repository 등 공통)
             networkModule,
             firstLaunchDataModule,
             authDataModule,
+            tierDataModule,
 
             // feature
             splashModule,
