@@ -1,4 +1,4 @@
-package com.kus.feature.community
+package com.kus.feature.search
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
