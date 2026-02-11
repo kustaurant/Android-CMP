@@ -12,6 +12,7 @@ kotlin {
             dependencies {
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:feature:splash"))
+                implementation(project(":shared:feature:search"))
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)

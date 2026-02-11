@@ -3,12 +3,13 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
     androidTarget()
 
-    val xcfName = "shared:core:designSystemKit"
+    val xcfName = "shared:feature:searchKit"
 
     iosX64 {
         binaries.framework {
@@ -28,7 +29,6 @@ kotlin {
         }
     }
 
-
     jvm("desktop")
 
     sourceSets {
@@ -36,14 +36,23 @@ kotlin {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.ui)
                 implementation(compose.material3)
+                implementation(compose.ui)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
-                implementation(libs.koin.core)
-                implementation(libs.koin.compose)
-                implementation(libs.kamel.image)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
 
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
+
+                implementation(libs.navigation.compose)
+
+                implementation(libs.lifecycle.viewmodel)
+
+                implementation(libs.kotlinx.coroutines.core)
+
+                implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:data:network"))
                 resources.srcDirs("src/commonMain/composeResources")
             }
         }
@@ -57,6 +66,9 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(compose.preview)
+                implementation(libs.androidx.activity.compose)
+
+                implementation(libs.koin.android)
             }
         }
 
@@ -73,11 +85,7 @@ compose.resources {
 }
 
 android {
-    namespace = "com.kus.core.designsystem"
-
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
+    namespace = "com.kus.feature.search"
+    compileSdk = 36
+    defaultConfig { minSdk = 26 }
 }
