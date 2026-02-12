@@ -1,5 +1,6 @@
 package com.kus.feature.tier.ui
 
+import UiState
 import com.kus.feature.tier.ui.map.TierMapUiState
 import com.kus.shared.domain.model.tier.TierRestaurant
 import com.kus.shared.domain.model.tier.filter.Cuisine
@@ -50,12 +51,6 @@ data class TierFilterState(
         return if (labels.isEmpty()) setOf("전체") else labels.toSet()
     }
 
-}
-
-sealed interface UiState<out T> {
-    data object Loading : UiState<Nothing>
-    data class Success<T>(val data: T) : UiState<T>
-    data class Failure(val message: String) : UiState<Nothing>
 }
 
 data class TierUiState(

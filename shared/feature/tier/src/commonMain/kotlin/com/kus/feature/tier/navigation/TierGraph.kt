@@ -5,6 +5,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.kus.core.serialization.KusJson
+import com.kus.feature.tier.TierKeys
 import com.kus.feature.tier.ui.TierFilterState
 import com.kus.feature.tier.ui.category.TierCategorySelectScreen
 import kotlinx.serialization.Serializable
@@ -23,7 +24,7 @@ fun NavGraphBuilder.tierNavGraph(
 ) {
     composable<Tier> { entry ->
         val resultJson by entry.savedStateHandle
-            .getStateFlow<String?>("tier_result_json", null)
+            .getStateFlow<String?>(TierKeys.RESULT_FILTER, null)
             .collectAsStateWithLifecycle()
 
         val result: TierFilterState? = resultJson?.let { json ->
@@ -33,15 +34,15 @@ fun NavGraphBuilder.tierNavGraph(
         TierRoute(
             navigateToTierCategorySelect = navigateToTierCategorySelect,
             resultFilter = result,
-            consumeResult = { entry.savedStateHandle["tier_result_json"] = null },
+            consumeResult = { entry.savedStateHandle[TierKeys.RESULT_FILTER] = null },
         )
     }
 
     composable<TierCategorySelect> {
         TierCategorySelectScreen(
             initial = initialProvider(),
-            onBack = { onBackButtonClick() },
-            onApply = { result -> popBackStackWithResult(result) }
+            onBack = onBackButtonClick,
+            onApply = popBackStackWithResult
         )
     }
 }

@@ -60,3 +60,4 @@ include(":shared:domain:model")
 
 
 include(":shared:core:serialization")
+include(":shared:core:presentation")

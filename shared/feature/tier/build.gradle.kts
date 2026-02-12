@@ -70,6 +70,8 @@ kotlin {
                 implementation(project(":shared:core:logging"))
                 implementation(project(":shared:core:serialization"))
 
+                implementation(project(":shared:core:presentation"))
+
                 implementation(project(":shared:domain:model"))
                 implementation(project(":shared:domain:tier"))
 

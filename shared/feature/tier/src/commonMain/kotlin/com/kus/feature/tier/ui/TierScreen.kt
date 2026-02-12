@@ -2,7 +2,6 @@ package com.kus.feature.tier.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,20 +15,17 @@ import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
@@ -39,31 +35,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusChip
-import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.util.noRippleClickable
+import com.kus.feature.tier.ui.list.TierListScreen
 import com.kus.feature.tier.ui.map.TierMapScreen
 import com.kus.feature.tier.ui.map.rememberMapInstance
-import com.kus.feature.tier.ui.popup.TierInfoPopup
-import com.kus.shared.domain.model.tier.TierRestaurant
 import kotlinx.coroutines.launch
 import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import kustaurant.shared.core.designsystem.generated.resources.ic_search
 import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 import kustaurant.shared.feature.tier.generated.resources.Res
-import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_off
-import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_on
 import kustaurant.shared.feature.tier.generated.resources.ic_filter
 import org.koin.compose.viewmodel.koinViewModel
-
-enum class TierTab(val title: String) {
-    LIST("티어표"),
-    MAP("지도"),
-}
 
 @Composable
 fun TierScreen(
@@ -301,184 +287,3 @@ private fun FadingEdgeLazyRow(
         content = content
     )
 }
-
-
-@Composable
-private fun TierAiToggleRow(
-    modifier: Modifier = Modifier,
-    onTierGuideClick: () -> Unit = {},
-) {
-    var isAiOn by rememberSaveable { mutableStateOf(false) }
-
-    val iconRes = if (isAiOn) {
-        Res.drawable.ic_ai_filter_on
-    } else {
-        Res.drawable.ic_ai_filter_off
-    }
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clickable { isAiOn = !isAiOn }
-        ) {
-            Image(
-                painter = painterResource(iconRes),
-                contentDescription = null,
-                modifier = Modifier.size(14.dp)
-            )
-
-            Text(
-                text = "AI 기반 티어 보기",
-                modifier = Modifier.padding(start = 6.dp),
-                style = KusTheme.typography.type12m.copy(color = KusTheme.colors.c_AAAAAA)
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "티어란?",
-            style = KusTheme.typography.type12m.copy(
-                color = KusTheme.colors.c_AAAAAA,
-                textDecoration = TextDecoration.Underline
-            ),
-            modifier = Modifier.clickable(onClick = onTierGuideClick)
-        )
-    }
-}
-
-@Composable
-fun TierListScreen(
-    modifier: Modifier = Modifier,
-    viewModel: TierViewModel,
-    onRestaurantClick: (TierRestaurant) -> Unit = {},
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showTierInfo by rememberSaveable { mutableStateOf(false) }
-
-    if (showTierInfo) {
-        TierInfoPopup(onDismiss = { showTierInfo = false })
-    }
-
-    val listState = rememberLazyListState()
-
-    LaunchedEffect(Unit) {
-        val pos = uiState.tierListLastPosition
-        if (pos > 0) listState.scrollToItem(pos)
-    }
-
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex }
-            .collect { index -> viewModel.setTierListLastPosition(index) }
-    }
-
-    InfiniteScrollEffect(
-        listState = listState,
-        onLoadMore = { viewModel.fetchNextRestaurants() }
-    )
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        TierAiToggleRow(
-            onTierGuideClick = { showTierInfo = true }
-        )
-
-        when (val state = uiState.listState) {
-            is UiState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is UiState.Failure -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = state.message,
-                        style = KusTheme.typography.type14r.copy(color = KusTheme.colors.c_AAAAAA)
-                    )
-                }
-            }
-
-            is UiState.Success -> {
-                val list = state.data
-
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 18.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(
-                        items = list,
-                        key = { it.restaurantId }
-                    ) { restaurant ->
-                        KusRestThumbnail(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onRestaurantClick(restaurant) },
-                            tier = restaurant.mainTier,
-                            restName = restaurant.restaurantName,
-                            restThumbnail = restaurant.restaurantImgUrl,
-                            restAlliance = restaurant.partnershipInfo,
-                            categories = arrayListOf(restaurant.restaurantCuisine),
-                            location = restaurant.restaurantPosition,
-                            isSaved = restaurant.isFavorite,
-                            isEvaluated = restaurant.isEvaluated,
-                            onClick = { onRestaurantClick(restaurant) }
-                        )
-                    }
-
-                    item {
-                        if (uiState.pageState.phase == TierPhase.Paging) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 14.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun InfiniteScrollEffect(
-    listState: LazyListState,
-    buffer: Int = 4,
-    onLoadMore: () -> Unit,
-) {
-    LaunchedEffect(listState) {
-        snapshotFlow {
-            val layoutInfo = listState.layoutInfo
-            val total = layoutInfo.totalItemsCount
-            val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            total to lastVisible
-        }.collect { (total, lastVisible) ->
-            if (total > 0 && lastVisible >= total - 1 - buffer) {
-                onLoadMore()
-            }
-        }
-    }
-}
-
-
