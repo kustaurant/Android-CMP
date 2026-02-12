@@ -49,6 +49,7 @@ include(":shared:feature:community")
 include(":shared:feature:draw")
 include(":shared:feature:tier")
 include(":shared:feature:my")
+include(":shared:feature:search")
 
 include(":shared:data:firstLaunch")
 include(":shared:data:network")

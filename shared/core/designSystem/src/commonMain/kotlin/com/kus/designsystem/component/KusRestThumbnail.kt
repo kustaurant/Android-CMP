@@ -24,9 +24,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
+import kustaurant.shared.core.designsystem.generated.resources.Res
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_check
 import kustaurant.shared.core.designsystem.generated.resources.ic_kus_blank
 import kustaurant.shared.core.designsystem.generated.resources.ic_location
@@ -101,7 +101,7 @@ fun KusRestThumbnail(
             }
 
             Icon(
-                imageVector = vectorResource(savedModel),
+                painterResource(savedModel),
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp)
@@ -127,7 +127,7 @@ fun KusRestThumbnail(
 
                 if (isEvaluated) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.ic_check),
+                        painterResource(Res.drawable.ic_check),
                         contentDescription = null,
                         modifier = Modifier.padding(start = 6.dp),
                         tint = Color.Unspecified
@@ -140,7 +140,7 @@ fun KusRestThumbnail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = vectorResource(Res.drawable.ic_location),
+                    painterResource(Res.drawable.ic_location),
                     contentDescription = null,
                     modifier = Modifier.size(12.dp),
                     tint = KusTheme.colors.c_AAAAAA
