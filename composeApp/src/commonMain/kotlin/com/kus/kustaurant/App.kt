@@ -78,12 +78,7 @@ fun SetNavigation() {
         },
         modifier = Modifier.systemBarsPadding(),
     ) { padding ->
-        KusNavHost(
-            navController = navController,
-            durationMillis = durationMillis,
-            onShowMessage = onShowMessage,
-            modifier = Modifier.padding(padding),
-        )
+        KusNavHost(navController, durationMillis, onShowMessage, Modifier.padding(padding))
     }
 }
 

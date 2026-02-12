@@ -1,0 +1,30 @@
+PODS:
+  - NMapsGeometry (1.0.2)
+  - NMapsMap (3.19.0):
+    - NMapsGeometry
+  - tier (1.0.0):
+    - NMapsGeometry (= 1.0.2)
+    - NMapsMap (= 3.19.0)
+
+DEPENDENCIES:
+  - NMapsGeometry (= 1.0.2)
+  - NMapsMap (= 3.19.0)
+  - tier (from `../shared/feature/tier`)
+
+SPEC REPOS:
+  trunk:
+    - NMapsGeometry
+    - NMapsMap
+
+EXTERNAL SOURCES:
+  tier:
+    :path: "../shared/feature/tier"
+
+SPEC CHECKSUMS:
+  NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
+  NMapsMap: 99c10429d93340780b6f88d3fc7c0a3850b43664
+  tier: 1cfa494d883e6c7a3e9e940099b0916893be21a2
+
+PODFILE CHECKSUM: e981913b2c0f639b2f29cde5ec13d26fe05376fc
+
+COCOAPODS: 1.16.2

@@ -5,6 +5,7 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -14,9 +15,14 @@ import kotlinx.serialization.json.Json
 
 fun createHttpClient(
     engine: HttpClientEngine,
+    baseUrl: String,
     isDebug: Boolean = true,
     additionalConfig: HttpClientConfig<*>.() -> Unit = {}
 ): HttpClient = HttpClient(engine) {
+    defaultRequest {
+        url(baseUrl)
+    }
+
     if (isDebug) {
         install(Logging) {
             logger = Logger.SIMPLE

@@ -33,7 +33,10 @@ material = "1.12.0"
 uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.4.1"
 napier = "2.7.1"
-kamel = "0.9.4"
+kamel = "1.0.8"
+naverMaps = "3.23.0"
+buildkonfig = "0.15.1"
+kotlinx-serialization = "1.7.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -54,6 +57,7 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 oshi-core = { module = "com.github.oshi:oshi-core", version.ref = "oshiCore" }
 navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
 
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
@@ -86,7 +90,11 @@ androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchm
 
 napier-log = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 
-kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }
+kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
+
+naver-maps = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMaps" }
+
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -100,6 +108,8 @@ androidLint = { id = "com.android.lint", version.ref = "agp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-test = { id = "com.android.test", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 
 [bundles]
 ktor = [

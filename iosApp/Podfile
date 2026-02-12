@@ -1,0 +1,12 @@
+platform :ios, '12.0'
+
+use_frameworks!
+use_modular_headers!
+
+target 'iosApp' do
+  pod 'tier', :path => '../shared/feature/tier'
+
+  pod 'NMapsMap', '3.19.0'
+  pod 'NMapsGeometry', '1.0.2'
+end
+

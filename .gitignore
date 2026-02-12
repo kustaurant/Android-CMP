@@ -17,3 +17,23 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+.xcconfig
+
+# CocoaPods
+Pods/
+**/Pods/
+pods-iosapp-frameworks/
+
+# Xcode
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserstate
+*.car
+
+secrets/
+
+# Build
+build/
+
+

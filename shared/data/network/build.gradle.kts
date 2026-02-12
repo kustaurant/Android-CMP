@@ -6,13 +6,11 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "com.kus.network"
+        namespace = "com.kus.data.network"
         compileSdk = 36
         minSdk = 26
 
-        withHostTestBuilder {
-        }
-
+        withHostTestBuilder {}
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }.configure {
@@ -41,12 +39,14 @@ kotlin {
             baseName = xcfName
         }
     }
-
+    
     sourceSets {
         commonMain {
             dependencies {
                 api(libs.koin.core)
                 implementation(libs.bundles.ktor)
+
+                implementation(project(":shared:core:config"))
             }
         }
 

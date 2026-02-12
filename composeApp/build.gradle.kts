@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -33,6 +34,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+            implementation(libs.naver.maps)
 
             implementation(libs.google.material)
             implementation(libs.androidx.core.splashscreen)
@@ -47,12 +49,16 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(project(":shared:core:designSystem"))
+            implementation(project(":shared:core:config"))
             implementation(project(":shared:core:logging"))
+            implementation(project(":shared:core:serialization"))
 
             implementation(project(":shared:data:network"))
             implementation(project(":shared:data:firstLaunch"))
+            implementation(project(":shared:data:tier"))
 
             implementation(project(":shared:feature:community"))
             implementation(project(":shared:feature:draw"))
@@ -65,6 +71,7 @@ kotlin {
             implementation(project(":shared:feature:search"))
 
             implementation(project(":shared:domain:firstLaunch"))
+            implementation(project(":shared:domain:tier"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
