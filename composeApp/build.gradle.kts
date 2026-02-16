@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -51,10 +52,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
             implementation(libs.koin.compose)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(project(":shared:core:designSystem"))
             implementation(project(":shared:core:logging"))
             implementation(project(":shared:core:config"))
+            implementation(project(":shared:core:logging"))
             implementation(project(":shared:core:serialization"))
 
             implementation(project(":shared:data:network"))
@@ -70,6 +73,7 @@ kotlin {
             implementation(project(":shared:feature:splash"))
             implementation(project(":shared:feature:tier"))
             implementation(project(":shared:feature:my"))
+            implementation(project(":shared:feature:search"))
 
             implementation(project(":shared:domain:firstLaunch"))
             implementation(project(":shared:domain:tier"))

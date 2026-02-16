@@ -7,12 +7,12 @@ import com.kus.data.network.di.networkModule
 import com.kus.domain.firstLaunch.di.firstLaunchDomainModule
 import com.kus.domain.auth.di.authDomainModule
 import com.kus.feature.login.di.featureLoginModule
-import com.kus.feature.onboarding.di.onboardingModule
-import com.kus.feature.splash.di.splashModule
+import com.kus.feature.onboarding.di.onboardingFeatureModule
 import com.kus.feature.tier.di.tierFeatureModule
 import com.kus.shared.data.tier.di.tierDataModule
 import com.kus.shared.domain.tier.di.tierDomainModule
 import org.koin.core.KoinApplication
+import com.kus.feature.splash.di.splashFeatureModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -40,8 +40,8 @@ fun initKoin(
             tierDataModule,
 
             // feature
-            splashModule,
-            onboardingModule,
+            splashFeatureModule,
+            onboardingFeatureModule,
             featureLoginModule,
             tierFeatureModule,
         )

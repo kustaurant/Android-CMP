@@ -15,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.kus.core.designsystem.R
 import com.kus.designsystem.theme.KusTheme
 import com.kus.shared.domain.model.tier.TierMapData
@@ -127,7 +127,6 @@ fun TierMapAndroidScreen(
         }
     }
 
-    // ✅ "map 로드 완료" + "데이터 준비" 된 다음에만 카메라 이동
     LaunchedEffect(naverMap, isMapLoaded, state.map) {
         val map = naverMap ?: return@LaunchedEffect
         if (!isMapLoaded) return@LaunchedEffect
@@ -167,7 +166,6 @@ fun TierMapAndroidScreen(
                     minZoom = data.minZoom.toDouble()
                 )
 
-                // 2) 이동 완료(Idle) 1회 감지 후 표시
                 var done = false
                 val oneShotIdle = object : NaverMap.OnCameraIdleListener {
                     override fun onCameraIdle() {
@@ -179,7 +177,6 @@ fun TierMapAndroidScreen(
                 }
                 map.addOnCameraIdleListener(oneShotIdle)
 
-                // 무한로딩 방지: idle이 안 오면 강제 표시
                 mapView.postDelayed({
                     if (!done) {
                         map.removeOnCameraIdleListener(oneShotIdle)
@@ -188,7 +185,6 @@ fun TierMapAndroidScreen(
                 }, 700)
             }
         } else if (!isMapReadyToShow) {
-            // bounds 동일이면 바로 표시
             isMapReadyToShow = true
         }
     }

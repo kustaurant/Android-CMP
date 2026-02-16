@@ -59,8 +59,16 @@ include(":shared:feature:community")
 include(":shared:feature:draw")
 include(":shared:feature:tier")
 include(":shared:feature:my")
+include(":shared:feature:search")
+
+include(":shared:data:firstLaunch")
+include(":shared:data:network")
+include(":shared:data:tier")
 
 include(":shared:domain:firstLaunch")
 include(":shared:domain:model")
 include(":shared:domain:tier")
 include(":shared:domain:auth")
+
+include(":shared:core:serialization")
+include(":shared:core:presentation")

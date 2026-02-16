@@ -31,7 +31,6 @@ import cocoapods.NMapsMap.NMFMarker
 import cocoapods.NMapsMap.NMFOverlayImage
 import com.kus.designsystem.toUIColor
 import com.kus.feature.tier.ui.map.MapCameraState
-import com.kus.feature.tier.ui.map.PolygonColorsIos
 import com.kus.feature.tier.ui.map.TierMapUiState
 import com.kus.feature.tier.ui.map.TierRestaurantBottomSheetCard
 
