@@ -8,20 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		A9B0559C853C142D3A6C6B71 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0034160D93F9F955A298DD7 /* Pods_iosApp.framework */; };
-		BFBA73432F34D8C500C94D68 /* NaverLoginBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */; };
 		BFBA73452F34D8C500C94D68 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA733F2F34D8C500C94D68 /* ContentView.swift */; };
 		BFBA73462F34D8C500C94D68 /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA73412F34D8C500C94D68 /* iOSApp.swift */; };
 		BFBA73472F34D8C500C94D68 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733C2F34D8C500C94D68 /* Preview Assets.xcassets */; };
 		BFBA73482F34D8C500C94D68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733E2F34D8C500C94D68 /* Assets.xcassets */; };
-		BFBA734A2F34D8C500C94D68 /* NaverLoginBridgeError.swift in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2FA65A5A9C5AD2181DB1E845 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		49798E78D608B8DBF563C324 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 		BEDAF15A8875D515274269F3 /* Kustaurant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kustaurant.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginBridge.swift; sourceTree = "<group>"; };
-		BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginBridgeError.swift; sourceTree = "<group>"; };
 		BFBA733C2F34D8C500C94D68 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BFBA733E2F34D8C500C94D68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BFBA733F2F34D8C500C94D68 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -33,8 +29,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AAC7BD4E7A7D29C041541713 /* Configuration */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = Configuration;
 			sourceTree = "<group>";
 		};
@@ -69,15 +63,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		BFBA733B2F34D8C500C94D68 /* login */ = {
-			isa = PBXGroup;
-			children = (
-				BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */,
-				BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */,
-			);
-			path = login;
-			sourceTree = "<group>";
-		};
 		BFBA733D2F34D8C500C94D68 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,7 +74,6 @@
 		BFBA73422F34D8C500C94D68 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
-				BFBA733B2F34D8C500C94D68 /* login */,
 				BFBA733D2F34D8C500C94D68 /* Preview Content */,
 				BFBA733E2F34D8C500C94D68 /* Assets.xcassets */,
 				BFBA733F2F34D8C500C94D68 /* ContentView.swift */,
@@ -181,7 +165,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFBA73472F34D8C500C94D68 /* Preview Assets.xcassets in Resources */,
-				BFBA734A2F34D8C500C94D68 /* NaverLoginBridgeError.swift in Resources */,
 				BFBA73482F34D8C500C94D68 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -238,9 +221,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -254,7 +241,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BFBA73432F34D8C500C94D68 /* NaverLoginBridge.swift in Sources */,
 				BFBA73452F34D8C500C94D68 /* ContentView.swift in Sources */,
 				BFBA73462F34D8C500C94D68 /* iOSApp.swift in Sources */,
 			);
