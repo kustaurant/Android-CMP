@@ -84,7 +84,6 @@ fun TierScreen(
     val mapPlatform: TierMapPlatform = koinInject()
     val sharedMapInstance = mapPlatform.rememberMapInstance()
 
-    LaunchedEffect(Unit) { viewModel.fetchFirstRestaurants() }
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onTabSelected(tabs[pagerState.currentPage])
     }

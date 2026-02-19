@@ -23,7 +23,7 @@ class TierViewModel(
     val uiState: StateFlow<TierUiState> = _uiState.asStateFlow()
 
     init {
-        loadRestaurant()
+        fetchFirstRestaurants()
     }
 
     fun setShowBottomSheet(show: Boolean) {
