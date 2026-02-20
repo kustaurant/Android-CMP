@@ -1,21 +1,20 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'tier'
     spec.version                  = '1.0.0'
-    spec.homepage                 = 'https://your.domain'
+    spec.homepage                 = 'https://kustaurant.com'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = 'tierKit'
-    spec.vendored_frameworks      = 'build/cocoapods/framework/tier.framework'
+    spec.summary                  = 'Kustaurant iOS Tier Kit'
+    spec.vendored_frameworks      = 'build/cocoapods/framework/tierKit.framework'
     spec.libraries                = 'c++'
-    spec.ios.deployment_target    = '12.0'
-    spec.dependency 'NMapsGeometry', '1.0.2'
-    spec.dependency 'NMapsMap', '3.19.0'
+    spec.ios.deployment_target    = '13.0'
+    spec.dependency 'NMapsMap', '3.23.0'
                 
-    if !Dir.exist?('build/cocoapods/framework/tier.framework') || Dir.empty?('build/cocoapods/framework/tier.framework')
+    if !Dir.exist?('build/cocoapods/framework/tierKit.framework') || Dir.empty?('build/cocoapods/framework/tierKit.framework')
         raise "
 
-        Kotlin framework 'tier' doesn't exist yet, so a proper Xcode project can't be generated.
+        Kotlin framework 'tierKit' doesn't exist yet, so a proper Xcode project can't be generated.
         'pod install' should be executed after running ':generateDummyFramework' Gradle task:
 
             ./gradlew :shared:feature:tier:generateDummyFramework
@@ -29,7 +28,7 @@ Pod::Spec.new do |spec|
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':shared:feature:tier',
-        'PRODUCT_MODULE_NAME' => 'tier',
+        'PRODUCT_MODULE_NAME' => 'tierKit',
     }
                 
     spec.script_phases = [

@@ -8,6 +8,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,9 +19,12 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kus.designsystem.theme.KusTheme
+import com.kus.domain.auth.session.SessionEvent
+import com.kus.domain.auth.session.SessionEventBus
 import com.kus.feature.community.navigation.Community
 import com.kus.feature.draw.navigation.Draw
 import com.kus.feature.home.navigation.Home
+import com.kus.feature.login.navigation.Login
 import com.kus.feature.my.navigation.My
 import com.kus.feature.tier.navigation.Tier
 import com.kus.kustaurant.navigation.BottomTab
@@ -28,6 +32,7 @@ import com.kus.kustaurant.navigation.KusBottomBar
 import com.kus.kustaurant.navigation.KusNavHost
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @Composable
 @Preview
@@ -59,6 +64,20 @@ fun SetNavigation() {
         }
     }
 
+    val sessionBus: SessionEventBus = koinInject()
+    LaunchedEffect(Unit) {
+        sessionBus.events.collect { ev ->
+            when (ev) {
+                SessionEvent.Expired -> {
+                    navController.navigate(Login) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            }
+        }
+    }
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -78,7 +97,12 @@ fun SetNavigation() {
         },
         modifier = Modifier.systemBarsPadding(),
     ) { padding ->
-        KusNavHost(navController, durationMillis, onShowMessage, Modifier.padding(padding))
+        KusNavHost(
+            navController = navController,
+            durationMillis = durationMillis,
+            onShowMessage = onShowMessage,
+            modifier = Modifier.padding(padding),
+        )
     }
 }
 

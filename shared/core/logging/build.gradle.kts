@@ -42,6 +42,7 @@ kotlin {
 
         iosMain {
             dependencies {
+                implementation(libs.koin.core)
             }
         }
     }

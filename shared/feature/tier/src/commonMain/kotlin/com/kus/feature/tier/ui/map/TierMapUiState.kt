@@ -1,6 +1,6 @@
 package com.kus.feature.tier.ui.map
 
-import com.kus.feature.tier.ui.UiState
+import UiState
 import com.kus.shared.domain.model.tier.TierMapData
 
 data class TierMapUiState(

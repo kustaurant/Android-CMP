@@ -32,22 +32,21 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_kus_blank
 import kustaurant.shared.core.designsystem.generated.resources.ic_location
 import kustaurant.shared.core.designsystem.generated.resources.ic_rank_none
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
-import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_2
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_3
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_4
-import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_1
 import kustaurant.shared.core.designsystem.generated.resources.ic_tier_2
 import kustaurant.shared.core.designsystem.generated.resources.ic_tier_3
 import kustaurant.shared.core.designsystem.generated.resources.ic_tier_4
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun KusRestThumbnail(
     modifier: Modifier = Modifier,
-    tier: Int,
+    tier: Int? = null,
     restName: String,
     restThumbnail: String? = null,
     restAlliance: String? = null,
@@ -209,7 +208,6 @@ fun KusRestThumbnail(
 
         }
 
-
         val tierIconRes = if (isTempTier) {
             when (tier) {
                 1 -> Res.drawable.ic_temp_tier_1
@@ -234,7 +232,7 @@ fun KusRestThumbnail(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = vectorResource(tierIconRes),
+                painter = painterResource(tierIconRes),
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier

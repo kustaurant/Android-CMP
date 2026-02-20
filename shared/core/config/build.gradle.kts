@@ -33,13 +33,32 @@ extensions.configure<BuildKonfigExtension>("buildkonfig") {
 
     defaultConfigs {
         buildConfigField(Type.STRING, "API_BASE_URL", resolveKey("API_BASE_URL", required = true))
+
         buildConfigField(
             Type.STRING,
             "NAVER_MAP_CLIENT_ID",
             resolveKey("NAVER_MAP_CLIENT_ID", required = true)
         )
+
+        buildConfigField(
+            Type.STRING,
+            "NAVER_CLIENT_ID",
+            resolveKey("NAVER_CLIENT_ID", required = true)
+        )
+        buildConfigField(
+            Type.STRING,
+            "NAVER_CLIENT_SECRET",
+            resolveKey("NAVER_CLIENT_SECRET", required = true) // 가능하면 서버로 빼는 게 원칙
+        )
+
+        buildConfigField(
+            Type.STRING,
+            "NAVER_IOS_URL_SCHEME",
+            resolveKey("NAVER_IOS_URL_SCHEME", defaultValue = "kustaurant")
+        )
     }
 }
+
 
 kotlin {
     androidTarget()
@@ -49,7 +68,9 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        commonMain.dependencies { }
+        commonMain.dependencies {
+            api(libs.koin.core)
+        }
     }
 }
 

@@ -1,30 +1,38 @@
 PODS:
+  - appKit (1.0.0):
+    - NaverBridge
+    - NidThirdPartyLogin (= 5.1.0)
+    - NMapsMap (= 3.23.0)
+  - NaverBridge (0.1.0):
+    - NidThirdPartyLogin
+  - NidThirdPartyLogin (5.1.0)
   - NMapsGeometry (1.0.2)
-  - NMapsMap (3.19.0):
+  - NMapsMap (3.23.0):
     - NMapsGeometry
-  - tier (1.0.0):
-    - NMapsGeometry (= 1.0.2)
-    - NMapsMap (= 3.19.0)
 
 DEPENDENCIES:
-  - NMapsGeometry (= 1.0.2)
-  - NMapsMap (= 3.19.0)
-  - tier (from `../shared/feature/tier`)
+  - appKit (from `../shared/appKit`)
+  - NaverBridge (from `../iosNaverBridge`)
 
 SPEC REPOS:
   trunk:
+    - NidThirdPartyLogin
     - NMapsGeometry
     - NMapsMap
 
 EXTERNAL SOURCES:
-  tier:
-    :path: "../shared/feature/tier"
+  appKit:
+    :path: "../shared/appKit"
+  NaverBridge:
+    :path: "../iosNaverBridge"
 
 SPEC CHECKSUMS:
+  appKit: 18679bd15fcb02495ade429e81eb114119f7878a
+  NaverBridge: c319b70bfdd79d1875c1e802cb862c248e8ac5d8
+  NidThirdPartyLogin: 9f1ffc5668d7487159bd1ddf9611086d454be3d4
   NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
-  NMapsMap: 99c10429d93340780b6f88d3fc7c0a3850b43664
-  tier: 1cfa494d883e6c7a3e9e940099b0916893be21a2
+  NMapsMap: 1964e6f9073301ad3cbe3a12235ba36f6f6cd905
 
-PODFILE CHECKSUM: e981913b2c0f639b2f29cde5ec13d26fe05376fc
+PODFILE CHECKSUM: 2db8b86ac7f114e53591ba92af17b273545bc826
 
 COCOAPODS: 1.16.2

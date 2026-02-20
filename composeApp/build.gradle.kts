@@ -35,9 +35,11 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.naver.maps)
+            implementation(libs.naver.oauth)
 
             implementation(libs.google.material)
             implementation(libs.androidx.core.splashscreen)
+            implementation(project(":shared:core:config"))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -49,9 +51,11 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
+            implementation(libs.koin.compose)
             implementation(libs.kotlinx.serialization.json)
 
             implementation(project(":shared:core:designSystem"))
+            implementation(project(":shared:core:logging"))
             implementation(project(":shared:core:config"))
             implementation(project(":shared:core:logging"))
             implementation(project(":shared:core:serialization"))
@@ -59,6 +63,7 @@ kotlin {
             implementation(project(":shared:data:network"))
             implementation(project(":shared:data:firstLaunch"))
             implementation(project(":shared:data:tier"))
+            implementation(project(":shared:data:auth"))
 
             implementation(project(":shared:feature:community"))
             implementation(project(":shared:feature:draw"))
@@ -72,11 +77,18 @@ kotlin {
 
             implementation(project(":shared:domain:firstLaunch"))
             implementation(project(":shared:domain:tier"))
+            implementation(project(":shared:domain:auth"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        iosMain.dependencies { 
+        iosMain.dependencies {
+            implementation(project(":shared:appKit"))
+
+            implementation(project(":shared:domain:auth"))
+            implementation(project(":shared:data:auth"))
+
+            implementation(project(":shared:core:config"))
         }
         val desktopMain by getting {
             dependencies {
@@ -87,8 +99,8 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.components.uiToolingPreview)
 
-
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:config"))
 
                 implementation(project(":shared:data:network"))
                 implementation(project(":shared:data:firstLaunch"))
@@ -104,7 +116,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.kus.kustaurant"
+        applicationId = "com.kust.kustaurant"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

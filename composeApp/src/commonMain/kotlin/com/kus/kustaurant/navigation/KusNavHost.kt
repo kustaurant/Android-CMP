@@ -34,7 +34,7 @@ fun KusNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home,
+        startDestination = Login,
 
         enterTransition = {
             fadeIn(animationSpec = tween(durationMillis)) +

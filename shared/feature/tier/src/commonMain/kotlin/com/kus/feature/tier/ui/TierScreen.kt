@@ -40,8 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusChip
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.tier.ui.list.TierListScreen
-import com.kus.feature.tier.ui.map.TierMapScreen
-import com.kus.feature.tier.ui.map.rememberMapInstance
+import com.kus.feature.tier.ui.map.TierMapPlatform
 import kotlinx.coroutines.launch
 import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
@@ -49,6 +48,7 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_search
 import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 import kustaurant.shared.feature.tier.generated.resources.Res
 import kustaurant.shared.feature.tier.generated.resources.ic_filter
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -65,11 +65,18 @@ fun TierScreen(
     val scope = rememberCoroutineScope()
     val viewModel: TierViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val sharedMapInstance = rememberMapInstance()
+    val mapPlatform: TierMapPlatform = koinInject()
+    val sharedMapInstance = mapPlatform.rememberMapInstance()
+    val listState = rememberLazyListState()
+
 
     LaunchedEffect(Unit) { viewModel.fetchFirstRestaurants() }
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onTabSelected(tabs[pagerState.currentPage])
+    }
+
+    LaunchedEffect(uiState.filterState) {
+        listState.scrollToItem(0)
     }
 
     Column(modifier = modifier.fillMaxSize().background(Color.White)) {
@@ -102,6 +109,7 @@ fun TierScreen(
                     TierTab.LIST -> {
                         TierListScreen(
                             viewModel = viewModel,
+                            listState = listState,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(top = 44.dp)
@@ -109,7 +117,7 @@ fun TierScreen(
                     }
 
                     TierTab.MAP -> {
-                        TierMapScreen(
+                        mapPlatform.TierMapScreen(
                             modifier = Modifier.fillMaxSize(),
                             state = uiState.mapUiState,
                             mapInstance = sharedMapInstance,
@@ -287,3 +295,5 @@ private fun FadingEdgeLazyRow(
         content = content
     )
 }
+
+

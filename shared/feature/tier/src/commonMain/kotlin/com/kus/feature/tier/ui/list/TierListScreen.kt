@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items 
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,11 +38,11 @@ import com.kus.shared.domain.model.tier.TierRestaurant
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 
-
 @Composable
 fun TierListScreen(
     modifier: Modifier = Modifier,
     viewModel: TierViewModel,
+    listState : LazyListState,
     onRestaurantClick: (TierRestaurant) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,8 +51,6 @@ fun TierListScreen(
     if (showTierInfo) {
         TierInfoPopup(onDismiss = { showTierInfo = false })
     }
-
-    val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
         val pos = uiState.tierListLastPosition
@@ -177,8 +175,3 @@ fun TierListScreen(
         }
     }
 }
-
-
-
-
-

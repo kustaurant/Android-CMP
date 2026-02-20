@@ -1,12 +1,9 @@
-platform :ios, '12.0'
-
-use_frameworks!
-use_modular_headers!
+source 'https://cdn.cocoapods.org'
+platform :ios, '13.0'
+use_frameworks! :linkage => :dynamic
 
 target 'iosApp' do
-  pod 'tier', :path => '../shared/feature/tier'
-
-  pod 'NMapsMap', '3.19.0'
-  pod 'NMapsGeometry', '1.0.2'
+  pod 'appKit', :path => '../shared/appKit'
+  pod 'NaverBridge', :path => '../iosNaverBridge'
 end
 
