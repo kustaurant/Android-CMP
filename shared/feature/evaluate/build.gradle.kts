@@ -71,10 +71,20 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
 
                 implementation(libs.koin.android)
+
+                implementation(libs.peekaboo.ui)
+                implementation(libs.peekaboo.image.picker)
             }
         }
 
         iosMain {
+            dependencies {
+                implementation(libs.peekaboo.ui)
+                implementation(libs.peekaboo.image.picker)
+            }
+        }
+
+        val desktopMain by getting {
             dependencies {
             }
         }
