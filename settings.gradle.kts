@@ -51,6 +51,7 @@ include(":shared:feature:draw")
 include(":shared:feature:tier")
 include(":shared:feature:my")
 include(":shared:feature:detail")
+include(":shared:feature:evaluate")
 
 include(":shared:domain:firstLaunch")
 include(":shared:core:logging")
