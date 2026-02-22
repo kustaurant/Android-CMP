@@ -1,3 +1,3 @@
 package com.kus.kustaurant.home
 
-actual fun platform(): String = "Desktop"
+expect fun platform(): String
