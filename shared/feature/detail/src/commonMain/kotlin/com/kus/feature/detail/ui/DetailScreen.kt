@@ -49,7 +49,6 @@ fun DetailScreen() {
     val topBarIconTint = if (useWhiteTopBar) KusTheme.colors.c_000000 else null
     val evaluateButtonText = if (restaurant.isEvaluated) "다시 평가하기" else "맛집 평가하기"
     val favoriteIcon = if (restaurant.isFavorite) Res.drawable.ic_saved else Res.drawable.ic_unsaved
-    val favoriteContentDescription = if (restaurant.isFavorite) "저장됨" else "저장 안됨"
     val favoriteCountText = restaurant.favoriteCount.toString()
 
     Box(
@@ -143,7 +142,7 @@ fun DetailScreen() {
             ) {
                 Image(
                     painter = painterResource(favoriteIcon),
-                    contentDescription = favoriteContentDescription,
+                    contentDescription = null,
                     modifier = Modifier
                 )
 
