@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -145,13 +146,15 @@ fun DetailScreen(
             )
 
             Column(
-                modifier = Modifier.padding(start = 18.dp, end = 12.dp),
+                modifier = Modifier
+                    .padding(start = 18.dp, end = 12.dp)
+                    .noRippleClickable { viewModel.onFavoriteClick() },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
                     painter = painterResource(favoriteIcon),
                     contentDescription = null,
-                    modifier = Modifier
+                    modifier = Modifier.size(28.dp)
                 )
 
                 Text(

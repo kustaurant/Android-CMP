@@ -35,6 +35,10 @@ fun DetailTabSection(
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
     onReviewTabSelected: () -> Unit = {},
+    onReviewLikeClick: (Int) -> Unit = {},
+    onReviewDislikeClick: (Int) -> Unit = {},
+    onCommentLikeClick: (Int, Int) -> Unit = { _, _ -> },
+    onCommentDislikeClick: (Int, Int) -> Unit = { _, _ -> },
 ) {
     val reviewCountText = if (reviewCount > 999) "999+" else reviewCount.toString()
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
@@ -103,7 +107,11 @@ fun DetailTabSection(
                 1 -> DetailReviewContent(
                     reviewList = reviewList,
                     selectedSort = selectedSort,
-                    onSortSelected = onSortSelected
+                    onSortSelected = onSortSelected,
+                    onReviewLikeClick = onReviewLikeClick,
+                    onReviewDislikeClick = onReviewDislikeClick,
+                    onCommentLikeClick = onCommentLikeClick,
+                    onCommentDislikeClick = onCommentDislikeClick,
                 )
             }
         }
@@ -144,6 +152,10 @@ private fun DetailReviewContent(
     reviewList: List<DetailReview>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
+    onReviewLikeClick: (Int) -> Unit,
+    onReviewDislikeClick: (Int) -> Unit,
+    onCommentLikeClick: (Int, Int) -> Unit,
+    onCommentDislikeClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (reviewList.isEmpty()) return
@@ -160,7 +172,11 @@ private fun DetailReviewContent(
             val bottomPadding = if (index == reviewList.lastIndex) 80.dp else 0.dp
             DetailReviewItem(
                 review = review,
-                modifier = Modifier.padding(bottom = bottomPadding)
+                modifier = Modifier.padding(bottom = bottomPadding),
+                onReviewLikeClick = onReviewLikeClick,
+                onReviewDislikeClick = onReviewDislikeClick,
+                onCommentLikeClick = onCommentLikeClick,
+                onCommentDislikeClick = onCommentDislikeClick,
             )
             if (index != reviewList.lastIndex) {
                 Box(

@@ -293,4 +293,162 @@ class DetailViewModel : ViewModel() {
             sort = sort,
         )
     }
+
+    fun onReviewLikeClick(evalId: Int) {
+        val currentList = _reviewUiState.value.reviewList
+        val updatedList = currentList.map { review ->
+            if (review.evalId == evalId) {
+                when (review.reactionType.uppercase()) {
+                    "LIKE" -> {
+                        review.copy(
+                            reactionType = "NONE",
+                            evalLikeCount = review.evalLikeCount - 1
+                        )
+                    }
+                    "DISLIKE" -> {
+                        review.copy(
+                            reactionType = "LIKE",
+                            evalLikeCount = review.evalLikeCount + 1,
+                            evalDislikeCount = review.evalDislikeCount - 1
+                        )
+                    }
+                    else -> {
+                        review.copy(
+                            reactionType = "LIKE",
+                            evalLikeCount = review.evalLikeCount + 1
+                        )
+                    }
+                }
+            } else {
+                review
+            }
+        }
+        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+    }
+
+    fun onReviewDislikeClick(evalId: Int) {
+        val currentList = _reviewUiState.value.reviewList
+        val updatedList = currentList.map { review ->
+            if (review.evalId == evalId) {
+                when (review.reactionType.uppercase()) {
+                    "DISLIKE" -> {
+                        review.copy(
+                            reactionType = "NONE",
+                            evalDislikeCount = review.evalDislikeCount - 1
+                        )
+                    }
+                    "LIKE" -> {
+                        review.copy(
+                            reactionType = "DISLIKE",
+                            evalLikeCount = review.evalLikeCount - 1,
+                            evalDislikeCount = review.evalDislikeCount + 1
+                        )
+                    }
+                    else -> {
+                        review.copy(
+                            reactionType = "DISLIKE",
+                            evalDislikeCount = review.evalDislikeCount + 1
+                        )
+                    }
+                }
+            } else {
+                review
+            }
+        }
+        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+    }
+
+    fun onCommentLikeClick(evalId: Int, commentId: Int) {
+        val currentList = _reviewUiState.value.reviewList
+        val updatedList = currentList.map { review ->
+            if (review.evalId == evalId) {
+                val updatedComments = review.evalCommentList.map { comment ->
+                    if (comment.commentId == commentId) {
+                        when (comment.reactionType.uppercase()) {
+                            "LIKE" -> {
+                                comment.copy(
+                                    reactionType = "NONE",
+                                    commentLikeCount = comment.commentLikeCount - 1
+                                )
+                            }
+                            "DISLIKE" -> {
+                                comment.copy(
+                                    reactionType = "LIKE",
+                                    commentLikeCount = comment.commentLikeCount + 1,
+                                    commentDislikeCount = comment.commentDislikeCount - 1
+                                )
+                            }
+                            else -> {
+                                comment.copy(
+                                    reactionType = "LIKE",
+                                    commentLikeCount = comment.commentLikeCount + 1
+                                )
+                            }
+                        }
+                    } else {
+                        comment
+                    }
+                }
+                review.copy(evalCommentList = updatedComments)
+            } else {
+                review
+            }
+        }
+        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+    }
+
+    fun onCommentDislikeClick(evalId: Int, commentId: Int) {
+        val currentList = _reviewUiState.value.reviewList
+        val updatedList = currentList.map { review ->
+            if (review.evalId == evalId) {
+                val updatedComments = review.evalCommentList.map { comment ->
+                    if (comment.commentId == commentId) {
+                        when (comment.reactionType.uppercase()) {
+                            "DISLIKE" -> {
+                                comment.copy(
+                                    reactionType = "NONE",
+                                    commentDislikeCount = comment.commentDislikeCount - 1
+                                )
+                            }
+                            "LIKE" -> {
+                                comment.copy(
+                                    reactionType = "DISLIKE",
+                                    commentLikeCount = comment.commentLikeCount - 1,
+                                    commentDislikeCount = comment.commentDislikeCount + 1
+                                )
+                            }
+                            else -> {
+                                comment.copy(
+                                    reactionType = "DISLIKE",
+                                    commentDislikeCount = comment.commentDislikeCount + 1
+                                )
+                            }
+                        }
+                    } else {
+                        comment
+                    }
+                }
+                review.copy(evalCommentList = updatedComments)
+            } else {
+                review
+            }
+        }
+        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+    }
+
+    fun onFavoriteClick() {
+        val current = _uiState.value.restaurant
+        val newIsFavorite = !current.isFavorite
+        val newFavoriteCount = if (newIsFavorite) {
+            current.favoriteCount + 1
+        } else {
+            current.favoriteCount - 1
+        }
+        _uiState.value = _uiState.value.copy(
+            restaurant = current.copy(
+                isFavorite = newIsFavorite,
+                favoriteCount = newFavoriteCount
+            )
+        )
+    }
 }

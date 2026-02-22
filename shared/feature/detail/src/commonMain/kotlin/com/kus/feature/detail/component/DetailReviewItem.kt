@@ -31,7 +31,11 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun DetailReviewItem(
     review: DetailReview,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onReviewLikeClick: (Int) -> Unit = {},
+    onReviewDislikeClick: (Int) -> Unit = {},
+    onCommentLikeClick: (Int, Int) -> Unit = { _, _ -> },
+    onCommentDislikeClick: (Int, Int) -> Unit = { _, _ -> },
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -46,6 +50,8 @@ fun DetailReviewItem(
             reactionType = review.reactionType,
             likeCount = review.evalLikeCount,
             dislikeCount = review.evalDislikeCount,
+            onLikeClick = { onReviewLikeClick(review.evalId) },
+            onDislikeClick = { onReviewDislikeClick(review.evalId) },
         )
 
         if (review.evalCommentList.isNotEmpty()) {
@@ -55,7 +61,9 @@ fun DetailReviewItem(
             ) {
                 review.evalCommentList.forEach { comment ->
                     ReviewCommentItem(
-                        comment = comment
+                        comment = comment,
+                        onLikeClick = { onCommentLikeClick(review.evalId, comment.commentId) },
+                        onDislikeClick = { onCommentDislikeClick(review.evalId, comment.commentId) },
                     )
                 }
             }
@@ -74,6 +82,8 @@ private fun ReviewContent(
     likeCount: Int,
     dislikeCount: Int,
     isComment: Boolean = false,
+    onLikeClick: () -> Unit = {},
+    onDislikeClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -130,14 +140,18 @@ private fun ReviewContent(
             modifier = Modifier.padding(top = 10.dp),
             likeText = likeCount.toString(),
             dislikeText = dislikeCount.toString(),
-            selectedType = reactionType.toReactionType()
+            selectedType = reactionType.toReactionType(),
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
         )
     } else {
         KusReactionButton(
             modifier = Modifier.padding(top = 6.dp),
             likeText = likeCount.toString(),
             dislikeText = dislikeCount.toString(),
-            selectedType = reactionType.toReactionType()
+            selectedType = reactionType.toReactionType(),
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
         )
     }
 }
@@ -145,6 +159,8 @@ private fun ReviewContent(
 @Composable
 private fun ReviewCommentItem(
     comment: DetailReviewComment,
+    onLikeClick: () -> Unit = {},
+    onDislikeClick: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -164,6 +180,8 @@ private fun ReviewCommentItem(
             likeCount = comment.commentLikeCount,
             dislikeCount = comment.commentDislikeCount,
             isComment = true,
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
         )
     }
 }
