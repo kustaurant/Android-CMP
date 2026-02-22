@@ -19,6 +19,8 @@ import com.kus.feature.login.navigation.loginNavGraph
 import com.kus.feature.my.navigation.myNavGraph
 import com.kus.feature.onboarding.navigatioin.Onboarding
 import com.kus.feature.onboarding.navigatioin.onboardingNavGraph
+import com.kus.feature.search.navigation.navigateToSearch
+import com.kus.feature.search.navigation.searchNavGraph
 import com.kus.feature.splash.navigation.Splash
 import com.kus.feature.splash.navigation.splashNavGraph
 import com.kus.feature.tier.navigation.TierCategorySelect
@@ -135,5 +137,10 @@ fun KusNavHost(
 
         communityNavGraph(onShowMessage = onShowMessage)
         myNavGraph(onShowMessage = onShowMessage)
+
+        searchNavGraph(
+            navigateToUp = navController::popBackStack,
+            navigateToRestDetail = { /* Todo: 상세화면 연결 */ },
+        )
     }
 }

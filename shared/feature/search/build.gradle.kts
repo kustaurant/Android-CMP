@@ -52,7 +52,13 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:presentation"))
+                implementation(project(":shared:core:logging"))
+                implementation(project(":shared:core:serialization"))
+
                 implementation(project(":shared:data:network"))
+                implementation(project(":shared:domain:model"))
+                implementation(project(":shared:domain:search"))
                 resources.srcDirs("src/commonMain/composeResources")
             }
         }
