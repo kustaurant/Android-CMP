@@ -52,6 +52,7 @@ kotlin {
                 implementation(libs.bundles.ktor)
 
                 implementation(project(":shared:domain:model"))
+                implementation(project(":shared:domain:home"))
                 implementation(project(":shared:data:network"))
             }
         }
