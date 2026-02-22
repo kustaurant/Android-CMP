@@ -25,6 +25,7 @@ import com.kus.feature.evaluate.component.EvaluationReview
 import com.kus.feature.evaluate.component.EvaluationStar
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_left_arrow
+import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
@@ -82,7 +83,7 @@ fun EvaluateScreen(
                 .align(Alignment.TopCenter)
         ) {
             KusTopBar(
-                leftIcon = Res.drawable.ic_left_arrow,
+                leftIcon = painterResource(Res.drawable.ic_left_arrow),
                 leftIconModifier = Modifier.noRippleClickable {}
                     .padding(all = 5.dp),
                 iconTint = KusTheme.colors.c_000000,

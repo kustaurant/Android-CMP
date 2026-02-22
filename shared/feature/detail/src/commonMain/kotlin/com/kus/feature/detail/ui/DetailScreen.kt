@@ -106,7 +106,7 @@ fun DetailScreen() {
                 .align(Alignment.TopCenter)
         ) {
             KusTopBar(
-                leftIcon = Res.drawable.ic_left_arrow,
+                leftIcon = painterResource(Res.drawable.ic_left_arrow),
                 leftIconModifier = Modifier.noRippleClickable {}
                     .padding(all = 5.dp),
                 iconTint = topBarIconTint,

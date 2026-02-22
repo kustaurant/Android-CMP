@@ -50,7 +50,7 @@ kotlin {
                 implementation(libs.lifecycle.viewmodel)
 
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kamel.image)
+                implementation(libs.kamel.image.default)
 
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:data:network"))
@@ -88,6 +88,10 @@ compose.resources {
 
 android {
     namespace = "com.kus.feature.detail"
-    compileSdk = 36
-    defaultConfig { minSdk = 26 }
+
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
 }

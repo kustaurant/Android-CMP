@@ -50,7 +50,7 @@ kotlin {
                 implementation(libs.lifecycle.viewmodel)
 
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kamel.image)
+                implementation(libs.kamel.image.default)
 
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:data:network"))
