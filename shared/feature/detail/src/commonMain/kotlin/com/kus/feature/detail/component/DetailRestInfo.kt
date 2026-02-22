@@ -19,7 +19,9 @@ import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import kustaurant.shared.feature.detail.generated.resources.Res as DetailRes
 import kustaurant.shared.feature.detail.generated.resources.Res
+import kustaurant.shared.feature.detail.generated.resources.ic_review_star
 import kustaurant.shared.feature.detail.generated.resources.img_rest_example
 import org.jetbrains.compose.resources.painterResource
 
@@ -35,6 +37,8 @@ fun DetailRestInfo(
     restaurantAddress: String = "",
     naverMapUrl: String = "",
     partnershipInfo: String = "",
+    rating: Double = 0.0,
+    evaluationCount: Int = 0,
 ) {
     val uriHandler = LocalUriHandler.current
     val hasNaverMapUrl = naverMapUrl.isNotBlank()
@@ -68,6 +72,33 @@ fun DetailRestInfo(
                         color = KusTheme.colors.c_000000
                     )
                 )
+
+                Row(
+                    modifier = Modifier.padding(top = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(DetailRes.drawable.ic_review_star),
+                        contentDescription = "평점 아이콘",
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Text(
+                        text = rating.toString(),
+                        modifier = Modifier.padding(start = 4.dp),
+                        style = KusTheme.typography.type14b.copy(
+                            color = KusTheme.colors.c_000000
+                        )
+                    )
+
+                    Text(
+                        text = "(평가수 ${if (evaluationCount > 9999) "9999+" else evaluationCount}개)",
+                        modifier = Modifier.padding(start = 4.dp),
+                        style = KusTheme.typography.type14r.copy(
+                            color = KusTheme.colors.c_AAAAAA
+                        )
+                    )
+                }
 
             }
 
