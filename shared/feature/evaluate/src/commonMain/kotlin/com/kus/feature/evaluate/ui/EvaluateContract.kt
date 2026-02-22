@@ -37,7 +37,7 @@ data class Evaluation(
     val evaluationImgUrl: String,
     val evaluationComment: String,
     val starComments: List<StarComment>,
-    val newImage: String? = null,
+    val imageBytes: ByteArray? = null,
 ) {
     companion object {
         fun empty() = Evaluation(
@@ -46,7 +46,7 @@ data class Evaluation(
             evaluationImgUrl = "",
             evaluationComment = "",
             starComments = emptyList(),
-            newImage = null,
+            imageBytes = null,
         )
     }
 }

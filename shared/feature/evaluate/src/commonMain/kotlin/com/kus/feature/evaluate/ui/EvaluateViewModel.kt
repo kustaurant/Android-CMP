@@ -40,8 +40,7 @@ class EvaluateViewModel : ViewModel() {
                         star = 4.0,
                         comment = "가격 대비 훌륭합니다."
                     )
-                ),
-                newImage = null
+                )
             )
         )
     }
@@ -70,9 +69,9 @@ class EvaluateViewModel : ViewModel() {
         )
     }
 
-    fun updateNewImage(newImage: String?) {
+    fun updateImageBytes(imageBytes: ByteArray) {
         _uiState.value = _uiState.value.copy(
-            evaluation = _uiState.value.evaluation.copy(newImage = newImage)
+            evaluation = _uiState.value.evaluation.copy(imageBytes = imageBytes)
         )
     }
 
