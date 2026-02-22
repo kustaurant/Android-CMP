@@ -11,7 +11,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.kus.core.serialization.KusJson
 import com.kus.feature.community.navigation.communityNavGraph
+import com.kus.feature.detail.navigation.Detail
+import com.kus.feature.detail.navigation.detailNavGraph
 import com.kus.feature.draw.navigation.drawNavGraph
+import com.kus.feature.evaluate.navigation.Evaluate
+import com.kus.feature.evaluate.navigation.evaluateNavGraph
 import com.kus.feature.home.navigation.Home
 import com.kus.feature.home.navigation.homeNavGraph
 import com.kus.feature.login.navigation.Login
@@ -122,6 +126,7 @@ fun KusNavHost(
 
                 navController.navigate(TierCategorySelect)
             },
+            navigateToDetail = { navController.navigate(Detail) },
             popBackStackWithResult = { result ->
                 val json = KusJson.json.encodeToString(result)
                 navController.previousBackStackEntry
@@ -130,10 +135,19 @@ fun KusNavHost(
 
                 navController.popBackStack()
             },
-            onBackButtonClick = { navController.popBackStack()}
+            onBackButtonClick = { navController.popBackStack() }
         )
 
         communityNavGraph(onShowMessage = onShowMessage)
         myNavGraph(onShowMessage = onShowMessage)
+
+        detailNavGraph(
+            navigateToEvaluate = { navController.navigate(Evaluate) },
+            onBackClick = { navController.popBackStack() }
+        )
+
+        evaluateNavGraph(
+            onBackClick = { navController.popBackStack() }
+        )
     }
 }

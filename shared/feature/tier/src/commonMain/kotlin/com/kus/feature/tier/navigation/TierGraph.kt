@@ -19,8 +19,9 @@ data object TierCategorySelect
 fun NavGraphBuilder.tierNavGraph(
     initialProvider: () -> TierFilterState,
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
+    navigateToDetail: () -> Unit,
     popBackStackWithResult: (TierFilterState) -> Unit,
-    onBackButtonClick : () -> Unit = {}
+    onBackButtonClick: () -> Unit = {},
 ) {
     composable<Tier> { entry ->
         val resultJson by entry.savedStateHandle
@@ -33,6 +34,7 @@ fun NavGraphBuilder.tierNavGraph(
 
         TierRoute(
             navigateToTierCategorySelect = navigateToTierCategorySelect,
+            navigateToDetail = navigateToDetail,
             resultFilter = result,
             consumeResult = { entry.savedStateHandle[TierKeys.RESULT_FILTER] = null },
         )
