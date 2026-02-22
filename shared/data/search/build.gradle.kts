@@ -51,6 +51,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.bundles.ktor)
 
+                implementation(project(":shared:domain:search"))
                 implementation(project(":shared:domain:model"))
                 implementation(project(":shared:data:network"))
             }
