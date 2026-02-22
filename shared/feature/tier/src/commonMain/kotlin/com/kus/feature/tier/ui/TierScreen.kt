@@ -321,6 +321,7 @@ private fun TierAiToggleRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(color = KusTheme.colors.c_FFFFFF)
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -347,7 +348,7 @@ private fun TierAiToggleRow(
         Text(
             text = "티어란?",
             style = KusTheme.typography.type12m.copy(
-                color = KusTheme.colors.c_AAAAAA,
+                color = KusTheme.colors.c_666666,
                 textDecoration = TextDecoration.Underline
             ),
             modifier = Modifier.clickable(onClick = onTierGuideClick)
@@ -388,7 +389,7 @@ fun TierListScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(KusTheme.colors.c_F3F3F3)
     ) {
         TierAiToggleRow(
             onTierGuideClick = { showTierInfo = true }
@@ -453,6 +454,8 @@ fun TierListScreen(
                         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 18.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
+                        item{ Spacer(modifier = Modifier.height(6.dp)) }
+
                         items(
                             items = list,
                             key = { it.restaurantId }
