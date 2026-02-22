@@ -36,7 +36,6 @@ plugins {
 
 include(":composeApp")
 include(":uiShowcase")
-
 include(":shared:appKit")
 
 include(
@@ -62,9 +61,11 @@ include(
     ":shared:domain:model",
     ":shared:domain:tier",
     ":shared:domain:auth",
+    ":shared:domain:home",
 )
 
-include(":shared:feature:login",
+include(
+    ":shared:feature:login",
     ":shared:feature:onBoarding",
     ":shared:feature:splash",
     ":shared:feature:home",
