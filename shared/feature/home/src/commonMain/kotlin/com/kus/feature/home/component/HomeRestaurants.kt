@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
+import com.kus.shared.domain.model.restaurant.RestaurantItem
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.core.designsystem.generated.resources.Res
@@ -42,7 +43,7 @@ import org.jetbrains.compose.resources.painterResource
 internal fun HomeRestaurants(
     title: String,
     subtitle: String,
-    restaurants: List<Int>, //TODO: model 변경
+    restaurants: List<RestaurantItem>,
     onRestaurantClick: (Long) -> Unit,
 ) {
     Column(
@@ -72,16 +73,16 @@ internal fun HomeRestaurants(
         ) {
             items(restaurants) { restaurant ->
                 RestaurantItem(
-                    restaurantName = "식당이름입니데이",
-                    restaurantCuisine = "일식",
-                    restaurantPosition = "중문~어대",
-                    restaurantImgUrl = "",
-                    mainTier = 1,
-                    partnershipInfo = "",
-                    restaurantScore = 4.5,
-                    isFavorite = true,
-                    isChecked = true,
-                    onItemClick = { onRestaurantClick(1) },
+                    restaurantName = restaurant.restaurantName,
+                    restaurantCuisine = restaurant.restaurantCuisine,
+                    restaurantPosition = restaurant.restaurantPosition,
+                    restaurantImgUrl = restaurant.restaurantImgUrl,
+                    mainTier = restaurant.mainTier,
+                    partnershipInfo = restaurant.partnershipInfo,
+                    restaurantScore = restaurant.restaurantScore,
+                    isFavorite = restaurant.isFavorite,
+                    isChecked = restaurant.isEvaluated,
+                    onItemClick = { onRestaurantClick(restaurant.restaurantId) },
                 )
             }
         }

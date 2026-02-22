@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,7 +51,6 @@ internal fun HomeBannerPager(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(180.dp)
     ) {
         HorizontalPager(
             state = pagerState,
@@ -60,8 +59,10 @@ internal fun HomeBannerPager(
             KamelImage(
                 resource = asyncPainterResource(imageUrls[page]),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(),
                 onFailure = {
                     Box(
                         Modifier.fillMaxSize().background(KusTheme.colors.c_F5F5F5),
