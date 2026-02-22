@@ -19,6 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
+import com.kus.feature.evaluate.component.EvaluationImage
 import com.kus.feature.evaluate.component.EvaluationRestInfoCard
 import com.kus.feature.evaluate.component.EvaluationKeyword
 import com.kus.feature.evaluate.component.EvaluationReview
@@ -73,6 +74,16 @@ fun EvaluateScreen(
                     evaluationComment = evaluation.evaluationComment,
                     onCommentChange = { comment ->
                         viewModel.updateEvaluationComment(comment)
+                    }
+                )
+            }
+
+            item {
+                EvaluationImage(
+                    imageUrl = evaluation.evaluationImgUrl,
+                    imageBytes = evaluation.imageBytes,
+                    onImageSelected = { imageBytes ->
+                        viewModel.updateImageBytes(imageBytes)
                     }
                 )
             }
