@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -44,9 +45,9 @@ fun KusChip(
     Box(
         modifier = modifier
             .background(backgroundColor, roundedCornerShape)
+            .noRippleClickable(onClick = onClick)
             .border(1.dp, mainColor, roundedCornerShape)
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .clickable(onClick = onClick),
+            .padding(horizontal = 16.dp, vertical = 4.dp),
     ) {
         Text(
             text = chipName,
