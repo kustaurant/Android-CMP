@@ -8,7 +8,7 @@ kotlin {
     androidLibrary {
         namespace = "com.kus.shared.domain.home"
         compileSdk = 36
-        minSdk = 29
+        minSdk = 26
 
         withHostTestBuilder {
         }
