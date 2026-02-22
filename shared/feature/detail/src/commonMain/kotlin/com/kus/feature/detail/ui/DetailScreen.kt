@@ -32,13 +32,17 @@ import com.kus.feature.detail.component.DetailHeaderImage
 import com.kus.feature.detail.component.DetailRestInfo
 import com.kus.feature.detail.component.DetailTabSection
 import kustaurant.shared.core.designsystem.generated.resources.Res
+import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import kustaurant.shared.core.designsystem.generated.resources.ic_left_arrow
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun DetailScreen() {
+fun DetailScreen(
+    navigateToEvaluate: () -> Unit,
+    onBackClick: () -> Unit,
+) {
     val viewModel = remember { DetailViewModel() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val reviewUiState by viewModel.reviewUiState.collectAsStateWithLifecycle()
@@ -95,7 +99,11 @@ fun DetailScreen() {
                     onSortSelected = { sort -> viewModel.loadReviews(sort) },
                     onReviewTabSelected = {
                         viewModel.loadReviewsIfNeeded()
-                    }
+                    },
+                    onReviewLikeClick = { evalId -> viewModel.onReviewLikeClick(evalId) },
+                    onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
+                    onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
+                    onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
                 )
             }
         }
@@ -106,8 +114,8 @@ fun DetailScreen() {
                 .align(Alignment.TopCenter)
         ) {
             KusTopBar(
-                leftIcon = painterResource(Res.drawable.ic_left_arrow),
-                leftIconModifier = Modifier.noRippleClickable {}
+                leftIcon = painterResource(Res.drawable.ic_arrow_back),
+                leftIconModifier = Modifier.noRippleClickable { onBackClick() }
                     .padding(all = 5.dp),
                 iconTint = topBarIconTint,
                 modifier = Modifier
@@ -133,7 +141,7 @@ fun DetailScreen() {
                 buttonName = evaluateButtonText,
                 modifier = Modifier.weight(1f),
                 roundedCornerShape = RoundedCornerShape(50.dp),
-                onClick = {}
+                onClick = navigateToEvaluate
             )
 
             Column(

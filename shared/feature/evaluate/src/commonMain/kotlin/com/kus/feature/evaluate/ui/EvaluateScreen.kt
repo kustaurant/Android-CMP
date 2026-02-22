@@ -24,13 +24,14 @@ import com.kus.feature.evaluate.component.EvaluationKeyword
 import com.kus.feature.evaluate.component.EvaluationReview
 import com.kus.feature.evaluate.component.EvaluationStar
 import kustaurant.shared.core.designsystem.generated.resources.Res
-import kustaurant.shared.core.designsystem.generated.resources.ic_left_arrow
+import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
 fun EvaluateScreen(
-    viewModel: EvaluateViewModel = viewModel { EvaluateViewModel() }
+    onBackClick: () -> Unit,
+    viewModel: EvaluateViewModel = viewModel { EvaluateViewModel() },
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val restaurant = uiState.restaurant
@@ -83,8 +84,8 @@ fun EvaluateScreen(
                 .align(Alignment.TopCenter)
         ) {
             KusTopBar(
-                leftIcon = painterResource(Res.drawable.ic_left_arrow),
-                leftIconModifier = Modifier.noRippleClickable {}
+                leftIcon = painterResource(Res.drawable.ic_arrow_back),
+                leftIconModifier = Modifier.noRippleClickable { onBackClick() }
                     .padding(all = 5.dp),
                 iconTint = KusTheme.colors.c_000000,
                 modifier = Modifier
