@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
-import com.kus.feature.evaluate.component.EvaluationRestaurantInfoCard
+import com.kus.feature.evaluate.component.EvaluationRestInfoCard
 import com.kus.feature.evaluate.component.EvaluationKeyword
 import com.kus.feature.evaluate.component.EvaluationReview
 import com.kus.feature.evaluate.component.EvaluationStar
@@ -38,12 +38,13 @@ fun EvaluateScreen(
     val evaluation = uiState.evaluation
     Box(
         modifier = Modifier.fillMaxSize()
+            .background(color = KusTheme.colors.c_FFFFFF)
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
             item {
-                EvaluationRestaurantInfoCard(
+                EvaluationRestInfoCard(
                     restaurant = restaurant
                 )
             }

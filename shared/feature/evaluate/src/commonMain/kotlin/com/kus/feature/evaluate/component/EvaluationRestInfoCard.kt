@@ -22,7 +22,7 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_location
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun EvaluationRestaurantInfoCard(
+fun EvaluationRestInfoCard(
     restaurant: EvaluateRestaurant,
     modifier: Modifier = Modifier
 ) {
