@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -21,25 +20,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import kustaurant.shared.core.designsystem.generated.resources.Res
-//import kustaurant.core.designsystem.generated.resources.ic_check
-//import kustaurant.core.designsystem.generated.resources.ic_kus_blank
-//import kustaurant.core.designsystem.generated.resources.ic_location
-//import kustaurant.core.designsystem.generated.resources.ic_saved
-//import kustaurant.core.designsystem.generated.resources.ic_unsaved
-import org.jetbrains.compose.resources.vectorResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.core.designsystem.generated.resources.ic_check
-import kustaurant.shared.core.designsystem.generated.resources.ic_kus_logo
+import kustaurant.shared.core.designsystem.generated.resources.ic_kus_blank
 import kustaurant.shared.core.designsystem.generated.resources.ic_location
+import kustaurant.shared.core.designsystem.generated.resources.ic_rank_none
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_2
+import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_3
+import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_4
+import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_2
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_3
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_4
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun KusRestThumbnail(
@@ -50,20 +52,13 @@ fun KusRestThumbnail(
     restAlliance: String? = null,
     categories: ArrayList<String>? = null,
     location: String? = null,
+    isTempTier : Boolean = false,
     isSaved: Boolean,
     isEvaluated: Boolean,
     onClick: () -> Unit = {},
 ) {
     val locationText = location ?: "위치정보 없음"
     val allianceText = restAlliance ?: "해당사항 없음"
-    val tierText = tier?.toString() ?: "-"
-    val tierColor = when (tier) {
-        1 -> KusTheme.colors.c_0093FF
-        2 -> KusTheme.colors.c_01BAA6
-        3 -> KusTheme.colors.c_FFB900
-        4 -> KusTheme.colors.c_9BA5B0
-        else -> KusTheme.colors.c_AAAAAA
-    }
     val savedModel = if (isSaved) Res.drawable.ic_saved else Res.drawable.ic_unsaved
 
     Row(
@@ -73,6 +68,7 @@ fun KusRestThumbnail(
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(8.dp)
+            .noRippleClickable { onClick() }
     ) {
         Box(
             modifier = Modifier
@@ -81,21 +77,21 @@ fun KusRestThumbnail(
         ) {
             if (restThumbnail.isNullOrBlank()) {
                 Image(
-                    imageVector = vectorResource(Res.drawable.ic_kus_logo),
-                    contentDescription = null,
+                    painter = painterResource(Res.drawable.ic_kus_blank),
+                    contentDescription = "음식점 사진이 없을 시, 표시되는 사진입니다.",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(80.dp)
                 )
             } else {
                 KamelImage(
                     resource = asyncPainterResource(restThumbnail),
-                    contentDescription = null,
+                    contentDescription = "음식점 사진입니다.",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(80.dp),
                     onFailure = {
                         Image(
-                            imageVector = vectorResource(Res.drawable.ic_kus_logo),
-                            contentDescription = null,
+                            painter = painterResource(Res.drawable.ic_kus_blank),
+                            contentDescription = "음식점 사진이 없을 시, 표시되는 사진입니다.",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(80.dp)
                         )
@@ -104,7 +100,7 @@ fun KusRestThumbnail(
             }
 
             Icon(
-                imageVector = vectorResource(savedModel),
+                painterResource(savedModel),
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp)
@@ -130,7 +126,7 @@ fun KusRestThumbnail(
 
                 if (isEvaluated) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.ic_check),
+                        painterResource(Res.drawable.ic_check),
                         contentDescription = null,
                         modifier = Modifier.padding(start = 6.dp),
                         tint = Color.Unspecified
@@ -143,7 +139,7 @@ fun KusRestThumbnail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = vectorResource(Res.drawable.ic_location),
+                    painterResource(Res.drawable.ic_location),
                     contentDescription = null,
                     modifier = Modifier.size(12.dp),
                     tint = KusTheme.colors.c_AAAAAA
@@ -212,30 +208,37 @@ fun KusRestThumbnail(
 
         }
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.Bottom)
-                .size(20.dp)
-                .border(
-                    width = 1.dp,
-                    color = tierColor,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(2.dp)
-                .background(tierColor, RoundedCornerShape(100.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = tierText,
-                style = KusTheme.typography.type16sb.copy(
-                    color = KusTheme.colors.c_FFFFFF,
-                    lineHeight = androidx.compose.ui.unit.TextUnit.Unspecified
-                ),
-                textAlign = TextAlign.Center
-            )
+        val tierIconRes = if (isTempTier) {
+            when (tier) {
+                1 -> Res.drawable.ic_temp_tier_1
+                2 -> Res.drawable.ic_temp_tier_2
+                3 -> Res.drawable.ic_temp_tier_3
+                4 -> Res.drawable.ic_temp_tier_4
+                else -> Res.drawable.ic_rank_none
+            }
+        } else {
+            when (tier) {
+                1 -> Res.drawable.ic_tier_1
+                2 -> Res.drawable.ic_tier_2
+                3 -> Res.drawable.ic_tier_3
+                4 -> Res.drawable.ic_tier_4
+                else -> Res.drawable.ic_rank_none
+            }
         }
 
-
+        Box(
+            modifier = Modifier
+                .align(Alignment.Bottom),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(tierIconRes),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(24.dp)
+            )
+        }
     }
 }
 

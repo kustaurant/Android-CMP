@@ -53,6 +53,7 @@ kotlin {
 
                 implementation(libs.kamel.image)
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:presentation"))
                 implementation(project(":shared:data:network"))
             }
         }
@@ -86,6 +87,10 @@ compose.resources {
 
 android {
     namespace = "com.kus.feature.home"
-    compileSdk = 36
-    defaultConfig { minSdk = 26 }
+
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
 }
