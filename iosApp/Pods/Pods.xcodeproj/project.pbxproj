@@ -1,0 +1,1235 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		0928C6151B80FDB69B74BB33FDF695A5 /* NidThirdPartyLogin */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 89A41E83ED03A478E5368746C8796419 /* Build configuration list for PBXAggregateTarget "NidThirdPartyLogin" */;
+			buildPhases = (
+				CD370454358667E63EF4A51EAE6A78E8 /* [CP] Copy XCFrameworks */,
+			);
+			dependencies = (
+			);
+			name = NidThirdPartyLogin;
+		};
+		72E614C823EA09AB1AAE80D5CD8A4C58 /* NMapsGeometry */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = EB98AD101AB530610FAEE48FABDF7F57 /* Build configuration list for PBXAggregateTarget "NMapsGeometry" */;
+			buildPhases = (
+				06DEA16D4139F67FC0E17642FDBEECD0 /* [CP] Copy XCFrameworks */,
+			);
+			dependencies = (
+			);
+			name = NMapsGeometry;
+		};
+		8E049F5F4E3BDC647F924FEF22D49D90 /* NMapsMap */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 73E737D5F21341C24A13EBC70CD8D471 /* Build configuration list for PBXAggregateTarget "NMapsMap" */;
+			buildPhases = (
+				B521269790554904B95202DE2D5AC59C /* [CP] Copy XCFrameworks */,
+			);
+			dependencies = (
+				65088F0C59A7D18DD28773B1B98918D1 /* PBXTargetDependency */,
+			);
+			name = NMapsMap;
+		};
+		B53BAE07FF6B9AA83D31B6BB875CC44F /* appKit */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 211E0D115CE11913AD0815B97D8E7359 /* Build configuration list for PBXAggregateTarget "appKit" */;
+			buildPhases = (
+				11868FC0CDC01A26380ECEFD2960049C /* [CP-User] Build appKit */,
+				7CA05508EE415689B0E649E62C93B6ED /* [CP] Copy dSYMs */,
+			);
+			dependencies = (
+				7B94067BFC3D4F8679C73168C0A12771 /* PBXTargetDependency */,
+				6386B61C9689AE02A7BC05E99148BD32 /* PBXTargetDependency */,
+				7DE268D522B7683224D38EA38F6EA199 /* PBXTargetDependency */,
+			);
+			name = appKit;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		69180F749A5200419F7675AD0C976697 /* NaverBridge-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BF534B59824E08D4423D574A542C0F91 /* NaverBridge-dummy.m */; };
+		7D946DAEFE1583544AA8EB480C6782AF /* Pods-iosApp-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F87A626222A8D9B26448A9FEB04FD0DF /* Pods-iosApp-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A20ACCD8455CD3D748236C8F14202CB6 /* NaverLoginBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B9BB1C67A90B40BD649820AF5BB70B /* NaverLoginBridge.swift */; };
+		A8E4BC28DDB9425D8490DD3CBE4FB4AF /* NaverBridge-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D9F217292AE529688B0183BDE9D6F3F1 /* NaverBridge-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C0FA56EA303A5EACB6194F1EF800D2F3 /* Pods-iosApp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DC7F9924F99FEE67A9AD3BEE09A10C /* Pods-iosApp-dummy.m */; };
+		D000684C23452E84AE0A46B3F20C9564 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 384DDA2CB25005BD6479B5987C619DD4 /* Foundation.framework */; };
+		D93D8893C54FDC7518DD1325EB8D63EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 384DDA2CB25005BD6479B5987C619DD4 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		041B9FF5799E39E4005E9FFA26372904 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0928C6151B80FDB69B74BB33FDF695A5;
+			remoteInfo = NidThirdPartyLogin;
+		};
+		5AAD64DCE63287E45EB1DFCFCC53AD41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E049F5F4E3BDC647F924FEF22D49D90;
+			remoteInfo = NMapsMap;
+		};
+		7D0297C9262727332F12A02032A01228 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0928C6151B80FDB69B74BB33FDF695A5;
+			remoteInfo = NidThirdPartyLogin;
+		};
+		83D2BA46051A2AAE44492AAF8E04A498 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AA3F1FA54AD9F010A7BFD16DED9E766;
+			remoteInfo = NaverBridge;
+		};
+		9B68A9F0D907EAB66F841AB17469D3D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0928C6151B80FDB69B74BB33FDF695A5;
+			remoteInfo = NidThirdPartyLogin;
+		};
+		A738F84DDDB3D8DAED397548C131A021 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 72E614C823EA09AB1AAE80D5CD8A4C58;
+			remoteInfo = NMapsGeometry;
+		};
+		A9D49E1059B881C78B1052C9B36E241B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B53BAE07FF6B9AA83D31B6BB875CC44F;
+			remoteInfo = appKit;
+		};
+		F7F5EDF8BB5A4FFDD64C12E64179C983 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 72E614C823EA09AB1AAE80D5CD8A4C58;
+			remoteInfo = NMapsGeometry;
+		};
+		FE85AD1514E3470357B16CEB378842A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AA3F1FA54AD9F010A7BFD16DED9E766;
+			remoteInfo = NaverBridge;
+		};
+		FF900DCC88D752459644CC5F5B730BA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E049F5F4E3BDC647F924FEF22D49D90;
+			remoteInfo = NMapsMap;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0187F135D5F61750CD24C3E04B6E8B64 /* Pods-iosApp-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-iosApp-frameworks.sh"; sourceTree = "<group>"; };
+		0588903AFB9C20BBDCE8987425D989B0 /* NaverBridge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NaverBridge.debug.xcconfig; sourceTree = "<group>"; };
+		065291C44831009075113345172D52A0 /* NMapsGeometry.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; name = NMapsGeometry.xcframework; path = framework/NMapsGeometry.xcframework; sourceTree = "<group>"; };
+		089B656939651B7020EDBA811DF8483C /* appKit-copy-dsyms.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "appKit-copy-dsyms.sh"; sourceTree = "<group>"; };
+		0CB66401829B9487B813FCA06D9902E9 /* appKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = appKit.debug.xcconfig; sourceTree = "<group>"; };
+		0D7ECEA008B2E31BD45E8665E70290A0 /* appKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = appKit.release.xcconfig; sourceTree = "<group>"; };
+		1B9448B99F20C532FAB54B295BEF3258 /* NaverBridge-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "NaverBridge-Info.plist"; sourceTree = "<group>"; };
+		1D7D0F805EA57E7C331E269A2922B985 /* appKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = appKit.framework; path = build/cocoapods/framework/appKit.framework; sourceTree = "<group>"; };
+		384DDA2CB25005BD6479B5987C619DD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		3DF461B536B8A379507053AAE0EED76B /* NidThirdPartyLogin-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "NidThirdPartyLogin-xcframeworks.sh"; sourceTree = "<group>"; };
+		3F64BADB16C311E9D09DAD0116F684F4 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
+		4809D6FD6325688155B739F16959A770 /* NidCore.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; name = NidCore.xcframework; path = frameworks/NidCore.xcframework; sourceTree = "<group>"; };
+		4AD0DD93E52515972F87F6AF66DB0EBC /* NMapsMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NMapsMap.debug.xcconfig; sourceTree = "<group>"; };
+		54DC7F9924F99FEE67A9AD3BEE09A10C /* Pods-iosApp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-iosApp-dummy.m"; sourceTree = "<group>"; };
+		55009DD469961D04EA73121EE2201A96 /* NidThirdPartyLogin.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; name = NidThirdPartyLogin.xcframework; path = frameworks/NidThirdPartyLogin.xcframework; sourceTree = "<group>"; };
+		5AC974169B09D4545F741E9A2147610E /* Pods-iosApp-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-Info.plist"; sourceTree = "<group>"; };
+		67E55CE77A491C7C5CC13C369611EA99 /* NMapsGeometry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NMapsGeometry.release.xcconfig; sourceTree = "<group>"; };
+		77616531FB042CFFEF0B1613D90F1045 /* NMapsMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NMapsMap.release.xcconfig; sourceTree = "<group>"; };
+		83B9BB1C67A90B40BD649820AF5BB70B /* NaverLoginBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NaverLoginBridge.swift; path = Sources/NaverLoginBridge.swift; sourceTree = "<group>"; };
+		879A07EFF1A2FAEC67BC3C3B3CF817E5 /* NidThirdPartyLogin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NidThirdPartyLogin.release.xcconfig; sourceTree = "<group>"; };
+		8B524AABE529FB8A2D151B05321336E0 /* Pods-iosApp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-iosApp.modulemap"; sourceTree = "<group>"; };
+		97A6767292219E45880DC0D4F6BF232F /* NMapsMap-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "NMapsMap-xcframeworks.sh"; sourceTree = "<group>"; };
+		97D17ADD3DA14E983CF3740400B650C9 /* NaverBridge-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NaverBridge-prefix.pch"; sourceTree = "<group>"; };
+		9BB0B8B698D4C35D4F9A07EF70910170 /* Pods-iosApp-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-iosApp-acknowledgements.plist"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9F1FFC8B10F4D7D4F37606E8959B3F29 /* Pods-iosApp-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-iosApp-acknowledgements.markdown"; sourceTree = "<group>"; };
+		9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
+		B097DD7534E741D5C41838011D755842 /* Pods-iosApp */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-iosApp"; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B51C813F36DE078676FE634CBEB9EA70 /* NaverBridge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NaverBridge.release.xcconfig; sourceTree = "<group>"; };
+		B8FB4EBE8A33475BD30BCA395293D254 /* NaverBridge.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = NaverBridge.modulemap; sourceTree = "<group>"; };
+		BC70A3A2D24377504F31F1F0E85EB63C /* NMapsGeometry-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "NMapsGeometry-xcframeworks.sh"; sourceTree = "<group>"; };
+		BF534B59824E08D4423D574A542C0F91 /* NaverBridge-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NaverBridge-dummy.m"; sourceTree = "<group>"; };
+		BFB2CE940D2A88CE2316F79CE414BC1E /* NaverBridge.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = NaverBridge.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		CBBA4F3AE79AC582D666D17626290897 /* NidThirdPartyLogin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NidThirdPartyLogin.debug.xcconfig; sourceTree = "<group>"; };
+		D4EFA352007AB9645466417771C477C0 /* appKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = appKit.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		D9F217292AE529688B0183BDE9D6F3F1 /* NaverBridge-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NaverBridge-umbrella.h"; sourceTree = "<group>"; };
+		E3731D79E85318287B0CA04B4CD91E5F /* NMapsMap.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; name = NMapsMap.xcframework; path = framework/NMapsMap.xcframework; sourceTree = "<group>"; };
+		E546E0234816E5F5E0DD8F15A536F5E8 /* NMapsGeometry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NMapsGeometry.debug.xcconfig; sourceTree = "<group>"; };
+		ED5211EE103EECEC24BFFD0DE17E2ECD /* NaverBridge */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = NaverBridge; path = NaverBridge.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F87A626222A8D9B26448A9FEB04FD0DF /* Pods-iosApp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-iosApp-umbrella.h"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		34AE43DEBBAF6C11A3D8828C9B2F08CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93D8893C54FDC7518DD1325EB8D63EB /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E8BB26F26D4418877C2EDA8A562631B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D000684C23452E84AE0A46B3F20C9564 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		11C970DEAE48C6D0282DFE54684F53F1 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				52A898E555C2DBD7D25A7E44754C3FC6 /* Pods-iosApp */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		1326C0F6EBDA360FE247CF35D288F751 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				B8FB4EBE8A33475BD30BCA395293D254 /* NaverBridge.modulemap */,
+				BF534B59824E08D4423D574A542C0F91 /* NaverBridge-dummy.m */,
+				1B9448B99F20C532FAB54B295BEF3258 /* NaverBridge-Info.plist */,
+				97D17ADD3DA14E983CF3740400B650C9 /* NaverBridge-prefix.pch */,
+				D9F217292AE529688B0183BDE9D6F3F1 /* NaverBridge-umbrella.h */,
+				0588903AFB9C20BBDCE8987425D989B0 /* NaverBridge.debug.xcconfig */,
+				B51C813F36DE078676FE634CBEB9EA70 /* NaverBridge.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../iosApp/Pods/Target Support Files/NaverBridge";
+			sourceTree = "<group>";
+		};
+		1477CA305F6F0E8FFED9363BF4A95A5F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4809D6FD6325688155B739F16959A770 /* NidCore.xcframework */,
+				55009DD469961D04EA73121EE2201A96 /* NidThirdPartyLogin.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		20286B124660B7E1A17131C9B56864B6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A15CDC511E47226BB089B212FE572 /* NidThirdPartyLogin */,
+				4FE20E3A73B65C38765720F695D6F020 /* NMapsGeometry */,
+				3ACD990C95EF816447603FAD9DFE8A1E /* NMapsMap */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		2AC7D608BDB701880B260D4068EAE168 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E3731D79E85318287B0CA04B4CD91E5F /* NMapsMap.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		33C29302130262143286BC6B09C9D9A4 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				089B656939651B7020EDBA811DF8483C /* appKit-copy-dsyms.sh */,
+				0CB66401829B9487B813FCA06D9902E9 /* appKit.debug.xcconfig */,
+				0D7ECEA008B2E31BD45E8665E70290A0 /* appKit.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../../iosApp/Pods/Target Support Files/appKit";
+			sourceTree = "<group>";
+		};
+		35F402A8AF2C4C09644EFC2680273A00 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				BFB2CE940D2A88CE2316F79CE414BC1E /* NaverBridge.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		3ACD990C95EF816447603FAD9DFE8A1E /* NMapsMap */ = {
+			isa = PBXGroup;
+			children = (
+				2AC7D608BDB701880B260D4068EAE168 /* Frameworks */,
+				8B6E2DF8C2A0C5402A6934085DD52807 /* Support Files */,
+			);
+			name = NMapsMap;
+			path = NMapsMap;
+			sourceTree = "<group>";
+		};
+		4CCD3C222E9781340146930726597BA6 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				BC70A3A2D24377504F31F1F0E85EB63C /* NMapsGeometry-xcframeworks.sh */,
+				E546E0234816E5F5E0DD8F15A536F5E8 /* NMapsGeometry.debug.xcconfig */,
+				67E55CE77A491C7C5CC13C369611EA99 /* NMapsGeometry.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/NMapsGeometry";
+			sourceTree = "<group>";
+		};
+		4FE20E3A73B65C38765720F695D6F020 /* NMapsGeometry */ = {
+			isa = PBXGroup;
+			children = (
+				FE85BF38368B1461380EBAEDCFAC205F /* Frameworks */,
+				4CCD3C222E9781340146930726597BA6 /* Support Files */,
+			);
+			name = NMapsGeometry;
+			path = NMapsGeometry;
+			sourceTree = "<group>";
+		};
+		52A898E555C2DBD7D25A7E44754C3FC6 /* Pods-iosApp */ = {
+			isa = PBXGroup;
+			children = (
+				8B524AABE529FB8A2D151B05321336E0 /* Pods-iosApp.modulemap */,
+				9F1FFC8B10F4D7D4F37606E8959B3F29 /* Pods-iosApp-acknowledgements.markdown */,
+				9BB0B8B698D4C35D4F9A07EF70910170 /* Pods-iosApp-acknowledgements.plist */,
+				54DC7F9924F99FEE67A9AD3BEE09A10C /* Pods-iosApp-dummy.m */,
+				0187F135D5F61750CD24C3E04B6E8B64 /* Pods-iosApp-frameworks.sh */,
+				5AC974169B09D4545F741E9A2147610E /* Pods-iosApp-Info.plist */,
+				F87A626222A8D9B26448A9FEB04FD0DF /* Pods-iosApp-umbrella.h */,
+				3F64BADB16C311E9D09DAD0116F684F4 /* Pods-iosApp.debug.xcconfig */,
+				9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */,
+			);
+			name = "Pods-iosApp";
+			path = "Target Support Files/Pods-iosApp";
+			sourceTree = "<group>";
+		};
+		584833C163BAE4EF0ED8DC28DD344281 /* appKit */ = {
+			isa = PBXGroup;
+			children = (
+				72D1E11EE92914B91786A56C346D4CD4 /* Frameworks */,
+				BA20B700C62749586678F90DEDB0B436 /* Pod */,
+				33C29302130262143286BC6B09C9D9A4 /* Support Files */,
+			);
+			name = appKit;
+			path = ../../shared/appKit;
+			sourceTree = "<group>";
+		};
+		72D1E11EE92914B91786A56C346D4CD4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D7D0F805EA57E7C331E269A2922B985 /* appKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7E6A15CDC511E47226BB089B212FE572 /* NidThirdPartyLogin */ = {
+			isa = PBXGroup;
+			children = (
+				1477CA305F6F0E8FFED9363BF4A95A5F /* Frameworks */,
+				D90B1088C509C282201FEBFD7B094D51 /* Support Files */,
+			);
+			name = NidThirdPartyLogin;
+			path = NidThirdPartyLogin;
+			sourceTree = "<group>";
+		};
+		8B6E2DF8C2A0C5402A6934085DD52807 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				97A6767292219E45880DC0D4F6BF232F /* NMapsMap-xcframeworks.sh */,
+				4AD0DD93E52515972F87F6AF66DB0EBC /* NMapsMap.debug.xcconfig */,
+				77616531FB042CFFEF0B1613D90F1045 /* NMapsMap.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/NMapsMap";
+			sourceTree = "<group>";
+		};
+		9CE31C193E2979256B85067E0B215CBF /* NaverBridge */ = {
+			isa = PBXGroup;
+			children = (
+				83B9BB1C67A90B40BD649820AF5BB70B /* NaverLoginBridge.swift */,
+				35F402A8AF2C4C09644EFC2680273A00 /* Pod */,
+				1326C0F6EBDA360FE247CF35D288F751 /* Support Files */,
+			);
+			name = NaverBridge;
+			path = ../../iosNaverBridge;
+			sourceTree = "<group>";
+		};
+		BA20B700C62749586678F90DEDB0B436 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				D4EFA352007AB9645466417771C477C0 /* appKit.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				EB5D07B0240D4528936CABA373DB5DE0 /* Development Pods */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				20286B124660B7E1A17131C9B56864B6 /* Pods */,
+				D8F5DE6EF031C9BCCD0C7ACA29DE6C0A /* Products */,
+				11C970DEAE48C6D0282DFE54684F53F1 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E4801F62A6B08CD9B5410329F1A18FDE /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D8F5DE6EF031C9BCCD0C7ACA29DE6C0A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ED5211EE103EECEC24BFFD0DE17E2ECD /* NaverBridge */,
+				B097DD7534E741D5C41838011D755842 /* Pods-iosApp */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D90B1088C509C282201FEBFD7B094D51 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				3DF461B536B8A379507053AAE0EED76B /* NidThirdPartyLogin-xcframeworks.sh */,
+				CBBA4F3AE79AC582D666D17626290897 /* NidThirdPartyLogin.debug.xcconfig */,
+				879A07EFF1A2FAEC67BC3C3B3CF817E5 /* NidThirdPartyLogin.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/NidThirdPartyLogin";
+			sourceTree = "<group>";
+		};
+		E4801F62A6B08CD9B5410329F1A18FDE /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				384DDA2CB25005BD6479B5987C619DD4 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		EB5D07B0240D4528936CABA373DB5DE0 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				584833C163BAE4EF0ED8DC28DD344281 /* appKit */,
+				9CE31C193E2979256B85067E0B215CBF /* NaverBridge */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		FE85BF38368B1461380EBAEDCFAC205F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				065291C44831009075113345172D52A0 /* NMapsGeometry.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9EB382ACD9E9B1BFB04C5D324892152F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D946DAEFE1583544AA8EB480C6782AF /* Pods-iosApp-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDD7BECE51368473494F7CCB7ACFD4E4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A8E4BC28DDB9425D8490DD3CBE4FB4AF /* NaverBridge-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1AA3F1FA54AD9F010A7BFD16DED9E766 /* NaverBridge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 43C4BFD34AAD36FB4F5213B6C5E55B27 /* Build configuration list for PBXNativeTarget "NaverBridge" */;
+			buildPhases = (
+				DDD7BECE51368473494F7CCB7ACFD4E4 /* Headers */,
+				F0045DCA8A9C688556AB2717C6AD2974 /* Sources */,
+				4E8BB26F26D4418877C2EDA8A562631B /* Frameworks */,
+				3BB59DA3661C99E443393B110EF8E749 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2F4762432DD7B23E5224910217A3A913 /* PBXTargetDependency */,
+			);
+			name = NaverBridge;
+			productName = NaverBridge;
+			productReference = ED5211EE103EECEC24BFFD0DE17E2ECD /* NaverBridge */;
+			productType = "com.apple.product-type.framework";
+		};
+		ED39C638569286489CD697A6C8964146 /* Pods-iosApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9C615F44F976F7430335000EA5BF646 /* Build configuration list for PBXNativeTarget "Pods-iosApp" */;
+			buildPhases = (
+				9EB382ACD9E9B1BFB04C5D324892152F /* Headers */,
+				7416A96A514A013B7EF377EF102C4598 /* Sources */,
+				34AE43DEBBAF6C11A3D8828C9B2F08CE /* Frameworks */,
+				494031515BF53FBDC81432F37B30F7D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7CF2A370C01DE76D900272EE7E942E97 /* PBXTargetDependency */,
+				90868B346A5EFA19FD416697C5DC3BAC /* PBXTargetDependency */,
+				8BE4D53F4DBDD5FA7A49EB16A888D9EB /* PBXTargetDependency */,
+				7950EE897D132D85228C811679C04DC0 /* PBXTargetDependency */,
+				81B135FB42DE41FFFB4D448DABFC5630 /* PBXTargetDependency */,
+			);
+			name = "Pods-iosApp";
+			productName = Pods_iosApp;
+			productReference = B097DD7534E741D5C41838011D755842 /* Pods-iosApp */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 16.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			minimizedProjectReferenceProxies = 0;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D8F5DE6EF031C9BCCD0C7ACA29DE6C0A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B53BAE07FF6B9AA83D31B6BB875CC44F /* appKit */,
+				1AA3F1FA54AD9F010A7BFD16DED9E766 /* NaverBridge */,
+				0928C6151B80FDB69B74BB33FDF695A5 /* NidThirdPartyLogin */,
+				72E614C823EA09AB1AAE80D5CD8A4C58 /* NMapsGeometry */,
+				8E049F5F4E3BDC647F924FEF22D49D90 /* NMapsMap */,
+				ED39C638569286489CD697A6C8964146 /* Pods-iosApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3BB59DA3661C99E443393B110EF8E749 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		494031515BF53FBDC81432F37B30F7D9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		06DEA16D4139F67FC0E17642FDBEECD0 /* [CP] Copy XCFrameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/NMapsGeometry/NMapsGeometry-xcframeworks-input-files.xcfilelist",
+			);
+			name = "[CP] Copy XCFrameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/NMapsGeometry/NMapsGeometry-xcframeworks-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/NMapsGeometry/NMapsGeometry-xcframeworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		11868FC0CDC01A26380ECEFD2960049C /* [CP-User] Build appKit */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Build appKit";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "                if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n                  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \"YES\"\"\n                  exit 0\n                fi\n                set -ev\n                REPO_ROOT=\"$PODS_TARGET_SRCROOT\"\n                \"$REPO_ROOT/../../gradlew\" -p \"$REPO_ROOT\" $KOTLIN_PROJECT_PATH:syncFramework                     -Pkotlin.native.cocoapods.platform=$PLATFORM_NAME                     -Pkotlin.native.cocoapods.archs=\"$ARCHS\"                     -Pkotlin.native.cocoapods.configuration=\"$CONFIGURATION\"\n";
+		};
+		7CA05508EE415689B0E649E62C93B6ED /* [CP] Copy dSYMs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/appKit/appKit-copy-dsyms-input-files.xcfilelist",
+			);
+			name = "[CP] Copy dSYMs";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/appKit/appKit-copy-dsyms-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/appKit/appKit-copy-dsyms.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B521269790554904B95202DE2D5AC59C /* [CP] Copy XCFrameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/NMapsMap/NMapsMap-xcframeworks-input-files.xcfilelist",
+			);
+			name = "[CP] Copy XCFrameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/NMapsMap/NMapsMap-xcframeworks-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/NMapsMap/NMapsMap-xcframeworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CD370454358667E63EF4A51EAE6A78E8 /* [CP] Copy XCFrameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/NidThirdPartyLogin/NidThirdPartyLogin-xcframeworks-input-files.xcfilelist",
+			);
+			name = "[CP] Copy XCFrameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/NidThirdPartyLogin/NidThirdPartyLogin-xcframeworks-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/NidThirdPartyLogin/NidThirdPartyLogin-xcframeworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7416A96A514A013B7EF377EF102C4598 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0FA56EA303A5EACB6194F1EF800D2F3 /* Pods-iosApp-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0045DCA8A9C688556AB2717C6AD2974 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				69180F749A5200419F7675AD0C976697 /* NaverBridge-dummy.m in Sources */,
+				A20ACCD8455CD3D748236C8F14202CB6 /* NaverLoginBridge.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2F4762432DD7B23E5224910217A3A913 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NidThirdPartyLogin;
+			target = 0928C6151B80FDB69B74BB33FDF695A5 /* NidThirdPartyLogin */;
+			targetProxy = 041B9FF5799E39E4005E9FFA26372904 /* PBXContainerItemProxy */;
+		};
+		6386B61C9689AE02A7BC05E99148BD32 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NidThirdPartyLogin;
+			target = 0928C6151B80FDB69B74BB33FDF695A5 /* NidThirdPartyLogin */;
+			targetProxy = 9B68A9F0D907EAB66F841AB17469D3D6 /* PBXContainerItemProxy */;
+		};
+		65088F0C59A7D18DD28773B1B98918D1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NMapsGeometry;
+			target = 72E614C823EA09AB1AAE80D5CD8A4C58 /* NMapsGeometry */;
+			targetProxy = A738F84DDDB3D8DAED397548C131A021 /* PBXContainerItemProxy */;
+		};
+		7950EE897D132D85228C811679C04DC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NidThirdPartyLogin;
+			target = 0928C6151B80FDB69B74BB33FDF695A5 /* NidThirdPartyLogin */;
+			targetProxy = 7D0297C9262727332F12A02032A01228 /* PBXContainerItemProxy */;
+		};
+		7B94067BFC3D4F8679C73168C0A12771 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NaverBridge;
+			target = 1AA3F1FA54AD9F010A7BFD16DED9E766 /* NaverBridge */;
+			targetProxy = 83D2BA46051A2AAE44492AAF8E04A498 /* PBXContainerItemProxy */;
+		};
+		7CF2A370C01DE76D900272EE7E942E97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NMapsGeometry;
+			target = 72E614C823EA09AB1AAE80D5CD8A4C58 /* NMapsGeometry */;
+			targetProxy = F7F5EDF8BB5A4FFDD64C12E64179C983 /* PBXContainerItemProxy */;
+		};
+		7DE268D522B7683224D38EA38F6EA199 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NMapsMap;
+			target = 8E049F5F4E3BDC647F924FEF22D49D90 /* NMapsMap */;
+			targetProxy = 5AAD64DCE63287E45EB1DFCFCC53AD41 /* PBXContainerItemProxy */;
+		};
+		81B135FB42DE41FFFB4D448DABFC5630 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = appKit;
+			target = B53BAE07FF6B9AA83D31B6BB875CC44F /* appKit */;
+			targetProxy = A9D49E1059B881C78B1052C9B36E241B /* PBXContainerItemProxy */;
+		};
+		8BE4D53F4DBDD5FA7A49EB16A888D9EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NaverBridge;
+			target = 1AA3F1FA54AD9F010A7BFD16DED9E766 /* NaverBridge */;
+			targetProxy = FE85AD1514E3470357B16CEB378842A6 /* PBXContainerItemProxy */;
+		};
+		90868B346A5EFA19FD416697C5DC3BAC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NMapsMap;
+			target = 8E049F5F4E3BDC647F924FEF22D49D90 /* NMapsMap */;
+			targetProxy = FF900DCC88D752459644CC5F5B730BA6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		05F65337F63BFA139670FF4A95D20519 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0588903AFB9C20BBDCE8987425D989B0 /* NaverBridge.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_PREFIX_HEADER = "Target Support Files/NaverBridge/NaverBridge-prefix.pch";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Target Support Files/NaverBridge/NaverBridge-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/NaverBridge/NaverBridge.modulemap";
+				PRODUCT_MODULE_NAME = NaverBridge;
+				PRODUCT_NAME = NaverBridge;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		09FC1A9D27A944F1965D6F11A07BDC30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FECCB5AFF87D121F15BA01E683C7932 /* Pods-iosApp.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = arm64;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-iosApp/Pods-iosApp-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-iosApp/Pods-iosApp.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		3391448DB5EDA03A303F4A425480F491 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0D7ECEA008B2E31BD45E8665E70290A0 /* appKit.release.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		40421F78879E2CE6F44AB62B90214242 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CBBA4F3AE79AC582D666D17626290897 /* NidThirdPartyLogin.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4AA700BA0E738F4312D016A532481693 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4AD0DD93E52515972F87F6AF66DB0EBC /* NMapsMap.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6123471002C4E281986706ABEF31EF35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B51C813F36DE078676FE634CBEB9EA70 /* NaverBridge.release.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_PREFIX_HEADER = "Target Support Files/NaverBridge/NaverBridge-prefix.pch";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Target Support Files/NaverBridge/NaverBridge-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/NaverBridge/NaverBridge.modulemap";
+				PRODUCT_MODULE_NAME = NaverBridge;
+				PRODUCT_NAME = NaverBridge;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		6AE67CB6DE03BCF434F0021701A5434C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67E55CE77A491C7C5CC13C369611EA99 /* NMapsGeometry.release.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6FD87B8D4AE49B0B61CC342B0A27D0A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 77616531FB042CFFEF0B1613D90F1045 /* NMapsMap.release.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8DE5143C03248BB6CD542DE3963D6F3A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		9C04AFC60EF16BE59D29DB74306DD4B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 879A07EFF1A2FAEC67BC3C3B3CF817E5 /* NidThirdPartyLogin.release.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9E406C6AAF85E580207CD97B0044DEAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		B0EBFC0DA1653266BE5041C14FA7F292 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3F64BADB16C311E9D09DAD0116F684F4 /* Pods-iosApp.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = arm64;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-iosApp/Pods-iosApp-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-iosApp/Pods-iosApp.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		B14390F3FBAB6778314FCE02AE418A44 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E546E0234816E5F5E0DD8F15A536F5E8 /* NMapsGeometry.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8BEF74E46ED2A85AEBD94E733117A6D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0CB66401829B9487B813FCA06D9902E9 /* appKit.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		211E0D115CE11913AD0815B97D8E7359 /* Build configuration list for PBXAggregateTarget "appKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8BEF74E46ED2A85AEBD94E733117A6D /* Debug */,
+				3391448DB5EDA03A303F4A425480F491 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		43C4BFD34AAD36FB4F5213B6C5E55B27 /* Build configuration list for PBXNativeTarget "NaverBridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05F65337F63BFA139670FF4A95D20519 /* Debug */,
+				6123471002C4E281986706ABEF31EF35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8DE5143C03248BB6CD542DE3963D6F3A /* Debug */,
+				9E406C6AAF85E580207CD97B0044DEAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73E737D5F21341C24A13EBC70CD8D471 /* Build configuration list for PBXAggregateTarget "NMapsMap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4AA700BA0E738F4312D016A532481693 /* Debug */,
+				6FD87B8D4AE49B0B61CC342B0A27D0A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		89A41E83ED03A478E5368746C8796419 /* Build configuration list for PBXAggregateTarget "NidThirdPartyLogin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40421F78879E2CE6F44AB62B90214242 /* Debug */,
+				9C04AFC60EF16BE59D29DB74306DD4B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E9C615F44F976F7430335000EA5BF646 /* Build configuration list for PBXNativeTarget "Pods-iosApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0EBFC0DA1653266BE5041C14FA7F292 /* Debug */,
+				09FC1A9D27A944F1965D6F11A07BDC30 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EB98AD101AB530610FAEE48FABDF7F57 /* Build configuration list for PBXAggregateTarget "NMapsGeometry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B14390F3FBAB6778314FCE02AE418A44 /* Debug */,
+				6AE67CB6DE03BCF434F0021701A5434C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

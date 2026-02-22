@@ -1,17 +1,12 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.androidLint)
 }
 
 kotlin {
-    androidLibrary {
-        namespace = "com.kus.designsystem"
-        compileSdk = 36
-        minSdk = 26
-    }
+    androidTarget()
 
     val xcfName = "shared:core:designSystemKit"
 
@@ -47,7 +42,7 @@ kotlin {
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
-                implementation(libs.kamel.image)
+                implementation(libs.kamel.image.default)
 
                 resources.srcDirs("src/commonMain/composeResources")
             }
@@ -75,4 +70,14 @@ kotlin {
 compose.resources {
     publicResClass = true
     generateResClass = always
+}
+
+android {
+    namespace = "com.kus.core.designsystem"
+
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
 }

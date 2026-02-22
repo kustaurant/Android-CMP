@@ -3,33 +3,35 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
     androidTarget()
-
-    val xcfName = "shared:feature:loginKit"
-
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
-
-    iosArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
-
-    iosSimulatorArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     jvm("desktop")
+
+    cocoapods {
+        summary = "Kustaurant iOS Login Kit"
+        homepage = "https://kustaurant.com"
+        version = "1.0.0"
+        ios.deploymentTarget = "13.0"
+
+        framework {
+            baseName = "loginKit"
+            isStatic = false
+        }
+
+        pod("NidThirdPartyLogin") {
+            version = "5.1.0"
+        }
+        pod("NaverBridge", path = rootProject.file("iosNaverBridge"))
+    }
+
 
     sourceSets {
         commonMain {
@@ -52,7 +54,13 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:presentation"))
+                implementation(project(":shared:core:logging"))
+
                 implementation(project(":shared:data:network"))
+
+                implementation(project(":shared:data:auth"))
+                implementation(project(":shared:domain:auth"))
             }
         }
 
@@ -65,8 +73,8 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(compose.preview)
-                implementation(libs.androidx.activity.compose)
-
+                implementation(libs.androidx.activity.compose) 
+                implementation(libs.naver.oauth)
                 implementation(libs.koin.android)
             }
         }
@@ -85,6 +93,10 @@ compose.resources {
 
 android {
     namespace = "com.kus.feature.login"
-    compileSdk = 36
-    defaultConfig { minSdk = 26 }
+
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
 }

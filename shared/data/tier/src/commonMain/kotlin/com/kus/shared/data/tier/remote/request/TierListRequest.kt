@@ -1,0 +1,12 @@
+package com.kus.shared.data.tier.remote.request
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class TierListRequest(
+    val cuisines: String,
+    val situations: String,
+    val locations: String,
+    val page: Int,
+    val limit: Int = 30,
+)
