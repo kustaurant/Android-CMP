@@ -22,13 +22,11 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.search.component.KusSearchBox
 import com.kus.feature.search.state.SearchUiState
-import com.kus.shared.domain.model.restaurant.RestaurantItem
 import kustaurant.shared.feature.search.generated.resources.Res
 import kustaurant.shared.feature.search.generated.resources.ic_left_chevron
 import kustaurant.shared.feature.search.generated.resources.img_no_result
