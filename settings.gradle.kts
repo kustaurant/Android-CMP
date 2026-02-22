@@ -72,3 +72,4 @@ include(":shared:domain:auth")
 
 include(":shared:core:serialization")
 include(":shared:core:presentation")
+include(":shared:data:search")
