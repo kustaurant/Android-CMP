@@ -1,10 +1,13 @@
 package com.kus.feature.evaluate.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +30,7 @@ import com.preat.peekaboo.image.picker.toImageBitmap
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.feature.evaluate.generated.resources.Res
+import kustaurant.shared.feature.evaluate.generated.resources.ic_edit
 import kustaurant.shared.feature.evaluate.generated.resources.ic_image_add
 import org.jetbrains.compose.resources.painterResource
 
@@ -45,39 +49,48 @@ actual fun EvaluationImage(
         }
     )
 
-    Box(
-        modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .padding(top = 30.dp)
-            .height(150.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .border(
-                shape = RoundedCornerShape(16.dp),
-                width = 1.dp,
-                color = KusTheme.colors.c_AAAAAA
-            )
-            .noRippleClickable { imagePicker.launch() }
-    ) {
-        when {
-            imageBytes != null -> {
+    when {
+        imageBytes != null -> {
+            EvaluationImageFrame(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                onClick = { imagePicker.launch() }
+            ) {
                 Image(
                     bitmap = imageBytes.toImageBitmap(),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
+                EditIconBadge()
             }
+        }
 
-            imageUrl.isNotEmpty() -> {
+        imageUrl.isNotEmpty() -> {
+            EvaluationImageFrame(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                onClick = { imagePicker.launch() }
+            ) {
                 KamelImage(
-                    resource = asyncPainterResource(imageUrl),
+                    resource = { asyncPainterResource(imageUrl) },
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
+                EditIconBadge()
             }
+        }
 
-            else -> {
+        else -> {
+            EvaluationImageFrame(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                onClick = { imagePicker.launch() }
+            ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,5 +112,52 @@ actual fun EvaluationImage(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun EvaluationImageFrame(
+    modifier: Modifier,
+    onClick: () -> Unit,
+    content: @Composable BoxScope.() -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .padding(horizontal = 20.dp)
+            .padding(top = 30.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .border(
+                shape = RoundedCornerShape(16.dp),
+                width = 1.dp,
+                color = KusTheme.colors.c_AAAAAA
+            )
+            .noRippleClickable(onClick),
+        content = content
+    )
+}
+
+@Composable
+private fun BoxScope.EditIconBadge() {
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(top = 14.dp, end = 14.dp)
+            .background(
+                color = KusTheme.colors.c_323232.copy(alpha = 0.8f),
+                shape = RoundedCornerShape(100.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = KusTheme.colors.c_FFFFFF,
+                shape = RoundedCornerShape(100.dp)
+            )
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.ic_edit),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.Center)
+        )
     }
 }
