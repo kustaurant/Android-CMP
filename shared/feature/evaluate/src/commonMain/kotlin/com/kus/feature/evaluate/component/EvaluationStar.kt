@@ -15,13 +15,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusRatingBar
 import com.kus.designsystem.theme.KusTheme
+import kotlin.math.roundToInt
 
 @Composable
 fun EvaluationStar(
-    initialRating: Double = 0.5,
+    initialRating: Double = 0.0,
     onRatingChanged: (Double) -> Unit = {}
 ) {
     var currentRating by remember { mutableStateOf(initialRating.toFloat()) }
+    val ratingDescription = when ((currentRating * 2).roundToInt()) {
+        0 -> "별점을 입력해주세요"
+        1 -> "다시 갈 것 같진 않아요"
+        2 -> "많이 아쉬워요"
+        3 -> "다른데 갈껄"
+        4 -> "조금 아쉬워요"
+        5 -> "무난했어요"
+        6 -> "괜찮았어요"
+        7 -> "만족스러웠어요"
+        8 -> "무조건 한번 더 올 것 같아요"
+        9 -> "행복했습니다"
+        10 -> "인생 최고의 식당입니다"
+        else -> "별점을 입력해주세요"
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -55,20 +70,21 @@ fun EvaluationStar(
 
         Row(
             modifier = Modifier.fillMaxWidth()
+                .padding(top = 10.dp)
         ) {
             Text(
                 text = "$currentRating",
                 style = KusTheme.typography.type14b.copy(
                     color = KusTheme.colors.c_000000
                 ),
-                modifier = Modifier.padding(top = 8.dp)
             )
 
             Text(
-                text = "",
+                text = ratingDescription,
                 style = KusTheme.typography.type14r.copy(
                     color = KusTheme.colors.c_666666
-                )
+                ),
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
 
