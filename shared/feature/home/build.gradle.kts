@@ -55,6 +55,8 @@ kotlin {
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:core:presentation"))
                 implementation(project(":shared:data:network"))
+                implementation(project(":shared:domain:home"))
+                implementation(project(":shared:domain:model"))
             }
         }
 

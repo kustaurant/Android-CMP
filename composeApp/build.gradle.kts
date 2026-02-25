@@ -64,6 +64,7 @@ kotlin {
             implementation(project(":shared:data:firstLaunch"))
             implementation(project(":shared:data:tier"))
             implementation(project(":shared:data:auth"))
+            implementation(project(":shared:data:home"))
 
             implementation(project(":shared:feature:community"))
             implementation(project(":shared:feature:draw"))
@@ -78,6 +79,7 @@ kotlin {
             implementation(project(":shared:domain:firstLaunch"))
             implementation(project(":shared:domain:tier"))
             implementation(project(":shared:domain:auth"))
+            implementation(project(":shared:domain:home"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

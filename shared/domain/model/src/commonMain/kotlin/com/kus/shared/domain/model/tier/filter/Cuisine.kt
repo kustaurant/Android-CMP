@@ -18,7 +18,6 @@ enum class Cuisine {
     SALAD,
     PARTNERSHIP;
 
-
     fun toLabel(): String = when (this) {
         ALL -> "전체"
         KOREAN -> "한식"
