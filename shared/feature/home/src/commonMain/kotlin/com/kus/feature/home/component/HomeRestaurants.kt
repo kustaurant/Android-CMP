@@ -189,7 +189,7 @@ private fun RestaurantItem(
                 )
 
                 Text(
-                    text = "${restaurantScore ?: 0.0}",
+                    text = "${restaurantScore ?: "-"}",
                     style = KusTheme.typography.type12r,
                     color = KusTheme.colors.c_323232,
                 )
