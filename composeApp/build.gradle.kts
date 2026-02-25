@@ -81,6 +81,7 @@ kotlin {
             implementation(project(":shared:domain:tier"))
             implementation(project(":shared:domain:auth"))
             implementation(project(":shared:domain:home"))
+            implementation(project(":shared:domain:search"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
