@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
@@ -77,7 +78,7 @@ internal fun KusSearchBox(
                         .padding(start = 13.dp, end = 6.dp)
                         .size(20.dp)
                         .noRippleClickable { onValueChange("") },
-                    tint = KusTheme.colors.c_AAAAAA,
+                    tint = Color.Unspecified,
                 )
             }
 
