@@ -40,6 +40,12 @@ fun EvaluateScreen(
     val uiState by viewModel.uiState.collectAsState()
     val restaurant = uiState.restaurant
     val evaluation = uiState.evaluation
+    val isRatingSelected = evaluation.evaluationScore != 0.0
+    val submitButtonColor = if (isRatingSelected) {
+        KusTheme.colors.c_43AB38
+    } else {
+        KusTheme.colors.c_E0E0E0
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -134,10 +140,16 @@ fun EvaluateScreen(
                 .align(Alignment.BottomCenter),
         ) {
             KusButton(
-                enabled = true,
+                enabled = isRatingSelected,
                 buttonName = "평가 제출하기",
                 roundedCornerShape = RoundedCornerShape(50.dp),
-                onClick = {}
+                containerColor = submitButtonColor,
+                borderColor = submitButtonColor,
+                onClick = {
+                    if (!isRatingSelected) return@KusButton
+                    viewModel.submitEvaluation()
+                    onBackClick()
+                }
             )
         }
     }
