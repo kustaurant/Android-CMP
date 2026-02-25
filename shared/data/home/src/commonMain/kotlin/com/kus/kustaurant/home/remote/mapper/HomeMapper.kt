@@ -27,5 +27,7 @@ fun RestaurantResponse.toDomain(): RestaurantItem =
         latitude = latitude,
         partnershipInfo = partnershipInfo ?: "",
         restaurantScore = restaurantScore?.takeIf { s -> !s.isNaN() } ?: 0.0,
+        cuisineImgUrl = cuisineImgUrl,
+        tierImgUrl = tierImgUrl,
         isTempTier = isTempTier,
     )

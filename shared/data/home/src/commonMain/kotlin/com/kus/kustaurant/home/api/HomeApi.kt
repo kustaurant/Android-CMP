@@ -8,7 +8,7 @@ import io.ktor.client.request.get
 class HomeApi(
     private val client: HttpClient,
 ) {
-    suspend fun getHomeInfo() : HomeInfoResponse {
-        return client.get("/api/v2/home").body()
+    suspend fun getHomeInfo() : Result<HomeInfoResponse> = runCatching {
+        client.get("/api/v2/home").body()
     }
 }

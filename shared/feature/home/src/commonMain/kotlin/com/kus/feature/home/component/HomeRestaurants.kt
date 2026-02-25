@@ -116,7 +116,7 @@ private fun RestaurantItem(
             contentAlignment = Alignment.TopStart,
         ) {
             KamelImage(
-                resource = asyncPainterResource(restaurantImgUrl),
+                resource = { asyncPainterResource(restaurantImgUrl) },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -168,6 +168,7 @@ private fun RestaurantItem(
         Row(
             modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
         ) {
+
             Text(
                 text = "#$restaurantCuisine #$restaurantPosition",
                 style = KusTheme.typography.type12r,
@@ -188,7 +189,7 @@ private fun RestaurantItem(
                 )
 
                 Text(
-                    text = "$restaurantScore",
+                    text = "${restaurantScore ?: 0.0}",
                     style = KusTheme.typography.type12r,
                     color = KusTheme.colors.c_323232,
                 )

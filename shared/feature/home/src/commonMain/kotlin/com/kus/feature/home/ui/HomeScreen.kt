@@ -75,7 +75,7 @@ fun HomeRoute(
             )
         }
 
-        is UiState.Failure -> {}
+        is UiState.Failure -> { /* 서버 연결 실패 시 화면 */ }
         is UiState.Idle -> {}
     }
 }

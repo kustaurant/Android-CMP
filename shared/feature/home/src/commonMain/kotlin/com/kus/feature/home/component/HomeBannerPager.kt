@@ -37,7 +37,8 @@ internal fun HomeBannerPager(
         pageCount = { pageCount }
     )
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(pageCount) {
+        if (pageCount <= 1) return@LaunchedEffect
         while (true) {
             delay(autoSlideDelay)
 
@@ -57,7 +58,7 @@ internal fun HomeBannerPager(
             modifier = Modifier.fillMaxSize()
         ) { page ->
             KamelImage(
-                resource = asyncPainterResource(imageUrls[page]),
+                resource = { asyncPainterResource(imageUrls[page]) },
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
