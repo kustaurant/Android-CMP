@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.search.component.KusSearchBox
 import kustaurant.shared.feature.search.generated.resources.Res
 import kustaurant.shared.feature.search.generated.resources.ic_left_chevron
@@ -32,6 +33,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SearchScreen(
+    onBackClick: () -> Unit,
     onRestDetailNavigate: (Long) -> Unit,
     viewModel: SearchViewModel = viewModel(),
 ) {
@@ -52,6 +54,7 @@ fun SearchScreen(
                 Icon(
                     painter = painterResource(Res.drawable.ic_left_chevron),
                     contentDescription = "뒤로가기 버튼",
+                    modifier = Modifier.noRippleClickable(onBackClick)
                 )
 
                 Spacer(Modifier.width(8.dp))
