@@ -63,14 +63,14 @@ fun KusRatingBar(
             }
             .then(
                 if (isEnabled) {
-                    Modifier.pointerInput(Unit) {
+                    Modifier.pointerInput(isEnabled) {
                         detectDragGestures(
                             onDrag = { change, _ ->
                                 val x = change.position.x
                                 if (containerWidth > 0) {
-                                    val newRating = (x / containerWidth * 5).coerceIn(0f, 5f)
+                                    val newRating = (x / containerWidth * 5).coerceIn(0.5f, 5f)
                                     // 0.5 단위 반올림
-                                    val roundedRating = (round(newRating * 2) / 2).coerceIn(0f, 5f)
+                                    val roundedRating = (round(newRating * 2) / 2).coerceIn(0.5f, 5f)
                                     if (roundedRating != currentRating) {
                                         currentRating = roundedRating
                                         onRatingChange(roundedRating)
