@@ -115,7 +115,7 @@ fun DetailRestInfo(
                 ) {
                     if (restaurantCuisineImgUrl.startsWith("http")) {
                         KamelImage(
-                            resource = asyncPainterResource(restaurantCuisineImgUrl),
+                            resource = { asyncPainterResource(restaurantCuisineImgUrl) },
                             contentDescription = "음식 카테고리 이미지",
                             modifier = Modifier.size(20.dp)
                         )
