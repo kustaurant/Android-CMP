@@ -50,6 +50,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
+            implementation(libs.compose.ui.graphics)
             implementation(libs.koin.compose)
 
             implementation(project(":shared:core:designSystem"))
@@ -61,6 +62,7 @@ kotlin {
             implementation(project(":shared:data:firstLaunch"))
             implementation(project(":shared:data:tier"))
             implementation(project(":shared:data:auth"))
+            implementation(project(":shared:data:community"))
 
             implementation(project(":shared:feature:community"))
             implementation(project(":shared:feature:draw"))
@@ -74,6 +76,7 @@ kotlin {
             implementation(project(":shared:domain:firstLaunch"))
             implementation(project(":shared:domain:tier"))
             implementation(project(":shared:domain:auth"))
+            implementation(project(":shared:domain:community"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -108,7 +111,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.kus.kustaurant"
+    namespace = "com.kust.kustaurant"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
