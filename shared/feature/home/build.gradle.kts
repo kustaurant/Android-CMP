@@ -51,9 +51,12 @@ kotlin {
 
                 implementation(libs.kotlinx.coroutines.core)
 
+                implementation(libs.kamel.image.default)
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:core:presentation"))
                 implementation(project(":shared:data:network"))
+                implementation(project(":shared:domain:home"))
+                implementation(project(":shared:domain:model"))
             }
         }
 

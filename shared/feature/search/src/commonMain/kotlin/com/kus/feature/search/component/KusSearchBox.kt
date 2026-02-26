@@ -42,21 +42,18 @@ internal fun KusSearchBox(
                 color = KusTheme.colors.c_FFFFFF,
                 shape = RoundedCornerShape(30.dp),
             )
-            .padding(14.dp),
+            .padding(horizontal = 14.dp, vertical = 10.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             BasicTextField(
                 value = searchTerm,
                 onValueChange = onValueChange,
                 singleLine = true,
                 enabled = true,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 5.dp),
+                modifier = Modifier.weight(1f),
                 textStyle = KusTheme.typography.type14r.copy(
                     color = KusTheme.colors.c_323232
                 ),
