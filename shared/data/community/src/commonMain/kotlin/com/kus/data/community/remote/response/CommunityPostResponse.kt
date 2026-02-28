@@ -2,10 +2,11 @@ package com.kus.data.community.remote.response
 
 import com.kus.data.community.remote.request.PostCategoryRequest
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class CommunityPostResponse(
-    val postId: Long,
+    val postId: Long= 0L,
     val category: PostCategoryRequest,
     val title: String,
     val body: String,
@@ -16,7 +17,7 @@ data class CommunityPostResponse(
     @SerialName("writerevalCount")val evalCount: Long,
     @SerialName("writericonUrl")val writerIconUrl: String?,
 
-    val timeAgo: String?,
+    val timeAgo: String,
     val createdAt: String,
     val updatedAt: String?,
 
