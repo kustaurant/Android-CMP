@@ -1,31 +1,55 @@
 package com.kus.feature.detail.component
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
+import androidx.compose.ui.window.PopupProperties
 import com.kus.designsystem.component.KusRatingBar
 import com.kus.designsystem.component.KusReactionButton
 import com.kus.designsystem.component.ReactionType
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.detail.ui.DetailReview
 import com.kus.feature.detail.ui.DetailReviewComment
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.feature.detail.generated.resources.Res
+import kustaurant.shared.feature.detail.generated.resources.ic_delete
+import kustaurant.shared.feature.detail.generated.resources.ic_more
+import kustaurant.shared.feature.detail.generated.resources.ic_report
 import kustaurant.shared.feature.detail.generated.resources.img_rest_example
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -36,6 +60,10 @@ fun DetailReviewItem(
     onReviewDislikeClick: (Int) -> Unit = {},
     onCommentLikeClick: (Int, Int) -> Unit = { _, _ -> },
     onCommentDislikeClick: (Int, Int) -> Unit = { _, _ -> },
+    onReviewDeleteClick: (Int) -> Unit = {},
+    onReviewReportClick: (Int) -> Unit = {},
+    onCommentDeleteClick: (Int, Int) -> Unit = { _, _ -> },
+    onCommentReportClick: (Int, Int) -> Unit = { _, _ -> },
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -50,8 +78,11 @@ fun DetailReviewItem(
             reactionType = review.reactionType,
             likeCount = review.evalLikeCount,
             dislikeCount = review.evalDislikeCount,
+            isMine = review.isEvaluationMine,
             onLikeClick = { onReviewLikeClick(review.evalId) },
             onDislikeClick = { onReviewDislikeClick(review.evalId) },
+            onDeleteClick = { onReviewDeleteClick(review.evalId) },
+            onReportClick = { onReviewReportClick(review.evalId) },
         )
 
         if (review.evalCommentList.isNotEmpty()) {
@@ -63,7 +94,14 @@ fun DetailReviewItem(
                     ReviewCommentItem(
                         comment = comment,
                         onLikeClick = { onCommentLikeClick(review.evalId, comment.commentId) },
-                        onDislikeClick = { onCommentDislikeClick(review.evalId, comment.commentId) },
+                        onDislikeClick = {
+                            onCommentDislikeClick(
+                                review.evalId,
+                                comment.commentId
+                            )
+                        },
+                        onDeleteClick = { onCommentDeleteClick(review.evalId, comment.commentId) },
+                        onReportClick = { onCommentReportClick(review.evalId, comment.commentId) },
                     )
                 }
             }
@@ -81,10 +119,16 @@ private fun ReviewContent(
     reactionType: String,
     likeCount: Int,
     dislikeCount: Int,
+    isMine: Boolean,
     isComment: Boolean = false,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {},
+    onReportClick: () -> Unit = {},
 ) {
+    var isMenuExpanded by remember { mutableStateOf(false) }
+    val density = LocalDensity.current
+
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -112,7 +156,7 @@ private fun ReviewContent(
                     KusRatingBar(
                         rating = rating,
                         isEnabled = false,
-                        starModifier = Modifier.size(14.dp)
+                        starModifier = Modifier.size(24.dp)
                     )
                 }
 
@@ -124,6 +168,23 @@ private fun ReviewContent(
                     )
                 )
             }
+        }
+
+        Box {
+            Image(
+                painter = painterResource(Res.drawable.ic_more),
+                modifier = Modifier.noRippleClickable { isMenuExpanded = true },
+                contentDescription = null
+            )
+
+            ReviewActionPopup(
+                expanded = isMenuExpanded,
+                isMine = isMine,
+                density = density,
+                onDismissRequest = { isMenuExpanded = false },
+                onDeleteClick = onDeleteClick,
+                onReportClick = onReportClick
+            )
         }
     }
 
@@ -161,6 +222,8 @@ private fun ReviewCommentItem(
     comment: DetailReviewComment,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {},
+    onReportClick: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -168,7 +231,7 @@ private fun ReviewCommentItem(
                 color = KusTheme.colors.c_EAEAEA,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .padding(12.dp)
     ) {
         ReviewContent(
             writerIconImgUrl = comment.writerIconImgUrl,
@@ -179,9 +242,109 @@ private fun ReviewCommentItem(
             reactionType = comment.reactionType,
             likeCount = comment.commentLikeCount,
             dislikeCount = comment.commentDislikeCount,
+            isMine = comment.isCommentMine,
             isComment = true,
             onLikeClick = onLikeClick,
             onDislikeClick = onDislikeClick,
+            onDeleteClick = onDeleteClick,
+            onReportClick = onReportClick,
+        )
+    }
+}
+
+@Composable
+private fun ReviewActionPopup(
+    expanded: Boolean,
+    isMine: Boolean,
+    density: Density,
+    onDismissRequest: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onReportClick: () -> Unit,
+) {
+    var shouldRender by remember { mutableStateOf(expanded) }
+    val alpha by animateFloatAsState(
+        targetValue = if (expanded) 1f else 0f,
+        animationSpec = tween(durationMillis = 220),
+        finishedListener = { value ->
+            if (!expanded && value == 0f) {
+                shouldRender = false
+            }
+        }
+    )
+
+    val positionProvider = remember(density) {
+        object : PopupPositionProvider {
+            override fun calculatePosition(
+                anchorBounds: IntRect,
+                windowSize: IntSize,
+                layoutDirection: LayoutDirection,
+                popupContentSize: IntSize
+            ): IntOffset {
+                val x = anchorBounds.right - popupContentSize.width
+                val y = anchorBounds.bottom + with(density) { 4.dp.roundToPx() }
+                return IntOffset(x, y)
+            }
+        }
+    }
+
+    LaunchedEffect(expanded) {
+        if (expanded) {
+            shouldRender = true
+        }
+    }
+
+    if (!shouldRender) return
+
+    Popup(
+        onDismissRequest = onDismissRequest,
+        popupPositionProvider = positionProvider,
+        properties = PopupProperties(focusable = true)
+    ) {
+        val (icon, text, actionClick) = if (isMine) {
+            Triple(Res.drawable.ic_delete, "삭제하기", onDeleteClick)
+        } else {
+            Triple(Res.drawable.ic_report, "신고하기", onReportClick)
+        }
+
+        Surface(
+            shape = RoundedCornerShape(10.dp),
+            color = KusTheme.colors.c_E0E0E0,
+            modifier = Modifier.alpha(alpha)
+        ) {
+            ReviewPopUpItem(
+                icon = icon,
+                text = text,
+                onClick = {
+                    onDismissRequest()
+                    actionClick()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ReviewPopUpItem(
+    icon: DrawableResource,
+    text: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .noRippleClickable(onClick = onClick)
+            .padding(10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(38.dp)
+    ) {
+        Text(
+            text = text,
+            style = KusTheme.typography.type14r.copy(
+                color = KusTheme.colors.c_666666
+            ),
+        )
+        Image(
+            painter = painterResource(icon),
+            contentDescription = null,
         )
     }
 }
@@ -193,7 +356,7 @@ private fun ReviewAvatar(
     val size = 40.dp
     if (url.startsWith("https")) {
         KamelImage(
-            resource = asyncPainterResource(url),
+            resource = { asyncPainterResource(url) },
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(size)
