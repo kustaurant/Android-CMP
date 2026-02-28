@@ -23,6 +23,7 @@ val C_0093FF = Color(0xFF0093FF)
 val C_01BAA6 = Color(0xFF01BAA6)
 val C_FFB900 = Color(0xFFFFB900)
 val C_9BA5B0 = Color(0xFF9BA5B0)
+val C_FF0000 = Color(0xFFFF0000)
 
 
 @Stable
@@ -44,6 +45,7 @@ class KusColors(
     c_01BAA6: Color,
     c_FFB900: Color,
     c_9BA5B0: Color,
+    c_FF0000: Color,
 ) {
     var c_43AB38 by mutableStateOf(c_43AB38)
         private set
@@ -79,6 +81,8 @@ class KusColors(
         private set
     var c_9BA5B0 by mutableStateOf(c_9BA5B0)
         private set
+    var c_FF0000 by mutableStateOf(c_FF0000)
+        private set
 
     fun copy(): KusColors = KusColors(
         c_43AB38,
@@ -98,6 +102,7 @@ class KusColors(
         c_01BAA6,
         c_FFB900,
         c_9BA5B0,
+        c_FF0000,
     )
 
     fun update(other: KusColors) {
@@ -118,6 +123,7 @@ class KusColors(
         c_01BAA6 = other.c_01BAA6
         c_FFB900 = other.c_FFB900
         c_9BA5B0 = other.c_9BA5B0
+        c_FF0000 = other.c_FF0000
     }
 }
 
@@ -139,6 +145,7 @@ fun KusLightColors(
     c_01BAA6: Color = C_01BAA6,
     c_FFB900: Color = C_FFB900,
     c_9BA5B0: Color = C_9BA5B0,
+    c_FF0000: Color = C_FF0000,
 ) = KusColors(
     c_43AB38,
     c_43AB38_20,
@@ -157,4 +164,5 @@ fun KusLightColors(
     c_01BAA6,
     c_FFB900,
     c_9BA5B0,
+    c_FF0000,
 )
