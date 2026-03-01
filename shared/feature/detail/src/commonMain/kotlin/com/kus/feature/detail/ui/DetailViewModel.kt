@@ -1,16 +1,28 @@
 package com.kus.feature.detail.ui
 
+import UiError
+import UiState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.kus.feature.detail.model.DetailReview
+import com.kus.feature.detail.model.DetailReviewComment
+import com.kus.feature.detail.model.DetailReviewUiState
+import com.kus.feature.detail.model.ReviewSort
+import com.kus.feature.detail.state.DetailUiState
+import com.kus.shared.domain.detail.usecase.GetRestaurantDetailUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(
+    private val getRestaurantDetailUseCase: GetRestaurantDetailUseCase,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
-    val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     private val _reviewUiState = MutableStateFlow(DetailReviewUiState())
-    val reviewUiState: StateFlow<DetailReviewUiState> = _reviewUiState.asStateFlow()
+    val reviewUiState = _reviewUiState.asStateFlow()
 
     private val dummyReviewList = listOf(
         DetailReview(
@@ -167,112 +179,14 @@ class DetailViewModel : ViewModel() {
         ),
     )
 
-    init {
-        _uiState.value = DetailUiState(
-            restaurant = DetailRestaurant(
-                restaurantId = 1,
-                restaurantImgUrl = "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20221219_73%2F1671415873694AWTMq_JPEG%2FDSC04440.jpg",
-                mainTier = 1,
-                isTempTier = false,
-                restaurantCuisine = "한식",
-                restaurantCuisineImgUrl = "https://kustaurant.s3.ap-northeast-2.amazonaws.com/common/cuisine-icon/카페디저트.svg",
-                restaurantPosition = "건입~중문",
-                restaurantName = "제주곤이칼국수 건대점",
-                restaurantAddress = "서울시 광진구 어딘가 222-22, 304호",
-                isOpen = true,
-                businessHours = "오늘 10:00~20:00",
-                naverMapUrl = "https://map.naver.com/p/entry/place/12785886?c=20.00,0,0,0,dh",
-                situationList = arrayListOf("혼밥", "배달"),
-                partnershipInfo = "학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!!",
-                evaluationCount = 100,
-                restaurantScore = 4.4,
-                isEvaluated = true,
-                isFavorite = true,
-                favoriteCount = 44,
-                restaurantMenuList = listOf(
-                    DetailRestaurantMenu(
-                        menuId = 1,
-                        restaurantId = 1,
-                        menuName = "곤이칼국수",
-                        menuPrice = "9,000원",
-                        naverType = "대표",
-                        menuImgUrl = "https://search.pstatic.net/common/?autoRotate=true&amp;quality=95&amp;type=f320_320&amp;src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20230703_3%2F1688371416401iXlcd_JPEG%2FEmmoBollP-9f7S9t1Tm8Ia0MCo4L7avZscDoUWphehEnIczhsCfxtBcVpWjFku8X.jpg&quot",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 2,
-                        restaurantId = 1,
-                        menuName = "얼큰칼국수",
-                        menuPrice = "9,500원",
-                        naverType = "추천",
-                        menuImgUrl = "https://picsum.photos/seed/menu2/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 3,
-                        restaurantId = 1,
-                        menuName = "해물파전",
-                        menuPrice = "12,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu3/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 4,
-                        restaurantId = 1,
-                        menuName = "왕만두",
-                        menuPrice = "6,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu4/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 5,
-                        restaurantId = 1,
-                        menuName = "수제비",
-                        menuPrice = "8,500원",
-                        naverType = "메인",
-                        menuImgUrl = "https://picsum.photos/seed/menu5/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 6,
-                        restaurantId = 1,
-                        menuName = "비빔국수",
-                        menuPrice = "8,000원",
-                        naverType = "메인",
-                        menuImgUrl = "https://picsum.photos/seed/menu6/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 7,
-                        restaurantId = 1,
-                        menuName = "볶음밥",
-                        menuPrice = "7,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu7/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 8,
-                        restaurantId = 1,
-                        menuName = "김치전",
-                        menuPrice = "10,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu8/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 9,
-                        restaurantId = 1,
-                        menuName = "공기밥",
-                        menuPrice = "1,000원",
-                        naverType = "기타",
-                        menuImgUrl = "https://picsum.photos/seed/menu9/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 10,
-                        restaurantId = 1,
-                        menuName = "음료",
-                        menuPrice = "2,000원",
-                        naverType = "기타",
-                        menuImgUrl = "https://picsum.photos/seed/menu10/200/200",
-                    ),
-                )
-            )
-        )
+    fun getRestaurantDetail(restaurantId: Long) = viewModelScope.launch {
+        runCatching {
+            getRestaurantDetailUseCase(restaurantId)
+        }.onSuccess { detail ->
+            _uiState.update { it.copy(restaurant = UiState.Success(detail)) }
+        }.onFailure {
+            _uiState.update { it.copy(restaurant = UiState.Failure(UiError.Network)) }
+        }
     }
 
     fun loadReviewsIfNeeded() {
@@ -437,18 +351,25 @@ class DetailViewModel : ViewModel() {
     }
 
     fun onFavoriteClick() {
-        val current = _uiState.value.restaurant
+        val currentState = _uiState.value.restaurant
+        if (currentState !is UiState.Success) return
+
+        val current = currentState.data
         val newIsFavorite = !current.isFavorite
         val newFavoriteCount = if (newIsFavorite) {
             current.favoriteCount + 1
         } else {
             current.favoriteCount - 1
         }
-        _uiState.value = _uiState.value.copy(
-            restaurant = current.copy(
-                isFavorite = newIsFavorite,
-                favoriteCount = newFavoriteCount
+        _uiState.update {
+            it.copy(
+                restaurant = UiState.Success(
+                    current.copy(
+                        isFavorite = newIsFavorite,
+                        favoriteCount = newFavoriteCount
+                    )
+                )
             )
-        )
+        }
     }
 }

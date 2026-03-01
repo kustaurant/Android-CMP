@@ -1,5 +1,6 @@
-﻿package com.kus.feature.detail.ui
+package com.kus.feature.detail.ui
 
+import UiState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,8 +20,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,22 +44,86 @@ import com.kus.feature.detail.component.DetailCommentInputBar
 import com.kus.feature.detail.component.DetailHeaderImage
 import com.kus.feature.detail.component.DetailRestInfo
 import com.kus.feature.detail.component.DetailTabSection
+import com.kus.feature.detail.model.DetailReviewUiState
+import com.kus.feature.detail.model.ReviewSort
+import com.kus.shared.domain.model.detail.RestaurantDetail
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun DetailRoute(
+    restaurantId: Long = 1L,
+    navigateToEvaluate: () -> Unit,
+    navigateToUp: () -> Unit,
+    viewModel: DetailViewModel = koinViewModel(),
+) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val reviewUiState = viewModel.reviewUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(restaurantId) {
+        viewModel.getRestaurantDetail(restaurantId)
+    }
+
+    when (uiState.value.restaurant) {
+        is UiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is UiState.Success<*> -> {
+            val restaurant = (uiState.value.restaurant as UiState.Success).data
+            DetailSuccessScreen(
+                restaurant = restaurant,
+                reviewUiState = reviewUiState.value,
+                navigateToEvaluate = navigateToEvaluate,
+                onBackClick = navigateToUp,
+                onFavoriteClick = { viewModel.onFavoriteClick() },
+                onSortSelected = { sort -> viewModel.loadReviews(sort) },
+                onReviewTabSelected = { viewModel.loadReviewsIfNeeded() },
+                onReviewLikeClick = { evalId -> viewModel.onReviewLikeClick(evalId) },
+                onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
+                onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
+                onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
+            )
+        }
+
+        is UiState.Failure -> {
+            Box(
+                modifier = Modifier.fillMaxSize()
+                    .background(color = KusTheme.colors.c_FFFFFF),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "서버 연결이 불안정합니다. 다시 시도해주세요.")
+            }
+        }
+
+        is UiState.Idle -> {}
+    }
+}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DetailScreen(
+private fun DetailSuccessScreen(
+    restaurant: RestaurantDetail,
+    reviewUiState: DetailReviewUiState,
     navigateToEvaluate: () -> Unit,
     onBackClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onSortSelected: (ReviewSort) -> Unit,
+    onReviewTabSelected: () -> Unit,
+    onReviewLikeClick: (Int) -> Unit,
+    onReviewDislikeClick: (Int) -> Unit,
+    onCommentLikeClick: (Int, Int) -> Unit,
+    onCommentDislikeClick: (Int, Int) -> Unit,
 ) {
-    val viewModel = remember { DetailViewModel() }
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val reviewUiState by viewModel.reviewUiState.collectAsStateWithLifecycle()
-    val restaurant = uiState.restaurant
     var restInfoTopInWindow by remember { mutableStateOf(Float.POSITIVE_INFINITY) }
     val useWhiteTopBar = restInfoTopInWindow <= 0f
     val topBarBackground = if (useWhiteTopBar) KusTheme.colors.c_FFFFFF else Color.Transparent
@@ -108,15 +175,13 @@ fun DetailScreen(
                     menuList = restaurant.restaurantMenuList,
                     reviewList = reviewUiState.reviewList,
                     selectedSort = reviewUiState.sort,
-                    onSortSelected = { sort -> viewModel.loadReviews(sort) },
-                    onReviewTabSelected = {
-                        viewModel.loadReviewsIfNeeded()
-                    },
-                    onReviewLikeClick = { evalId -> viewModel.onReviewLikeClick(evalId) },
-                    onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
+                    onSortSelected = onSortSelected,
+                    onReviewTabSelected = onReviewTabSelected,
+                    onReviewLikeClick = onReviewLikeClick,
+                    onReviewDislikeClick = onReviewDislikeClick,
                     onCommentClick = { isCommentInputVisible = true },
-                    onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
-                    onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
+                    onCommentLikeClick = onCommentLikeClick,
+                    onCommentDislikeClick = onCommentDislikeClick,
                 )
             }
         }
@@ -160,7 +225,7 @@ fun DetailScreen(
             Column(
                 modifier = Modifier
                     .padding(start = 18.dp, end = 12.dp)
-                    .noRippleClickable { viewModel.onFavoriteClick() },
+                    .noRippleClickable { onFavoriteClick() },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
