@@ -44,9 +44,9 @@ import com.kus.feature.detail.component.DetailCommentInputBar
 import com.kus.feature.detail.component.DetailHeaderImage
 import com.kus.feature.detail.component.DetailRestInfo
 import com.kus.feature.detail.component.DetailTabSection
-import com.kus.feature.detail.model.DetailReviewUiState
 import com.kus.feature.detail.model.ReviewSort
 import com.kus.shared.domain.model.detail.RestaurantDetail
+import com.kus.shared.domain.model.detail.RestaurantReview
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
@@ -56,19 +56,18 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DetailRoute(
-    restaurantId: Long = 1L,
+    restaurantId: Long = 510L,
     navigateToEvaluate: () -> Unit,
     navigateToUp: () -> Unit,
     viewModel: DetailViewModel = koinViewModel(),
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    val reviewUiState = viewModel.reviewUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(restaurantId) {
         viewModel.getRestaurantDetail(restaurantId)
     }
 
-    when (uiState.value.restaurant) {
+    when (val restaurantState = uiState.restaurant) {
         is UiState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -78,16 +77,16 @@ fun DetailRoute(
             }
         }
 
-        is UiState.Success<*> -> {
-            val restaurant = (uiState.value.restaurant as UiState.Success).data
+        is UiState.Success -> {
             DetailSuccessScreen(
-                restaurant = restaurant,
-                reviewUiState = reviewUiState.value,
+                restaurant = restaurantState.data,
+                reviewsState = uiState.reviews,
+                reviewSort = uiState.reviewSort,
                 navigateToEvaluate = navigateToEvaluate,
                 onBackClick = navigateToUp,
                 onFavoriteClick = { viewModel.onFavoriteClick() },
-                onSortSelected = { sort -> viewModel.loadReviews(sort) },
-                onReviewTabSelected = { viewModel.loadReviewsIfNeeded() },
+                onSortSelected = { sort -> viewModel.getRestaurantReviews(sort) },
+                onReviewTabSelected = { viewModel.getRestaurantReviewsIfNeeded() },
                 onReviewLikeClick = { evalId -> viewModel.onReviewLikeClick(evalId) },
                 onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
                 onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
@@ -113,7 +112,8 @@ fun DetailRoute(
 @Composable
 private fun DetailSuccessScreen(
     restaurant: RestaurantDetail,
-    reviewUiState: DetailReviewUiState,
+    reviewsState: UiState<List<RestaurantReview>>,
+    reviewSort: ReviewSort,
     navigateToEvaluate: () -> Unit,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -170,11 +170,15 @@ private fun DetailSuccessScreen(
             }
 
             item {
+                val reviewList = when (reviewsState) {
+                    is UiState.Success -> reviewsState.data
+                    else -> emptyList()
+                }
                 DetailTabSection(
                     reviewCount = restaurant.evaluationCount,
                     menuList = restaurant.restaurantMenuList,
-                    reviewList = reviewUiState.reviewList,
-                    selectedSort = reviewUiState.sort,
+                    reviewList = reviewList,
+                    selectedSort = reviewSort,
                     onSortSelected = onSortSelected,
                     onReviewTabSelected = onReviewTabSelected,
                     onReviewLikeClick = onReviewLikeClick,
