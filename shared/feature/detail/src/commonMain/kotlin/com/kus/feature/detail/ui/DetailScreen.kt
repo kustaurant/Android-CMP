@@ -1,13 +1,20 @@
 ﻿package com.kus.feature.detail.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,22 +30,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
+import com.kus.feature.detail.component.DetailCommentInputBar
 import com.kus.feature.detail.component.DetailHeaderImage
 import com.kus.feature.detail.component.DetailRestInfo
 import com.kus.feature.detail.component.DetailTabSection
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
-import kustaurant.shared.core.designsystem.generated.resources.ic_left_arrow
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailScreen(
     navigateToEvaluate: () -> Unit,
@@ -55,6 +64,8 @@ fun DetailScreen(
     val evaluateButtonText = if (restaurant.isEvaluated) "다시 평가하기" else "맛집 평가하기"
     val favoriteIcon = if (restaurant.isFavorite) Res.drawable.ic_saved else Res.drawable.ic_unsaved
     val favoriteCountText = restaurant.favoriteCount.toString()
+    var isCommentInputVisible by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -103,6 +114,7 @@ fun DetailScreen(
                     },
                     onReviewLikeClick = { evalId -> viewModel.onReviewLikeClick(evalId) },
                     onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
+                    onCommentClick = { isCommentInputVisible = true },
                     onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
                     onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
                 )
@@ -164,6 +176,40 @@ fun DetailScreen(
                     )
                 )
             }
+        }
+
+        AnimatedVisibility(
+            visible = isCommentInputVisible,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        keyboardController?.hide()
+                    }
+            )
+        }
+
+        AnimatedVisibility(
+            visible = isCommentInputVisible,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            DetailCommentInputBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = KusTheme.colors.c_FFFFFF)
+                    .imePadding(),
+                hasFocus = true,
+                onDismiss = { isCommentInputVisible = false }
+            )
         }
     }
 }
