@@ -41,8 +41,8 @@ import com.kus.designsystem.component.KusReactionButton
 import com.kus.designsystem.component.ReactionType
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
-import com.kus.feature.detail.ui.DetailReview
-import com.kus.feature.detail.ui.DetailReviewComment
+import com.kus.feature.detail.model.DetailReview
+import com.kus.feature.detail.model.DetailReviewComment
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.feature.detail.generated.resources.Res

@@ -28,7 +28,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun DetailRestInfo(
     modifier: Modifier = Modifier,
-    situationList: ArrayList<String> = arrayListOf(),
+    situationList: List<String> = listOf(),
     mainTier: Int = 1,
     restaurantCuisine: String = "",
     restaurantCuisineImgUrl: String = "",

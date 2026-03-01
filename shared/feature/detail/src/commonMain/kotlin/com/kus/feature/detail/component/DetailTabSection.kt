@@ -23,14 +23,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.detail.ui.DetailRestaurantMenu
-import com.kus.feature.detail.ui.DetailReview
-import com.kus.feature.detail.ui.ReviewSort
+import com.kus.feature.detail.model.DetailReview
+import com.kus.feature.detail.model.ReviewSort
+import com.kus.shared.domain.model.detail.RestaurantMenu
 
 @Composable
 fun DetailTabSection(
     reviewCount: Int,
-    menuList: List<DetailRestaurantMenu>,
+    menuList: List<RestaurantMenu>,
     reviewList: List<DetailReview>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
@@ -122,7 +122,7 @@ fun DetailTabSection(
 
 @Composable
 private fun DetailMenuContent(
-    menuList: List<DetailRestaurantMenu>,
+    menuList: List<RestaurantMenu>,
     modifier: Modifier = Modifier,
 ) {
     Column(

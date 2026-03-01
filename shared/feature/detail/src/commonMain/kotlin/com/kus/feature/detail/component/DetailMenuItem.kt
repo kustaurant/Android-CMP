@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,16 +16,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.detail.ui.DetailRestaurantMenu
+import com.kus.shared.domain.model.detail.RestaurantMenu
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import kustaurant.shared.feature.detail.generated.resources.Res
-import kustaurant.shared.feature.detail.generated.resources.img_rest_example
+import kustaurant.shared.core.designsystem.generated.resources.Res
+import kustaurant.shared.core.designsystem.generated.resources.ic_kus_blank
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun DetailMenuItem(
-    menu: DetailRestaurantMenu,
+    menu: RestaurantMenu,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -42,7 +41,7 @@ fun DetailMenuItem(
         ) {
             if (menu.menuImgUrl.isBlank() || !menu.menuImgUrl.startsWith("https")) {
                 Image(
-                    painter = painterResource(Res.drawable.img_rest_example),
+                    painter = painterResource(Res.drawable.ic_kus_blank),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(64.dp)
@@ -55,7 +54,7 @@ fun DetailMenuItem(
                     modifier = Modifier.size(64.dp),
                     onFailure = {
                         Image(
-                            painter = painterResource(Res.drawable.img_rest_example),
+                            painter = painterResource(Res.drawable.ic_kus_blank),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(64.dp)
