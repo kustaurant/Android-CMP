@@ -58,6 +58,7 @@ fun DetailReviewItem(
     modifier: Modifier = Modifier,
     onReviewLikeClick: (Int) -> Unit = {},
     onReviewDislikeClick: (Int) -> Unit = {},
+    onCommentClick: (Int) -> Unit = {},
     onCommentLikeClick: (Int, Int) -> Unit = { _, _ -> },
     onCommentDislikeClick: (Int, Int) -> Unit = { _, _ -> },
     onReviewDeleteClick: (Int) -> Unit = {},
@@ -81,6 +82,7 @@ fun DetailReviewItem(
             isMine = review.isEvaluationMine,
             onLikeClick = { onReviewLikeClick(review.evalId) },
             onDislikeClick = { onReviewDislikeClick(review.evalId) },
+            onCommentClick = { onCommentClick(review.evalId) },
             onDeleteClick = { onReviewDeleteClick(review.evalId) },
             onReportClick = { onReviewReportClick(review.evalId) },
         )
@@ -123,6 +125,7 @@ private fun ReviewContent(
     isComment: Boolean = false,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
+    onCommentClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
     onReportClick: () -> Unit = {},
 ) {
@@ -204,6 +207,7 @@ private fun ReviewContent(
             selectedType = reactionType.toReactionType(),
             onLikeClick = onLikeClick,
             onDislikeClick = onDislikeClick,
+            onCommentClick = onCommentClick,
         )
     } else {
         KusReactionButton(
@@ -213,6 +217,7 @@ private fun ReviewContent(
             selectedType = reactionType.toReactionType(),
             onLikeClick = onLikeClick,
             onDislikeClick = onDislikeClick,
+            onCommentClick = onCommentClick,
         )
     }
 }

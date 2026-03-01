@@ -37,6 +37,7 @@ fun DetailTabSection(
     onReviewTabSelected: () -> Unit = {},
     onReviewLikeClick: (Int) -> Unit = {},
     onReviewDislikeClick: (Int) -> Unit = {},
+    onCommentClick: (Int) -> Unit = {},
     onCommentLikeClick: (Int, Int) -> Unit = { _, _ -> },
     onCommentDislikeClick: (Int, Int) -> Unit = { _, _ -> },
 ) {
@@ -110,6 +111,7 @@ fun DetailTabSection(
                     onSortSelected = onSortSelected,
                     onReviewLikeClick = onReviewLikeClick,
                     onReviewDislikeClick = onReviewDislikeClick,
+                    onCommentClick = onCommentClick,
                     onCommentLikeClick = onCommentLikeClick,
                     onCommentDislikeClick = onCommentDislikeClick,
                 )
@@ -154,6 +156,7 @@ private fun DetailReviewContent(
     onSortSelected: (ReviewSort) -> Unit,
     onReviewLikeClick: (Int) -> Unit,
     onReviewDislikeClick: (Int) -> Unit,
+    onCommentClick: (Int) -> Unit,
     onCommentLikeClick: (Int, Int) -> Unit,
     onCommentDislikeClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -175,6 +178,7 @@ private fun DetailReviewContent(
                 modifier = Modifier.padding(bottom = bottomPadding),
                 onReviewLikeClick = onReviewLikeClick,
                 onReviewDislikeClick = onReviewDislikeClick,
+                onCommentClick = onCommentClick,
                 onCommentLikeClick = onCommentLikeClick,
                 onCommentDislikeClick = onCommentDislikeClick,
             )
