@@ -54,6 +54,9 @@ kotlin {
 
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:data:network"))
+                implementation(project(":shared:core:presentation"))
+                implementation(project(":shared:domain:detail"))
+                implementation(project(":shared:domain:model"))
 
                 resources.srcDir("src/commonMain/composeResources")
             }
