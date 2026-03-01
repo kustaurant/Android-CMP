@@ -26,22 +26,24 @@ import kustaurant.shared.feature.my.generated.resources.ic_left_chevron
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-internal fun NoticeScreen(
+internal fun MyPageWebViewScreen(
+    title: String,
+    url: String,
     onBackClick: () -> Unit,
 ) {
     var isLoading by remember { mutableStateOf(true) }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(KusTheme.colors.c_FFFFFF),
+            .background(KusTheme.colors.c_FFFFFF)
+            .padding(top = 10.dp),
     ) {
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                text = "공지사항",
+                text = title,
                 style = KusTheme.typography.type17sb,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -58,7 +60,7 @@ internal fun NoticeScreen(
         }
 
         WebView(
-            url = "https://kustaurant.com/notice",
+            url = url,
             onLoadingChanged = { loading ->
                 isLoading = loading
             },

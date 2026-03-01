@@ -142,6 +142,7 @@ fun KusNavHost(
         myNavGraph(
             onShowMessage = onShowMessage,
             navController = navController,
+            navigateToUp = navController::popBackStack,
         )
 
         searchNavGraph(
