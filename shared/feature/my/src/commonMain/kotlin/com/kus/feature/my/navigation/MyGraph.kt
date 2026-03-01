@@ -5,7 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.kus.feature.my.ui.notice.MyPageWebViewScreen
+import com.kus.feature.my.ui.feedback.FeedbackScreen
+import com.kus.feature.my.ui.webview.MyPageWebViewScreen
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToMyWebView(
@@ -13,6 +14,10 @@ fun NavController.navigateToMyWebView(
     url: String,
     navOptions: NavOptions? = null,
 ) = navigate(MyWebView(title, url), navOptions)
+
+fun NavController.navigateToFeedback(
+    navOptions: NavOptions? = null,
+) = navigate(Feedback, navOptions)
 
 fun NavGraphBuilder.myNavGraph(
     navigateToUp: () -> Unit,
@@ -40,7 +45,7 @@ fun NavGraphBuilder.myNavGraph(
                     url = "https://kustaurant.com/privacy-policy",
                 )
             },
-            navigateToFeedback = { },
+            navigateToFeedback = navController::navigateToFeedback,
             navigateToSavedRest = { },
             navigateToCheckedRest = { },
             navigateToMyArticle = { },
@@ -57,6 +62,12 @@ fun NavGraphBuilder.myNavGraph(
             onBackClick = navigateToUp,
         )
     }
+
+    composable<Feedback> {
+        FeedbackScreen(
+            onBackClick = navigateToUp,
+        )
+    }
 }
 
 @Serializable
@@ -67,3 +78,6 @@ data class MyWebView(
     val title: String,
     val url: String,
 )
+
+@Serializable
+data object Feedback
