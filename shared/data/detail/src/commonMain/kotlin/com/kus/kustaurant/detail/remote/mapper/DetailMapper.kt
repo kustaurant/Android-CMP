@@ -2,8 +2,12 @@ package com.kus.kustaurant.detail.remote.mapper
 
 import com.kus.kustaurant.detail.remote.response.DetailResponse
 import com.kus.kustaurant.detail.remote.response.MenuResponse
+import com.kus.kustaurant.detail.remote.response.ReviewCommentResponse
+import com.kus.kustaurant.detail.remote.response.ReviewResponse
 import com.kus.shared.domain.model.detail.RestaurantDetail
 import com.kus.shared.domain.model.detail.RestaurantMenu
+import com.kus.shared.domain.model.detail.RestaurantReview
+import com.kus.shared.domain.model.detail.ReviewComment
 
 fun DetailResponse.toDomain(): RestaurantDetail =
     RestaurantDetail(
@@ -37,4 +41,33 @@ fun MenuResponse.toDomain(): RestaurantMenu =
         menuPrice = menuPrice,
         naverType = naverType,
         menuImgUrl = menuImgUrl
+    )
+
+fun ReviewResponse.toDomain(): RestaurantReview =
+    RestaurantReview(
+        evalId = evalId,
+        evalScore = evalScore,
+        writerIconImgUrl = writerIconImgUrl ?: "",
+        writerNickname = writerNickname,
+        timeAgo = timeAgo,
+        evalImgUrl = evalImgUrl ?: "",
+        evalBody = evalBody ?: "",
+        reactionType = reactionType ?: "",
+        evalLikeCount = evalLikeCount,
+        evalDislikeCount = evalDislikeCount,
+        isEvaluationMine = isEvaluationMine,
+        evalCommentList = evalCommentList?.map { it.toDomain() } ?: emptyList(),
+    )
+
+fun ReviewCommentResponse.toDomain(): ReviewComment =
+    ReviewComment(
+        commentId = commentId,
+        writerIconImgUrl = writerIconImgUrl ?: "",
+        writerNickname = writerNickname,
+        timeAgo = timeAgo,
+        commentBody = commentBody ?: "",
+        reactionType = reactionType ?: "",
+        commentLikeCount = commentLikeCount,
+        commentDislikeCount = commentDislikeCount,
+        isCommentMine = isCommentMine,
     )
