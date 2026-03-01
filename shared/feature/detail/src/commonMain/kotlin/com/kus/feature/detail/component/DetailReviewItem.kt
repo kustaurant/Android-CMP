@@ -41,8 +41,8 @@ import com.kus.designsystem.component.KusReactionButton
 import com.kus.designsystem.component.ReactionType
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
-import com.kus.feature.detail.model.DetailReview
-import com.kus.feature.detail.model.DetailReviewComment
+import com.kus.shared.domain.model.detail.RestaurantReview
+import com.kus.shared.domain.model.detail.ReviewComment
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.feature.detail.generated.resources.Res
@@ -56,7 +56,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun DetailReviewItem(
-    review: DetailReview,
+    review: RestaurantReview,
     modifier: Modifier = Modifier,
     onReviewLikeClick: (Int) -> Unit = {},
     onReviewDislikeClick: (Int) -> Unit = {},
@@ -247,7 +247,7 @@ private fun ReviewContent(
 
 @Composable
 private fun ReviewCommentItem(
-    comment: DetailReviewComment,
+    comment: ReviewComment,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},

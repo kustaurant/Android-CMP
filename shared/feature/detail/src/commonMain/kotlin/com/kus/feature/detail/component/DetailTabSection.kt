@@ -23,15 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.detail.model.DetailReview
 import com.kus.feature.detail.model.ReviewSort
 import com.kus.shared.domain.model.detail.RestaurantMenu
+import com.kus.shared.domain.model.detail.RestaurantReview
 
 @Composable
 fun DetailTabSection(
     reviewCount: Int,
     menuList: List<RestaurantMenu>,
-    reviewList: List<DetailReview>,
+    reviewList: List<RestaurantReview>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
     onReviewTabSelected: () -> Unit = {},
@@ -151,7 +151,7 @@ private fun DetailMenuContent(
 
 @Composable
 private fun DetailReviewContent(
-    reviewList: List<DetailReview>,
+    reviewList: List<RestaurantReview>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
     onReviewLikeClick: (Int) -> Unit,
@@ -161,6 +161,7 @@ private fun DetailReviewContent(
     onCommentDislikeClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    println("DEBUG: DetailReviewContent - reviewList.size=${reviewList.size}")
     if (reviewList.isEmpty()) return
 
     Column(
