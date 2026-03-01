@@ -10,6 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.kus.core.serialization.KusJson
+import com.kus.feature.community.config.CommunityKeys.COMMUNITY_LIST_REFRESH
+import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_DELETE_ID
+import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_EDIT_RESULT
+import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_UPDATE_PAYLOAD
+import com.kus.feature.community.model.CommunityPostModifyPayload
+import com.kus.feature.community.navigation.Community
+import com.kus.feature.community.navigation.CommunityDetail
+import com.kus.feature.community.navigation.CommunityWrite
+import com.kus.feature.community.navigation.CommunityWriteModify
 import com.kus.feature.community.navigation.communityNavGraph
 import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.home.navigation.Home
@@ -133,7 +142,58 @@ fun KusNavHost(
             onBackButtonClick = { navController.popBackStack()}
         )
 
-        communityNavGraph(onShowMessage = onShowMessage)
+        communityNavGraph(
+            onShowMessage = onShowMessage,
+            onPostClick = { postId ->
+                navController.navigate(CommunityDetail(postId)) {
+                    popUpTo<Community> { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
+            onPostCreated = { postId ->
+                navController.getBackStackEntry<Community>()
+                    .savedStateHandle[COMMUNITY_LIST_REFRESH] = true
+
+                navController.navigate(CommunityDetail(postId)) {
+                    popUpTo<Community> { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
+            onPostModified = { payload ->
+                val json =
+                    KusJson.json.encodeToString(CommunityPostModifyPayload.serializer(), payload)
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(COMMUNITY_POST_EDIT_RESULT, json)
+                navController.popBackStack()
+            },
+            onBackButtonClick = { navController.popBackStack() },
+            onPostWriteClick = {
+                navController.navigate(CommunityWrite)
+            },
+            onPostModifyClick = { encoded ->
+                navController.navigate(CommunityWriteModify(encoded))
+            },
+            onSearchClick = {},
+            onPostModifiedInDetail = { payload ->
+                val json = KusJson.json.encodeToString(CommunityPostModifyPayload.serializer(), payload)
+                navController.getBackStackEntry<Community>()
+                    .savedStateHandle[COMMUNITY_POST_UPDATE_PAYLOAD] = json
+            },
+            onDetailBackClick = { payload ->
+                if (payload != null) {
+                    val json = KusJson.json.encodeToString(CommunityPostModifyPayload.serializer(), payload)
+                    navController.getBackStackEntry<Community>()
+                        .savedStateHandle[COMMUNITY_POST_UPDATE_PAYLOAD] = json
+                }
+                navController.popBackStack()
+            },
+            onPostDeletedInDetail = { postId ->
+                navController.getBackStackEntry<Community>()
+                    .savedStateHandle[COMMUNITY_POST_DELETE_ID] = postId
+                navController.popBackStack()
+            },
+        )
         myNavGraph(onShowMessage = onShowMessage)
     }
 }

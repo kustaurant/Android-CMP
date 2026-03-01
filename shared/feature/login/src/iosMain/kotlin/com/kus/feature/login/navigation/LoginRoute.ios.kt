@@ -58,6 +58,7 @@ actual fun LoginRoute(
                 }
             }
         },
-        onNavigateToHome = navigateToHome
+        onNavigateToHome = navigateToHome,
+        onSkipLogin = { viewModel.deleteUserInfo() }
     )
 }

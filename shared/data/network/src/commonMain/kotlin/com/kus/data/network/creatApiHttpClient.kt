@@ -26,27 +26,16 @@ fun creatApiHttpClient(
     baseUrl: String,
     additionalConfig: HttpClientConfig<*>.() -> Unit = {}
 ): HttpClient = HttpClient(engine = engine) {
-    defaultRequest {
-        url.takeFrom(baseUrl)
-    }
 
+    defaultRequest { url.takeFrom(baseUrl) }
     expectSuccess = false
 
     if (isDebug) {
-        install(Logging) {
-            logger = Logger.SIMPLE
-            level = LogLevel.BODY
-        }
+        install(Logging) { logger = Logger.SIMPLE; level = LogLevel.BODY }
     }
 
     install(ContentNegotiation) {
-        json(
-            Json {
-                ignoreUnknownKeys = true
-                explicitNulls = false
-                isLenient = true
-            }
-        )
+        json(Json { ignoreUnknownKeys = true; explicitNulls = false; isLenient = true })
     }
 
     install(HttpTimeout) {
@@ -59,24 +48,26 @@ fun creatApiHttpClient(
         bearer {
             sendWithoutRequest { request ->
                 val path = request.url.encodedPath
-                path.startsWith("/api/v2/login/naver") ||
-                        path.startsWith("/api/v2/token/refresh")
+                val isPublic =
+                    path.startsWith("/api/v2/login/naver") ||
+                            path.startsWith("/api/v2/token/refresh")
+                !isPublic
             }
 
             loadTokens {
-                tokenManager.loadAccessToken()
-                    .takeIf {it.isNotBlank() }
-                    ?.let { access ->
-                    BearerTokens(accessToken = access, refreshToken = "")
-                }
+                val access = tokenManager.loadAccessToken()
+                val refresh = tokenManager.loadRefreshToken()
+                if (access.isNotBlank() && refresh.isNotBlank()) {
+                    BearerTokens(accessToken = access, refreshToken = refresh)
+                } else null
             }
 
             refreshTokens {
-                tokenManager.refreshAndGetNewAccessToken()
-                    .takeIf{it.isNotBlank()}
-                    ?.let { newAccess ->
-                    BearerTokens(accessToken = newAccess, refreshToken = "")
-                }
+                val newAccess = tokenManager.refreshAndGetNewAccessToken()
+                val refresh = tokenManager.loadRefreshToken()
+                if (newAccess.isNotBlank() && refresh.isNotBlank()) {
+                    BearerTokens(accessToken = newAccess, refreshToken = refresh)
+                } else null
             }
         }
     }
