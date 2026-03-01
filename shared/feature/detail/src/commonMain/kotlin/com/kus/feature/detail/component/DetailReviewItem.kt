@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ import com.kus.feature.detail.ui.DetailReviewComment
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.feature.detail.generated.resources.Res
+import kustaurant.shared.feature.detail.generated.resources.ic_comment_arrow
 import kustaurant.shared.feature.detail.generated.resources.ic_delete
 import kustaurant.shared.feature.detail.generated.resources.ic_more
 import kustaurant.shared.feature.detail.generated.resources.ic_report
@@ -89,22 +91,42 @@ fun DetailReviewItem(
 
         if (review.evalCommentList.isNotEmpty()) {
             Column(
-                modifier = Modifier.padding(start = 22.dp, top = 8.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 review.evalCommentList.forEach { comment ->
-                    ReviewCommentItem(
-                        comment = comment,
-                        onLikeClick = { onCommentLikeClick(review.evalId, comment.commentId) },
-                        onDislikeClick = {
-                            onCommentDislikeClick(
-                                review.evalId,
-                                comment.commentId
-                            )
-                        },
-                        onDeleteClick = { onCommentDeleteClick(review.evalId, comment.commentId) },
-                        onReportClick = { onCommentReportClick(review.evalId, comment.commentId) },
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(Res.drawable.ic_comment_arrow),
+                            contentDescription = null
+                        )
+
+                        ReviewCommentItem(
+                            comment = comment,
+                            onLikeClick = { onCommentLikeClick(review.evalId, comment.commentId) },
+                            onDislikeClick = {
+                                onCommentDislikeClick(
+                                    review.evalId,
+                                    comment.commentId
+                                )
+                            },
+                            onDeleteClick = {
+                                onCommentDeleteClick(
+                                    review.evalId,
+                                    comment.commentId
+                                )
+                            },
+                            onReportClick = {
+                                onCommentReportClick(
+                                    review.evalId,
+                                    comment.commentId
+                                )
+                            },
+                        )
+                    }
                 }
             }
         }
