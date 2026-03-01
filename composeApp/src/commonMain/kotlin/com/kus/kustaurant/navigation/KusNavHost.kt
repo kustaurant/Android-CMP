@@ -134,11 +134,15 @@ fun KusNavHost(
 
                 navController.popBackStack()
             },
-            onBackButtonClick = { navController.popBackStack()}
+            onBackButtonClick = { navController.popBackStack() }
         )
 
         communityNavGraph(onShowMessage = onShowMessage)
-        myNavGraph(onShowMessage = onShowMessage)
+
+        myNavGraph(
+            onShowMessage = onShowMessage,
+            navController = navController,
+        )
 
         searchNavGraph(
             navigateToUp = navController::popBackStack,
