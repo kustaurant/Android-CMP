@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.feedback
+package com.kus.feature.my.ui.subscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -23,14 +22,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.theme.KusTheme
-import com.kus.designsystem.util.noRippleClickable
-import kustaurant.shared.feature.my.generated.resources.Res
-import kustaurant.shared.feature.my.generated.resources.ic_left_chevron
-import org.jetbrains.compose.resources.painterResource
+import com.kus.feature.my.component.MyPageTopBar
 
 @Composable
 internal fun FeedbackScreen(
@@ -43,31 +38,17 @@ internal fun FeedbackScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(KusTheme.colors.c_FFFFFF)
-            .padding(top = 10.dp, start = 16.dp, end=16.dp),
+            .padding(start = 16.dp, end=16.dp),
     ) {
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = "의견 보내기",
-                style = KusTheme.typography.type17sb,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-            )
-
-            Icon(
-                painter = painterResource(Res.drawable.ic_left_chevron),
-                contentDescription = null,
-                modifier = Modifier
-                    .noRippleClickable(onBackClick)
-                    .padding(horizontal = 4.dp),
-            )
-        }
+        MyPageTopBar(
+            title ="의견 보내기",
+            onBackClick = onBackClick,
+        )
 
         Box(
             modifier = Modifier.weight(1f)
                 .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
-                .padding(top = 20.dp)
+                .padding(top = 10.dp)
         ) {
             OutlinedTextField(
                 value = text,
