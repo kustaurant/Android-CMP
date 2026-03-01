@@ -193,7 +193,7 @@ private fun ReviewContent(
 
     Text(
         text = body,
-        modifier = Modifier.padding(top = if (isComment) 4.dp else 8.dp),
+        modifier = Modifier.padding(top = 10.dp),
         style = KusTheme.typography.type14r.copy(
             color = KusTheme.colors.c_000000
         )
@@ -201,7 +201,7 @@ private fun ReviewContent(
 
     if (!isComment) {
         KusReactionButton(
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 12.dp),
             likeText = likeCount.toString(),
             dislikeText = dislikeCount.toString(),
             selectedType = reactionType.toReactionType(),
@@ -211,10 +211,11 @@ private fun ReviewContent(
         )
     } else {
         KusReactionButton(
-            modifier = Modifier.padding(top = 6.dp),
+            modifier = Modifier.padding(top = 8.dp),
             likeText = likeCount.toString(),
             dislikeText = dislikeCount.toString(),
             selectedType = reactionType.toReactionType(),
+            isCommentVisible = false,
             onLikeClick = onLikeClick,
             onDislikeClick = onDislikeClick,
             onCommentClick = onCommentClick,
