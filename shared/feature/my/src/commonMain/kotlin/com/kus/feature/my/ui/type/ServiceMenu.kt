@@ -10,7 +10,6 @@ import org.jetbrains.compose.resources.DrawableResource
 enum class ServiceMenu(
     override val title: String,
     override val iconRes: DrawableResource,
-    override val count: Int? = null,
 ) : MenuItemUi {
     NOTICE("공지사항", Res.drawable.ic_notice),
     TERMS_OF_SERVICE("이용약관", Res.drawable.ic_terms),
