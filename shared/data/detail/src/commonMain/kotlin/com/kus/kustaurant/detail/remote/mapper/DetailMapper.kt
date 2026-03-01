@@ -31,6 +31,10 @@ fun DetailResponse.toDomain(): RestaurantDetail =
 
 fun MenuResponse.toDomain(): RestaurantMenu =
     RestaurantMenu(
+        menuId = menuId,
+        restaurantId = restaurantId,
         menuName = menuName,
         menuPrice = menuPrice,
+        naverType = naverType,
+        menuImgUrl = menuImgUrl
     )

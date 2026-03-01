@@ -24,6 +24,10 @@ data class RestaurantDetail(
 )
 
 data class RestaurantMenu(
+    val menuId: Long,
+    val restaurantId: Long,
     val menuName: String,
     val menuPrice: String,
+    val naverType: String,
+    val menuImgUrl: String
 )

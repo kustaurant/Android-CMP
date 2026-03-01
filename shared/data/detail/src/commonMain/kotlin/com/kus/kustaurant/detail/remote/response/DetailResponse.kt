@@ -28,6 +28,10 @@ data class DetailResponse(
 
 @Serializable
 data class MenuResponse(
+    val menuId: Long,
+    val restaurantId: Long,
     val menuName: String,
     val menuPrice: String,
+    val naverType: String,
+    val menuImgUrl: String
 )
