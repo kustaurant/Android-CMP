@@ -3,9 +3,12 @@ package com.kus.kustaurant.di
 import com.kus.core.config.di.configModule
 import com.kus.data.firstLaunch.di.firstLaunchDataModule
 import com.kus.data.auth.di.authDataModule
+import com.kus.data.community.di.communityDataModule
 import com.kus.data.network.di.networkModule
 import com.kus.domain.firstLaunch.di.firstLaunchDomainModule
 import com.kus.domain.auth.di.authDomainModule
+import com.kus.domain.community.di.communityDomainModule
+import com.kus.feature.community.di.communityFeatureModule
 import com.kus.feature.login.di.featureLoginModule
 import com.kus.feature.onboarding.di.onboardingModule
 import com.kus.feature.splash.di.splashModule
@@ -32,18 +35,21 @@ fun initKoin(
             firstLaunchDomainModule,
             authDomainModule,
             tierDomainModule,
+            communityDomainModule,
 
             // data (repository 등 공통)
             networkModule,
             firstLaunchDataModule,
             authDataModule,
             tierDataModule,
+            communityDataModule,
 
             // feature
             splashModule,
             onboardingModule,
             featureLoginModule,
             tierFeatureModule,
+            communityFeatureModule
         )
 
         modules(additionalModules)

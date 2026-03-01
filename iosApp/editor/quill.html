@@ -150,8 +150,7 @@
     function notifyHtmlChanged() {
       const raw = quill.root.innerHTML;
       const clean = sanitizeHtml(raw);
-
-      // DOMPurify returns a string. Normalize links by DOM parsing.
+ 
       const tmp = document.createElement("div");
       tmp.innerHTML = clean;
       normalizeLinks(tmp);
@@ -175,18 +174,20 @@
     });
 
     window.EditorApi = {
-      setHtml: function(content) {
-        const clean = sanitizeHtml(content || "");
+        setHtml: function(content) {
+            const clean = sanitizeHtml(content || "");
+            const tmp = document.createElement("div");
+            tmp.innerHTML = clean;
+            normalizeLinks(tmp);
 
-        // Normalize links after sanitize
-        const tmp = document.createElement("div");
-        tmp.innerHTML = clean;
-        normalizeLinks(tmp);
-
-        // Insert into editor
-        quill.clipboard.dangerouslyPasteHTML(tmp.innerHTML);
-        notifyHtmlChanged();
-      },
+            quill.clipboard.dangerouslyPasteHTML(tmp.innerHTML);
+             
+            const length = quill.getLength();
+            quill.setSelection(length, 0, "silent");
+            quill.blur();
+            
+            notifyHtmlChanged();
+        },
 
       getHtml: function() {
         // Return sanitized current content
@@ -220,7 +221,7 @@
         const range = quill.getSelection(true);
         const index = range ? range.index : quill.getLength();
 
-        quill.insertEmbed(index, "image", u, "user");
+        quill.insertEmbed(index, "image", u, "user"); 
         quill.setSelection(index + 1, 0, "user");
         notifyHtmlChanged();
       },
@@ -231,6 +232,8 @@
       }
     };
 
+    window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
+    
     notifyHtmlChanged();
 </script>
 </body>

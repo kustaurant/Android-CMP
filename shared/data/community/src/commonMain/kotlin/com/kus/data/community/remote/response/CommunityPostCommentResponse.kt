@@ -1,6 +1,5 @@
 package com.kus.data.community.remote.response
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,8 +17,8 @@ data class CommunityPostCommentResponse(
     val isCommentMine: Boolean,
     val replyCount: Int = 0,
     val replies: List<CommunityPostCommentResponse>?,
-    @SerialName("writeruserId") val writerId: Long,
-    @SerialName("writernickname") val nickname: String,
-    @SerialName("writerevalCount") val evalCount: Long,
-    @SerialName("writericonUrl") val writerIconUrl: String?,
+     val writeruserId: Long?,
+     val writernickname: String?,
+     val writerevalCount: Long?,
+     val writericonUrl: String?,
 )

@@ -1,6 +1,10 @@
 package com.kus.kustaurant
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -13,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
@@ -30,6 +35,7 @@ import com.kus.feature.tier.navigation.Tier
 import com.kus.kustaurant.navigation.BottomTab
 import com.kus.kustaurant.navigation.KusBottomBar
 import com.kus.kustaurant.navigation.KusNavHost
+import com.kus.kustaurant.navigation.util.shouldShowBottomBar
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -79,10 +85,17 @@ fun SetNavigation() {
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val destination = navBackStackEntry?.destination
 
-    val showBottomBar = shouldShowBottomBar(currentRoute)
+    val showBottomBar = shouldShowBottomBar(destination)
+    val currentRoute = destination?.route
     val selectedKey = BottomTab.fromRoute(currentRoute).key
+
+
+    LaunchedEffect(destination) {
+        println("hierarchy dest.route = ${destination?.route}")
+        println("hierarchy.routes = ${destination?.hierarchy?.map { it.route }}")
+    }
 
     Scaffold(
         bottomBar = {
@@ -95,13 +108,19 @@ fun SetNavigation() {
         snackbarHost = {
             KusSnackBarHost(hostState = snackBarHostState)
         },
-        modifier = Modifier.systemBarsPadding(),
+        modifier =
+            Modifier
+            .background(KusTheme.colors.c_FFFFFF)
+            .systemBarsPadding(),
+        contentWindowInsets = WindowInsets.systemBars,
     ) { padding ->
         KusNavHost(
             navController = navController,
             durationMillis = durationMillis,
             onShowMessage = onShowMessage,
-            modifier = Modifier.padding(padding),
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
         )
     }
 }
@@ -131,14 +150,6 @@ private fun NavHostController.navigateToTab(key: String) {
         BottomTab.MY.key -> navigate(My) { tabOptions(this@navigateToTab) }
     }
 }
-
-private fun shouldShowBottomBar(currentRoute: String?): Boolean {
-    val route = currentRoute ?: return true
-    val hiddenRoutes = listOf("Splash", "Onboarding", "Login")
-
-    return hiddenRoutes.none { route.contains(it) }
-}
-
 private fun NavOptionsBuilder.tabOptions(navController: NavHostController) {
     launchSingleTop = true
     restoreState = true

@@ -51,7 +51,10 @@ fun KusCommentInput(
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(autoFocus) {
-        if (autoFocus) focusRequester.requestFocus()
+        if (autoFocus) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
     }
 
     val canSend = enabled && value.isNotBlank()

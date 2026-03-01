@@ -2,6 +2,7 @@ package com.kus.kustaurant
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.kus.appkit.di.iosAuthModule
+import com.kus.appkit.di.iosCommunityModule
 import com.kus.appkit.di.iosTierMapPlatformModule
 import com.kus.data.auth.di.iosAuthLocalModule
 import com.kus.data.firstLaunch.di.iosFirstLaunchModule
@@ -22,6 +23,7 @@ fun MainViewController() = ComposeUIViewController {
                     iosTierMapPlatformModule,
                     iosAuthModule,
                     iosAuthLocalModule,
+                    iosCommunityModule
                 )
         )
         koinStarted = true

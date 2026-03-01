@@ -11,6 +11,7 @@ val C_43AB38_20 = Color(0xFFE6F3EA)
 val C_046B40 = Color(0xFF046B40)
 val C_FFFFFF = Color(0xFFFFFFFF)
 val C_F5F5F5 = Color(0xFFF5F5F5)
+val C_F3F3F3 = Color(0xFFF3F3F3)
 val C_EAEAEA = Color(0xFFEAEAEA)
 val C_E0E0E0 = Color(0xFFE0E0E0)
 val C_AAAAAA = Color(0xFFAAAAAA)
@@ -31,6 +32,7 @@ class KusColors(
     c_046B40: Color,
     c_FFFFFF: Color,
     c_F5F5F5: Color,
+    c_F3F3F3: Color,
     c_EAEAEA: Color,
     c_E0E0E0: Color,
     c_AAAAAA: Color,
@@ -52,6 +54,8 @@ class KusColors(
     var c_FFFFFF by mutableStateOf(c_FFFFFF)
         private set
     var c_F5F5F5 by mutableStateOf(c_F5F5F5)
+        private set
+    var c_F3F3F3 by mutableStateOf(c_F3F3F3)
         private set
     var c_EAEAEA by mutableStateOf(c_EAEAEA)
         private set
@@ -82,6 +86,7 @@ class KusColors(
         c_046B40,
         c_FFFFFF,
         c_F5F5F5,
+        c_F3F3F3,
         c_EAEAEA,
         c_E0E0E0,
         c_AAAAAA,
@@ -101,6 +106,7 @@ class KusColors(
         c_046B40 = other.c_046B40
         c_FFFFFF = other.c_FFFFFF
         c_F5F5F5 = other.c_F5F5F5
+        c_F3F3F3 = other.c_F3F3F3
         c_EAEAEA = other.c_EAEAEA
         c_E0E0E0 = other.c_E0E0E0
         c_AAAAAA = other.c_AAAAAA
@@ -121,6 +127,7 @@ fun KusLightColors(
     c_046B40: Color = C_046B40,
     c_FFFFFF: Color = C_FFFFFF,
     c_F5F5F5: Color = C_F5F5F5,
+    c_F3F3F3: Color = C_F3F3F3,
     c_EAEAEA: Color = C_EAEAEA,
     c_E0E0E0: Color = C_E0E0E0,
     c_AAAAAA: Color = C_AAAAAA,
@@ -138,6 +145,7 @@ fun KusLightColors(
     c_046B40,
     c_FFFFFF,
     c_F5F5F5,
+    c_F3F3F3,
     c_EAEAEA,
     c_E0E0E0,
     c_AAAAAA,
