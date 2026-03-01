@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kus.feature.my.component.MyActivityScreen
 import com.kus.feature.my.component.MyProfileScreen
 import com.kus.feature.my.component.MyTabRow
 import com.kus.feature.my.ui.type.MyTab
@@ -23,6 +24,16 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MyScreen(
     modifier: Modifier = Modifier,
+    onProfileEditNavigate: () -> Unit,
+    onNoticeNavigate: () -> Unit,
+    onTermsNavigate: () -> Unit,
+    onPrivacyPolicyNavigate: () -> Unit,
+    onFeedbackNavigate: () -> Unit,
+    onSavedRestNavigate: () -> Unit,
+    onCheckedRestNavigate: () -> Unit,
+    onMyArticleNavigate: () -> Unit,
+    onMyCommentNavigate: () -> Unit,
+    onScrapNavigate: () -> Unit,
 ) {
     val tabs = remember { MyTab.entries }
     val pagerState = rememberPagerState { tabs.size }
@@ -57,18 +68,24 @@ fun MyScreen(
                             userName = "쿠쿠스토랑",
                             userImgUrl = "",
                             modifier = Modifier,
-                            onEditProfileClick = {},
-                            onItemClick = {},
+                            onEditProfileClick = onProfileEditNavigate,
+                            onNoticeClick = onNoticeNavigate,
+                            onTermsClick = onTermsNavigate,
+                            onPrivacyPolicyClick = onPrivacyPolicyNavigate,
+                            onFeedbackClick = onFeedbackNavigate,
+                            onLogoutClick = { },
+                            onDeleteAccountClick = { },
                         )
                     }
 
                     MyTab.MY_ACTIVITIES -> {
-                        MyProfileScreen(
-                            userName = "쿠쿠스토랑",
-                            userImgUrl = "",
+                        MyActivityScreen(
                             modifier = Modifier,
-                            onEditProfileClick = {},
-                            onItemClick = {},
+                            onSavedRestClick = onSavedRestNavigate,
+                            onCheckedRestClick = onCheckedRestNavigate,
+                            onMyArticleClick = onMyArticleNavigate,
+                            onMyCommentClick = onMyCommentNavigate,
+                            onScrapClick = onScrapNavigate,
                         )
                     }
                 }

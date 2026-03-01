@@ -12,6 +12,16 @@ fun NavGraphBuilder.myNavGraph(
 ) {
     composable<My> {
         MyRoute(
+            navigateToProfileEdit = {  },
+            navigateToNotice = {  },
+            navigateToTerms = {  },
+            navigateToPrivacyPolicy = {  },
+            navigateToFeedback = {  },
+            navigateToSavedRest = {  },
+            navigateToCheckedRest = {  },
+            navigateToMyArticle = {  },
+            navigateToMyComment = {  },
+            navigateToScrap = {  },
         )
     }
 }

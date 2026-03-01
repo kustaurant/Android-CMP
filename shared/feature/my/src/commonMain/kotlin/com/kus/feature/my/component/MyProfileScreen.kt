@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.my.ui.type.AccountMenu
 import com.kus.feature.my.ui.type.ServiceMenu
 import io.kamel.image.KamelImage
@@ -34,10 +35,15 @@ internal fun MyProfileScreen(
     userImgUrl: String,
     modifier: Modifier = Modifier,
     onEditProfileClick: () -> Unit,
-    onItemClick: () -> Unit,
+    onNoticeClick: () -> Unit,
+    onTermsClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+    onFeedbackClick: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(KusTheme.colors.c_F3F3F3),
     ) {
@@ -88,6 +94,7 @@ internal fun MyProfileScreen(
                         style = KusTheme.typography.type12r,
                         color = KusTheme.colors.c_AAAAAA,
                         textAlign = TextAlign.Center,
+                        modifier = Modifier.noRippleClickable(onEditProfileClick),
                     )
                 }
             }
@@ -97,8 +104,13 @@ internal fun MyProfileScreen(
             MenuList(
                 title = "서비스",
                 items = ServiceMenu.entries,
-                onClick = {
-
+                onClick = { menu ->
+                    when (menu) {
+                        ServiceMenu.NOTICE -> onNoticeClick()
+                        ServiceMenu.TERMS_OF_SERVICE -> onTermsClick()
+                        ServiceMenu.PRIVACY_POLICY -> onPrivacyPolicyClick()
+                        ServiceMenu.SEND_FEEDBACK -> onFeedbackClick()
+                    }
                 }
             )
         }
@@ -107,8 +119,11 @@ internal fun MyProfileScreen(
             MenuList(
                 title = "계정",
                 items = AccountMenu.entries,
-                onClick = {
-
+                onClick = { menu ->
+                    when (menu) {
+                        AccountMenu.LOGOUT -> onLogoutClick()
+                        AccountMenu.DELETE_ACCOUNT -> onDeleteAccountClick()
+                    }
                 }
             )
         }
