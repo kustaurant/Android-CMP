@@ -56,7 +56,8 @@ fun DetailRestInfoMore(
         color = KusTheme.colors.c_AAAAAA,
         textDecoration = TextDecoration.Underline
     )
-    var displayText by remember { mutableStateOf(AnnotatedString(content)) }
+    val actualContent = if (content == "" && isPartnerInfo) "해당사항 없음" else content
+    var displayText by remember { mutableStateOf(AnnotatedString(actualContent)) }
     var showSeeMore by remember { mutableStateOf(false) }
 
     Row(
@@ -84,32 +85,32 @@ fun DetailRestInfoMore(
                 val density = LocalDensity.current
                 val maxWidthPx = with(density) { maxWidth.toPx() }.toInt()
 
-                LaunchedEffect(content, maxWidthPx, isExpanded, enableSeeMore) {
+                LaunchedEffect(actualContent, maxWidthPx, isExpanded, enableSeeMore) {
                     if (!enableSeeMore || isExpanded || maxWidthPx <= 0) {
-                        displayText = AnnotatedString(content)
+                        displayText = AnnotatedString(actualContent)
                         showSeeMore = false
                         return@LaunchedEffect
                     }
 
                     val baseResult = textMeasurer.measure(
-                        text = AnnotatedString(content),
+                        text = AnnotatedString(actualContent),
                         style = titleStyle,
                         constraints = Constraints(maxWidth = maxWidthPx),
                         maxLines = 2
                     )
 
                     if (!baseResult.hasVisualOverflow) {
-                        displayText = AnnotatedString(content)
+                        displayText = AnnotatedString(actualContent)
                         showSeeMore = false
                         return@LaunchedEffect
                     }
 
                     val ellipsis = "… "
                     val moreLabel = "더보기"
-                    var cutIndex = content.length
+                    var cutIndex = actualContent.length
 
                     while (cutIndex > 0) {
-                        val candidateText = content.take(cutIndex).trimEnd()
+                        val candidateText = actualContent.take(cutIndex).trimEnd()
                         val annotated = buildAnnotatedString {
                             append(candidateText)
                             append(ellipsis)
@@ -167,7 +168,7 @@ fun DetailRestInfoMore(
                     }
                 } else {
                     Text(
-                        text = content,
+                        text = actualContent,
                         style = titleStyle,
                         maxLines = if (enableSeeMore && !isExpanded) 2 else Int.MAX_VALUE,
                         overflow = TextOverflow.Ellipsis,
