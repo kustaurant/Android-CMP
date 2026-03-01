@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.notice
+package com.kus.feature.my.ui.webview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
