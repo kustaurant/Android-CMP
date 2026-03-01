@@ -53,6 +53,7 @@ fun KusReactionButton(
     dislikeText: String,
     selectedType: ReactionType? = null,
     enabled: Boolean = true,
+    isCommentVisible: Boolean = true,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
     onCommentClick: () -> Unit = {}
@@ -88,18 +89,20 @@ fun KusReactionButton(
         )
 
         // 댓글 버튼
-        Image(
-            painter = painterResource(Res.drawable.ic_comment),
-            modifier = Modifier.size(16.dp)
-                .then(
-                    if (enabled) {
-                        Modifier.noRippleClickable { onCommentClick() }
-                    } else {
-                        Modifier
-                    }
-                ),
-            contentDescription = null
-        )
+        if (isCommentVisible) {
+            Image(
+                painter = painterResource(Res.drawable.ic_comment),
+                modifier = Modifier.size(16.dp)
+                    .then(
+                        if (enabled) {
+                            Modifier.noRippleClickable { onCommentClick() }
+                        } else {
+                            Modifier
+                        }
+                    ),
+                contentDescription = null
+            )
+        }
     }
 }
 
