@@ -174,7 +174,7 @@ private fun ReviewContent(
             )
 
             Row(
-                modifier = Modifier.padding(top = if (isComment) 2.dp else 4.dp),
+                modifier = Modifier.padding(top = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (!isComment) {
