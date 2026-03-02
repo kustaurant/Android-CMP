@@ -7,9 +7,9 @@ class PutCommentReactionUseCase(
     private val detailRepository: DetailRepository,
 ) {
     suspend operator fun invoke(
-        evaluationId: Int,
+        evalCommentId: Int,
         reaction: String?,
     ): ReactionResult {
-        return detailRepository.putCommentReaction(evaluationId, reaction)
+        return detailRepository.putCommentReaction(evalCommentId, reaction)
     }
 }
