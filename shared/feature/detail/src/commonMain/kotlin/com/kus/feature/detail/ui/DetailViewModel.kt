@@ -8,6 +8,8 @@ import com.kus.feature.detail.model.ReviewSort
 import com.kus.feature.detail.state.DetailUiState
 import com.kus.shared.domain.detail.usecase.GetRestaurantDetailUseCase
 import com.kus.shared.domain.detail.usecase.GetRestaurantReviewsUseCase
+import com.kus.shared.domain.detail.usecase.PutCommentReactionUseCase
+import com.kus.shared.domain.detail.usecase.PutEvaluationReactionUseCase
 import com.kus.shared.domain.model.detail.RestaurantReview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,8 @@ import kotlinx.coroutines.launch
 class DetailViewModel(
     private val getRestaurantDetailUseCase: GetRestaurantDetailUseCase,
     private val getRestaurantReviewsUseCase: GetRestaurantReviewsUseCase,
+    private val reactToEvaluationUseCase: PutCommentReactionUseCase,
+    private val reactToCommentUseCase: PutEvaluationReactionUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -56,111 +60,19 @@ class DetailViewModel(
     }
 
     fun onReviewLikeClick(evalId: Int) {
-        updateReviewList { reviews ->
-            reviews.map { review ->
-                if (review.evalId == evalId) {
-                    when (review.reactionType.uppercase()) {
-                        "LIKE" -> review.copy(
-                            reactionType = "NONE",
-                            evalLikeCount = review.evalLikeCount - 1
-                        )
-                        "DISLIKE" -> review.copy(
-                            reactionType = "LIKE",
-                            evalLikeCount = review.evalLikeCount + 1,
-                            evalDislikeCount = review.evalDislikeCount - 1
-                        )
-                        else -> review.copy(
-                            reactionType = "LIKE",
-                            evalLikeCount = review.evalLikeCount + 1
-                        )
-                    }
-                } else review
-            }
-        }
+        onReviewReactionClick(evalId, targetReaction = "LIKE")
     }
 
     fun onReviewDislikeClick(evalId: Int) {
-        updateReviewList { reviews ->
-            reviews.map { review ->
-                if (review.evalId == evalId) {
-                    when (review.reactionType.uppercase()) {
-                        "DISLIKE" -> review.copy(
-                            reactionType = "NONE",
-                            evalDislikeCount = review.evalDislikeCount - 1
-                        )
-                        "LIKE" -> review.copy(
-                            reactionType = "DISLIKE",
-                            evalLikeCount = review.evalLikeCount - 1,
-                            evalDislikeCount = review.evalDislikeCount + 1
-                        )
-                        else -> review.copy(
-                            reactionType = "DISLIKE",
-                            evalDislikeCount = review.evalDislikeCount + 1
-                        )
-                    }
-                } else review
-            }
-        }
+        onReviewReactionClick(evalId, targetReaction = "DISLIKE")
     }
 
     fun onCommentLikeClick(evalId: Int, commentId: Int) {
-        updateReviewList { reviews ->
-            reviews.map { review ->
-                if (review.evalId == evalId) {
-                    review.copy(
-                        evalCommentList = review.evalCommentList.map { comment ->
-                            if (comment.commentId == commentId) {
-                                when (comment.reactionType.uppercase()) {
-                                    "LIKE" -> comment.copy(
-                                        reactionType = "NONE",
-                                        commentLikeCount = comment.commentLikeCount - 1
-                                    )
-                                    "DISLIKE" -> comment.copy(
-                                        reactionType = "LIKE",
-                                        commentLikeCount = comment.commentLikeCount + 1,
-                                        commentDislikeCount = comment.commentDislikeCount - 1
-                                    )
-                                    else -> comment.copy(
-                                        reactionType = "LIKE",
-                                        commentLikeCount = comment.commentLikeCount + 1
-                                    )
-                                }
-                            } else comment
-                        }
-                    )
-                } else review
-            }
-        }
+        onCommentReactionClick(evalId, commentId, targetReaction = "LIKE")
     }
 
     fun onCommentDislikeClick(evalId: Int, commentId: Int) {
-        updateReviewList { reviews ->
-            reviews.map { review ->
-                if (review.evalId == evalId) {
-                    review.copy(
-                        evalCommentList = review.evalCommentList.map { comment ->
-                            if (comment.commentId == commentId) {
-                                when (comment.reactionType.uppercase()) {
-                                    "DISLIKE" -> comment.copy(
-                                        reactionType = "NONE",
-                                        commentDislikeCount = comment.commentDislikeCount - 1
-                                    )
-                                    "LIKE" -> comment.copy(
-                                        reactionType = "DISLIKE",
-                                        commentLikeCount = comment.commentLikeCount - 1,
-                                        commentDislikeCount = comment.commentDislikeCount + 1
-                                    )
-                                    else -> comment.copy(
-                                        reactionType = "DISLIKE",
-                                        commentDislikeCount = comment.commentDislikeCount + 1
-                                    )
-                                }
-                            } else comment
-                        }
-                    )
-                } else review
-            }
-        }
+        onCommentReactionClick(evalId, commentId, targetReaction = "DISLIKE")
     }
 
     fun onFavoriteClick() {
@@ -184,4 +96,72 @@ class DetailViewModel(
         if (currentReviews !is UiState.Success) return
         _uiState.update { it.copy(reviews = UiState.Success(transform(currentReviews.data))) }
     }
+
+    private fun onReviewReactionClick(evalId: Int, targetReaction: String) = viewModelScope.launch {
+        val currentReviews = _uiState.value.reviews
+        if (currentReviews !is UiState.Success) return@launch
+
+        val review = currentReviews.data.find { it.evalId == evalId } ?: return@launch
+        val newReaction = setChangeReaction(
+            currentReaction = review.reactionType,
+            targetReaction = targetReaction
+        )
+
+        runCatching {
+            reactToEvaluationUseCase(evalId, newReaction)
+        }.onSuccess { result ->
+            updateReviewList { reviews ->
+                reviews.map {
+                    if (it.evalId == evalId) {
+                        it.copy(
+                            reactionType = result.reaction,
+                            evalLikeCount = result.likeCount,
+                            evalDislikeCount = result.dislikeCount
+                        )
+                    } else it
+                }
+            }
+        }
+    }
+
+    private fun onCommentReactionClick(
+        evalId: Int,
+        commentId: Int,
+        targetReaction: String
+    ) = viewModelScope.launch {
+        val currentReviews = _uiState.value.reviews
+        if (currentReviews !is UiState.Success) return@launch
+
+        val review = currentReviews.data.find { it.evalId == evalId } ?: return@launch
+        val comment = review.evalCommentList.find { it.commentId == commentId } ?: return@launch
+        val newReaction = setChangeReaction(
+            currentReaction = comment.reactionType,
+            targetReaction = targetReaction
+        )
+
+        runCatching {
+            reactToCommentUseCase(commentId, newReaction)
+        }.onSuccess { result ->
+            updateReviewList { reviews ->
+                reviews.map {
+                    if (it.evalId == evalId) {
+                        it.copy(
+                            evalCommentList = it.evalCommentList.map { currentComment ->
+                                if (currentComment.commentId == commentId) {
+                                    currentComment.copy(
+                                        reactionType = result.reaction,
+                                        commentLikeCount = result.likeCount,
+                                        commentDislikeCount = result.dislikeCount
+                                    )
+                                } else currentComment
+                            }
+                        )
+                    } else it
+                }
+            }
+        }
+    }
+
+    private fun setChangeReaction(currentReaction: String, targetReaction: String): String? =
+        if (currentReaction.equals(targetReaction, ignoreCase = true)) null else targetReaction
 }
