@@ -1,9 +1,12 @@
 package com.kus.kustaurant.detail.remote.mapper
 
+import com.kus.kustaurant.detail.remote.response.CommentReactionResponse
 import com.kus.kustaurant.detail.remote.response.DetailResponse
+import com.kus.kustaurant.detail.remote.response.EvaluationReactionResponse
 import com.kus.kustaurant.detail.remote.response.MenuResponse
 import com.kus.kustaurant.detail.remote.response.ReviewCommentResponse
 import com.kus.kustaurant.detail.remote.response.ReviewResponse
+import com.kus.shared.domain.model.detail.ReactionResult
 import com.kus.shared.domain.model.detail.RestaurantDetail
 import com.kus.shared.domain.model.detail.RestaurantMenu
 import com.kus.shared.domain.model.detail.RestaurantReview
@@ -70,4 +73,20 @@ fun ReviewCommentResponse.toDomain(): ReviewComment =
         commentLikeCount = commentLikeCount,
         commentDislikeCount = commentDislikeCount,
         isCommentMine = isCommentMine,
+    )
+
+fun EvaluationReactionResponse.toDomain(): ReactionResult =
+    ReactionResult(
+        id = evaluationId,
+        reaction = reaction ?: "",
+        likeCount = likeCount,
+        dislikeCount = dislikeCount,
+    )
+
+fun CommentReactionResponse.toDomain(): ReactionResult =
+    ReactionResult(
+        id = evalCommentId,
+        reaction = reaction ?: "",
+        likeCount = likeCount,
+        dislikeCount = dislikeCount,
     )
