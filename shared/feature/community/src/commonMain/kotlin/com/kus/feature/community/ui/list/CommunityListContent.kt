@@ -75,7 +75,6 @@ fun CommunityListContent(
                 }
             )
 
-            // ✅ indicator는 오버레이로 올릴 거라서 여기서는 비움
             PullToRefreshBox(
                 state = pullState,
                 isRefreshing = isPullRefreshing,
@@ -97,8 +96,6 @@ fun CommunityListContent(
 
                     when (val state = uiState.postListState) {
                         is UiState.Loading, UiState.Idle -> {
-                            // ✅ 초기 로딩도 상단 인디케이터로 통일 → 내부 로더 없음
-                            // 필요하면 빈 공간만 조금 확보(선택)
                             item { Spacer(Modifier.height(12.dp)) }
                         }
 

@@ -52,7 +52,6 @@ class IosImagePickerFactory : PlatformImagePickerFactory {
                             callback(null); return
                         }
 
-                        // ✅ iOS 14+: UTType.image.identifier 로 data 로드
                         val typeId = "public.image"
 
                         if (!provider.hasItemConformingToTypeIdentifier(typeId)) {
