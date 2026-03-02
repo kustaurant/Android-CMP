@@ -147,6 +147,7 @@ private fun DetailSuccessScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     DetailHeaderImage(
+                        imageUrl = restaurant.restaurantImgUrl,
                         imageHeight = imageHeight
                     )
 

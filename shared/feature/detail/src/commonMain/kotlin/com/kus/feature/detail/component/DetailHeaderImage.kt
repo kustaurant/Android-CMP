@@ -14,12 +14,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import com.kus.designsystem.theme.KusTheme
-import kustaurant.shared.feature.detail.generated.resources.Res
-import kustaurant.shared.feature.detail.generated.resources.img_rest_example
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import kustaurant.shared.core.designsystem.generated.resources.Res
+import kustaurant.shared.core.designsystem.generated.resources.ic_kus_blank
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun DetailHeaderImage(
+    imageUrl: String,
     imageHeight: Dp,
     modifier: Modifier = Modifier,
 ) {
@@ -28,22 +31,39 @@ fun DetailHeaderImage(
             .fillMaxWidth()
             .height(imageHeight)
     ) {
-        Image(
-            painter = painterResource(Res.drawable.img_rest_example),
-            contentDescription = "식당 이미지 사진",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.BottomCenter)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, KusTheme.colors.c_000000)
+        if (imageUrl.isBlank() || !imageUrl.startsWith("https")) {
+            Image(
+                painter = painterResource(Res.drawable.ic_kus_blank),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            KamelImage(
+                resource = asyncPainterResource(imageUrl),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                onFailure = {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_kus_blank),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
                     )
-                )
-        )
+                }
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, KusTheme.colors.c_000000)
+                        )
+                    )
+            )
+        }
     }
 }
