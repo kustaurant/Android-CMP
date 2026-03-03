@@ -45,7 +45,7 @@ fun DetailCommentInputBar(
 
     val density = LocalDensity.current
     val isKeyboardVisible = WindowInsets.ime.getBottom(density) > 0
-    var hasKeyboardOpened by remember { mutableStateOf(false) }
+    var hasKeyboardOpened by remember { mutableStateOf(isKeyboardVisible) }
 
     LaunchedEffect(hasFocus) {
         if (hasFocus) {
