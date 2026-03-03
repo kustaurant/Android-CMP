@@ -192,6 +192,7 @@ fun DetailScreen(
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
                         keyboardController?.hide()
+                        isCommentInputVisible = false
                     }
             )
         }
