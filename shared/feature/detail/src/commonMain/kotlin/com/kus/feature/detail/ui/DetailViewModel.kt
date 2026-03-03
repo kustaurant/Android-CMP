@@ -8,8 +8,10 @@ import com.kus.feature.detail.model.ReviewSort
 import com.kus.feature.detail.state.DetailUiState
 import com.kus.shared.domain.detail.usecase.GetRestaurantDetailUseCase
 import com.kus.shared.domain.detail.usecase.GetRestaurantReviewsUseCase
+import com.kus.shared.domain.detail.usecase.DeleteRestaurantFavoriteUseCase
 import com.kus.shared.domain.detail.usecase.PutCommentReactionUseCase
 import com.kus.shared.domain.detail.usecase.PutEvaluationReactionUseCase
+import com.kus.shared.domain.detail.usecase.PutRestaurantFavoriteUseCase
 import com.kus.shared.domain.model.detail.RestaurantReview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,8 +21,10 @@ import kotlinx.coroutines.launch
 class DetailViewModel(
     private val getRestaurantDetailUseCase: GetRestaurantDetailUseCase,
     private val getRestaurantReviewsUseCase: GetRestaurantReviewsUseCase,
-    private val reactToEvaluationUseCase: PutCommentReactionUseCase,
-    private val reactToCommentUseCase: PutEvaluationReactionUseCase,
+    private val putEvaluationReactionUseCase: PutEvaluationReactionUseCase,
+    private val putCommentReactionUseCase: PutCommentReactionUseCase,
+    private val putRestaurantFavoriteUseCase: PutRestaurantFavoriteUseCase,
+    private val deleteRestaurantFavoriteUseCase: DeleteRestaurantFavoriteUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -75,19 +79,31 @@ class DetailViewModel(
         onCommentReactionClick(evalId, commentId, targetReaction = "DISLIKE")
     }
 
-    fun onFavoriteClick() {
+    fun onFavoriteClick() = viewModelScope.launch {
         val currentState = _uiState.value.restaurant
-        if (currentState !is UiState.Success) return
+        if (currentState !is UiState.Success) return@launch
 
         val current = currentState.data
-        val newIsFavorite = !current.isFavorite
-        val newFavoriteCount = if (newIsFavorite) current.favoriteCount + 1 else current.favoriteCount - 1
-        _uiState.update {
-            it.copy(
-                restaurant = UiState.Success(
-                    current.copy(isFavorite = newIsFavorite, favoriteCount = newFavoriteCount)
+        runCatching {
+            if (current.isFavorite) {
+                deleteRestaurantFavoriteUseCase(current.restaurantId)
+            } else {
+                putRestaurantFavoriteUseCase(current.restaurantId)
+            }
+        }.onSuccess { result ->
+            _uiState.update { state ->
+                val restaurantState = state.restaurant
+                if (restaurantState !is UiState.Success) return@update state
+
+                state.copy(
+                    restaurant = UiState.Success(
+                        restaurantState.data.copy(
+                            isFavorite = result.isFavorite,
+                            favoriteCount = result.favoriteCount
+                        )
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -108,7 +124,7 @@ class DetailViewModel(
         )
 
         runCatching {
-            reactToEvaluationUseCase(evalId, newReaction)
+            putEvaluationReactionUseCase(evalId, newReaction)
         }.onSuccess { result ->
             updateReviewList { reviews ->
                 reviews.map {
@@ -140,7 +156,7 @@ class DetailViewModel(
         )
 
         runCatching {
-            reactToCommentUseCase(commentId, newReaction)
+            putCommentReactionUseCase(commentId, newReaction)
         }.onSuccess { result ->
             updateReviewList { reviews ->
                 reviews.map {
