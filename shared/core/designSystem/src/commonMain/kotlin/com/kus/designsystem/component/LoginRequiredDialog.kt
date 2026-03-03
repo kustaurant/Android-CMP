@@ -69,7 +69,7 @@ fun LoginRequiredDialog(
                         Spacer(Modifier.height(8.dp))
 
                         Text(
-                            text = "${targetFeature}은(는) 로그인 후\n이용할 수 있습니다",
+                            text = "$targetFeature 은(는) 로그인 후\n이용할 수 있습니다",
                             style = KusTheme.typography.type16m,
                             textAlign = TextAlign.Center,
                         )
