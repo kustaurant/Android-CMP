@@ -5,7 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.kus.feature.my.ui.feedback.FeedbackScreen
+import com.kus.feature.my.ui.subscreen.CheckedRestaurantScreen
+import com.kus.feature.my.ui.subscreen.FavoriteRestaurantScreen
+import com.kus.feature.my.ui.subscreen.FeedbackScreen
 import com.kus.feature.my.ui.webview.MyPageWebViewScreen
 import kotlinx.serialization.Serializable
 
@@ -15,9 +17,23 @@ fun NavController.navigateToMyWebView(
     navOptions: NavOptions? = null,
 ) = navigate(MyWebView(title, url), navOptions)
 
-fun NavController.navigateToFeedback(
-    navOptions: NavOptions? = null,
-) = navigate(Feedback, navOptions)
+fun NavController.navigateToFeedback(navOptions: NavOptions? = null) =
+    navigate(Feedback, navOptions)
+
+fun NavController.navigateToFavoriteRest(navOptions: NavOptions? = null) =
+    navigate(FavoriteRest, navOptions)
+
+fun NavController.navigateToCheckedRest(navOptions: NavOptions? = null) =
+    navigate(CheckedRest, navOptions)
+
+fun NavController.navigateToMyArticle(navOptions: NavOptions? = null) =
+    navigate(MyArticle, navOptions)
+
+fun NavController.navigateToMyComment(navOptions: NavOptions? = null) =
+    navigate(MyComment, navOptions)
+
+fun NavController.navigateToScrap(navOptions: NavOptions? = null) =
+    navigate(Scrap, navOptions)
 
 fun NavGraphBuilder.myNavGraph(
     navigateToUp: () -> Unit,
@@ -35,22 +51,22 @@ fun NavGraphBuilder.myNavGraph(
             },
             navigateToTerms = {
                 navController.navigateToMyWebView(
-                    title = "공지사항",
+                    title = "이용약관",
                     url = "https://kustaurant.com/terms_of_use",
                 )
             },
             navigateToPrivacyPolicy = {
                 navController.navigateToMyWebView(
-                    title = "공지사항",
+                    title = "개인정보처리방침",
                     url = "https://kustaurant.com/privacy-policy",
                 )
             },
             navigateToFeedback = navController::navigateToFeedback,
-            navigateToSavedRest = { },
-            navigateToCheckedRest = { },
-            navigateToMyArticle = { },
-            navigateToMyComment = { },
-            navigateToScrap = { },
+            navigateToSavedRest = navController::navigateToFavoriteRest,
+            navigateToCheckedRest = navController::navigateToCheckedRest,
+            navigateToMyArticle = navController::navigateToMyArticle,
+            navigateToMyComment = navController::navigateToMyComment,
+            navigateToScrap = navController::navigateToScrap,
         )
     }
 
@@ -63,11 +79,22 @@ fun NavGraphBuilder.myNavGraph(
         )
     }
 
-    composable<Feedback> {
-        FeedbackScreen(
+    composable<Feedback> { FeedbackScreen(onBackClick = navigateToUp) }
+    composable<FavoriteRest> {
+        FavoriteRestaurantScreen(
             onBackClick = navigateToUp,
+            onItemClick = { }
         )
     }
+    composable<CheckedRest> {
+        CheckedRestaurantScreen(
+            onBackClick = navigateToUp,
+            onItemClick = {}
+        )
+    }
+    composable<MyArticle> { /* MyArticleScreen(onBackClick = navigateToUp) */ }
+    composable<MyComment> { /* MyCommentScreen(onBackClick = navigateToUp) */ }
+    composable<Scrap> { /* ScrapScreen(onBackClick = navigateToUp) */ }
 }
 
 @Serializable
@@ -81,3 +108,18 @@ data class MyWebView(
 
 @Serializable
 data object Feedback
+
+@Serializable
+data object FavoriteRest
+
+@Serializable
+data object CheckedRest
+
+@Serializable
+data object MyArticle
+
+@Serializable
+data object MyComment
+
+@Serializable
+data object Scrap

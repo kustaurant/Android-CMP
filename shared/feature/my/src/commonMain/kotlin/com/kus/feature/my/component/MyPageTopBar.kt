@@ -1,8 +1,10 @@
 package com.kus.feature.my.component
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,25 +23,28 @@ internal fun MyPageTopBar(
     title: String,
     onBackClick: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .padding(vertical = 10.dp)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.CenterStart,
-    ) {
-        Text(
-            text = title,
-            style = KusTheme.typography.type17sb,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-        )
-
-        Icon(
-            painter = painterResource(Res.drawable.ic_left_chevron),
-            contentDescription = null,
+    Column {
+        Box(
             modifier = Modifier
-                .noRippleClickable(onBackClick)
-                .padding(horizontal = 4.dp),
-        )
+                .padding(vertical = 14.dp, horizontal = 16.dp)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            Text(
+                text = title,
+                style = KusTheme.typography.type17sb,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+            )
+
+            Icon(
+                painter = painterResource(Res.drawable.ic_left_chevron),
+                contentDescription = null,
+                modifier = Modifier
+                    .noRippleClickable(onBackClick)
+                    .padding(horizontal = 4.dp),
+            )
+        }
+        HorizontalDivider(thickness = 1.dp, color = KusTheme.colors.c_E0E0E0)
     }
 }
