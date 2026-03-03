@@ -162,8 +162,9 @@ fun DetailRestInfo(
             textDecoration = TextDecoration.Underline,
             modifier = Modifier.padding(top = 17.dp, bottom = 16.dp)
                 .noRippleClickable {
-                    if (hasNaverMapUrl) {
-                        uriHandler.openUri(naverMapUrl)
+                    val isValidUrl = naverMapUrl.startsWith("https://") || naverMapUrl.startsWith("http://")
+                    if (hasNaverMapUrl && isValidUrl) {
+                        runCatching { uriHandler.openUri(naverMapUrl) }
                     }
                 }
         )

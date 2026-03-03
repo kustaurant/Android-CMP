@@ -264,6 +264,7 @@ private fun DetailSuccessScreen(
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
                         keyboardController?.hide()
+                        isCommentInputVisible = false
                     }
             )
         }

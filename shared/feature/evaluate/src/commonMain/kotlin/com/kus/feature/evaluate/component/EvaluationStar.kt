@@ -22,7 +22,7 @@ fun EvaluationStar(
     initialRating: Double = 0.0,
     onRatingChanged: (Double) -> Unit = {}
 ) {
-    var currentRating by remember { mutableStateOf(initialRating.toFloat()) }
+    var currentRating by remember(initialRating) { mutableStateOf(initialRating.toFloat()) }
     val ratingDescription = when ((currentRating * 2).roundToInt()) {
         0 -> "별점을 입력해주세요"
         1 -> "다시 갈 것 같진 않아요"

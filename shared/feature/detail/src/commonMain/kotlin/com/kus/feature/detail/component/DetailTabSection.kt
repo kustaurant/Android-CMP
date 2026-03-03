@@ -76,8 +76,10 @@ fun DetailTabSection(
                         title = "리뷰($reviewCountText)",
                         selected = selectedIndex == 1,
                         onClick = {
-                            selectedIndex = 1
-                            onReviewTabSelected()
+                            if (selectedIndex != 1) {
+                                selectedIndex = 1
+                                onReviewTabSelected()
+                            }
                         },
                         modifier = Modifier.weight(1f)
                     )

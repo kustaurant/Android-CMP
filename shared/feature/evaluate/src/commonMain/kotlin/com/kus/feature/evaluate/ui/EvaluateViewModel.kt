@@ -71,7 +71,7 @@ class EvaluateViewModel : ViewModel() {
 
     fun updateImageBytes(imageBytes: ByteArray) {
         _uiState.value = _uiState.value.copy(
-            evaluation = _uiState.value.evaluation.copy(imageBytes = imageBytes)
+            evaluation = _uiState.value.evaluation.copy(imageBytes = imageBytes.copyOf())
         )
     }
 

@@ -98,6 +98,6 @@ compose.resources {
 
 android {
     namespace = "com.kus.feature.evaluate"
-    compileSdk = 36
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig { minSdk = 26 }
 }
