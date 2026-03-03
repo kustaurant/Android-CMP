@@ -161,6 +161,8 @@ private fun DetailSuccessScreen(
                         restaurantAddress = restaurant.restaurantAddress,
                         naverMapUrl = restaurant.naverMapUrl,
                         partnershipInfo = restaurant.partnershipInfo,
+                        rating = restaurant.restaurantScore,
+                        evaluationCount = restaurant.evaluationCount,
                         modifier = Modifier
                             .padding(top = imageHeight - overlap)
                             .onGloballyPositioned { coordinates ->
