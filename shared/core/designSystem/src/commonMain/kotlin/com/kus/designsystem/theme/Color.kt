@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 val C_43AB38 = Color(0xFF43AB38)
 val C_43AB38_20 = Color(0xFFE6F3EA)
 val C_046B40 = Color(0xFF046B40)
+val C_098C62 = Color(0xFF098C62)
 val C_FFFFFF = Color(0xFFFFFFFF)
 val C_F5F5F5 = Color(0xFFF5F5F5)
 val C_F3F3F3 = Color(0xFFF3F3F3)
@@ -30,6 +31,7 @@ class KusColors(
     c_43AB38: Color,
     c_43AB38_20: Color,
     c_046B40: Color,
+    c_098C62: Color,
     c_FFFFFF: Color,
     c_F5F5F5: Color,
     c_F3F3F3: Color,
@@ -50,6 +52,8 @@ class KusColors(
     var c_43AB38_20 by mutableStateOf(c_43AB38_20)
         private set
     var c_046B40 by mutableStateOf(c_046B40)
+        private set
+    var c_098C62 by mutableStateOf(c_098C62)
         private set
     var c_FFFFFF by mutableStateOf(c_FFFFFF)
         private set
@@ -84,6 +88,7 @@ class KusColors(
         c_43AB38,
         c_43AB38_20,
         c_046B40,
+        c_098C62,
         c_FFFFFF,
         c_F5F5F5,
         c_F3F3F3,
@@ -104,6 +109,7 @@ class KusColors(
         c_43AB38 = other.c_43AB38
         c_43AB38_20 = other.c_43AB38_20
         c_046B40 = other.c_046B40
+        c_098C62 = other.c_098C62
         c_FFFFFF = other.c_FFFFFF
         c_F5F5F5 = other.c_F5F5F5
         c_F3F3F3 = other.c_F3F3F3
@@ -125,6 +131,7 @@ fun KusLightColors(
     c_43AB38: Color = C_43AB38,
     c_43AB38_20: Color = C_43AB38_20,
     c_046B40: Color = C_046B40,
+    c_098C62: Color = C_098C62,
     c_FFFFFF: Color = C_FFFFFF,
     c_F5F5F5: Color = C_F5F5F5,
     c_F3F3F3: Color = C_F3F3F3,
@@ -143,6 +150,7 @@ fun KusLightColors(
     c_43AB38,
     c_43AB38_20,
     c_046B40,
+    c_098C62,
     c_FFFFFF,
     c_F5F5F5,
     c_F3F3F3,
