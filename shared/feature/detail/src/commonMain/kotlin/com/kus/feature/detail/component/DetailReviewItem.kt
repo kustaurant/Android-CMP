@@ -4,7 +4,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -155,7 +154,8 @@ private fun ReviewContent(
     val density = LocalDensity.current
 
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         ReviewAvatar(
             url = writerIconImgUrl
@@ -213,13 +213,15 @@ private fun ReviewContent(
         }
     }
 
-    Text(
-        text = body,
-        modifier = Modifier.padding(top = 10.dp),
-        style = KusTheme.typography.type14r.copy(
-            color = KusTheme.colors.c_000000
+    if (body.isNotEmpty()) {
+        Text(
+            text = body,
+            modifier = Modifier.padding(top = 10.dp),
+            style = KusTheme.typography.type14r.copy(
+                color = KusTheme.colors.c_000000
+            )
         )
-    )
+    }
 
     if (!isComment) {
         KusReactionButton(
