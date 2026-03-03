@@ -3,9 +3,11 @@ package com.kus.kustaurant.detail.api
 import com.kus.kustaurant.detail.remote.response.CommentReactionResponse
 import com.kus.kustaurant.detail.remote.response.DetailResponse
 import com.kus.kustaurant.detail.remote.response.EvaluationReactionResponse
+import com.kus.kustaurant.detail.remote.response.FavoriteResponse
 import com.kus.kustaurant.detail.remote.response.ReviewResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.put
@@ -42,5 +44,13 @@ class DetailApi(
         return client.put("/api/v2/auth/eval-comments/$evalCommentId") {
             reaction?.let { parameter("reaction", it) }
         }.body()
+    }
+
+    suspend fun putRestaurantFavorite(restaurantId: Long): FavoriteResponse {
+        return client.put("/api/v2/auth/restaurants/$restaurantId/favorite").body()
+    }
+
+    suspend fun deleteRestaurantFavorite(restaurantId: Long): FavoriteResponse {
+        return client.delete("/api/v2/auth/restaurants/$restaurantId/favorite").body()
     }
 }

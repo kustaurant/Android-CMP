@@ -3,9 +3,11 @@ package com.kus.kustaurant.detail.remote.mapper
 import com.kus.kustaurant.detail.remote.response.CommentReactionResponse
 import com.kus.kustaurant.detail.remote.response.DetailResponse
 import com.kus.kustaurant.detail.remote.response.EvaluationReactionResponse
+import com.kus.kustaurant.detail.remote.response.FavoriteResponse
 import com.kus.kustaurant.detail.remote.response.MenuResponse
 import com.kus.kustaurant.detail.remote.response.ReviewCommentResponse
 import com.kus.kustaurant.detail.remote.response.ReviewResponse
+import com.kus.shared.domain.model.detail.FavoriteResult
 import com.kus.shared.domain.model.detail.ReactionResult
 import com.kus.shared.domain.model.detail.RestaurantDetail
 import com.kus.shared.domain.model.detail.RestaurantMenu
@@ -89,4 +91,10 @@ fun CommentReactionResponse.toDomain(): ReactionResult =
         reaction = reaction ?: "",
         likeCount = likeCount,
         dislikeCount = dislikeCount,
+    )
+
+fun FavoriteResponse.toDomain(): FavoriteResult =
+    FavoriteResult(
+        isFavorite = isFavorite,
+        favoriteCount = count.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
     )

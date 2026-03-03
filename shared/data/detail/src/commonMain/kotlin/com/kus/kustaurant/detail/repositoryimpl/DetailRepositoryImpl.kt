@@ -3,6 +3,7 @@ package com.kus.kustaurant.detail.repositoryimpl
 import com.kus.kustaurant.detail.api.DetailApi
 import com.kus.kustaurant.detail.remote.mapper.toDomain
 import com.kus.shared.domain.detail.repository.DetailRepository
+import com.kus.shared.domain.model.detail.FavoriteResult
 import com.kus.shared.domain.model.detail.ReactionResult
 import com.kus.shared.domain.model.detail.RestaurantDetail
 import com.kus.shared.domain.model.detail.RestaurantReview
@@ -27,4 +28,10 @@ class DetailRepositoryImpl(
         reaction: String?,
     ): ReactionResult =
         api.putCommentReaction(evalCommentId, reaction).toDomain()
+
+    override suspend fun putRestaurantFavorite(restaurantId: Long): FavoriteResult =
+        api.putRestaurantFavorite(restaurantId).toDomain()
+
+    override suspend fun deleteRestaurantFavorite(restaurantId: Long): FavoriteResult =
+        api.deleteRestaurantFavorite(restaurantId).toDomain()
 }
