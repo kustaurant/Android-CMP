@@ -8,8 +8,13 @@ import androidx.compose.runtime.remember
 class CommunityEditorController {
 
     var delegate: EditorDelegate? = null
+    var expectsContent: Boolean = false
 
-    fun setHtml(html: String) = delegate?.setHtml(html)
+    fun setHtml(html: String) {
+        expectsContent = true
+        delegate?.setHtml(html)
+    }
+    
     fun insertImage(url: String) = delegate?.insertImage(url)
     fun undo() = delegate?.undo()
     fun redo() = delegate?.redo()

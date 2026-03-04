@@ -9,8 +9,6 @@
     <script src="purify.min.js"></script>
 
     <style>
-        /* ===== Quill Editor Full-Height Layout (WebView) ===== */
-
         html, body {
           height: 100%;
           margin: 0;
@@ -22,20 +20,17 @@
           flex-direction: column;
         }
 
-        /* Quill mounts into this element */
         #editor-container {
-          flex: 1;                 /* fill remaining height */
-          min-height: 0;           /* important for flex children + scrolling */
+          flex: 1;
+          min-height: 0;
           background-color: #ffffff;
-          padding: 0;              /* padding is applied to .ql-editor */
+          padding: 0;
           box-sizing: border-box;
         }
 
-        /* Remove Quill borders / toolbar */
         .ql-container.ql-snow { border: none; }
         .ql-toolbar.ql-snow { display: none; }
 
-        /* Make Quill internals stretch */
         #editor-container .ql-container {
           height: 100%;
           min-height: 0;
@@ -51,7 +46,6 @@
           box-sizing: border-box;
           overflow-y: auto;
 
-          /* Basic typography */
           font-size: 14px;
           line-height: 1.6;
           color: #222;
@@ -59,7 +53,6 @@
           white-space: pre-wrap;
         }
 
-        /* Placeholder style */
         #editor-container .ql-editor.ql-blank::before {
           left: 12px;
           right: 12px;
@@ -68,7 +61,6 @@
           font-style: italic;
         }
 
-        /* Images fit container */
         #editor-container .ql-editor img {
           max-width: 100%;
           height: auto;
@@ -76,7 +68,6 @@
           margin: 8px 0;
         }
 
-        /* Code block style */
         #editor-container .ql-editor pre {
           padding: 10px;
           border-radius: 8px;
@@ -94,7 +85,6 @@
       "내용을 입력해주세요. 커뮤니티 이용 규칙에 의해 부적절한 게시물은 숨김, 삭제 처리될 수 있습니다.";
 
     const PURIFY_CONFIG = {
-      // Keep this list tight. Add only what you really need.
       ALLOWED_TAGS: [
         "b","strong","i","em","u",
         "p","br","div","span",
@@ -108,10 +98,7 @@
         "href","src","alt","title","target","rel",
         "class","style"
       ],
-      // Prevent data: urls unless you explicitly need them
       ALLOW_DATA_ATTR: false,
-      // Keep unknown protocols blocked by default
-      // DOMPurify will remove javascript: etc.
     };
 
     function sanitizeHtml(html) {
@@ -119,37 +106,30 @@
       if (window.DOMPurify) {
         return window.DOMPurify.sanitize(html, PURIFY_CONFIG);
       }
-      // Fallback: if DOMPurify not available, return empty or minimal safe string
-      // (Better to fail safe than to allow XSS)
       return "";
     }
 
     function normalizeLinks(container) {
-      // Ensure links are safe: remove javascript: and force rel/target
       const links = container.querySelectorAll("a");
       links.forEach(a => {
         const href = (a.getAttribute("href") || "").trim();
 
-        // Block dangerous protocols
         if (/^javascript:/i.test(href) || /^data:/i.test(href)) {
           a.removeAttribute("href");
         }
 
-        // Optional: open in new tab (WebView may handle differently)
         a.setAttribute("target", "_blank");
         a.setAttribute("rel", "noopener noreferrer");
       });
     }
 
     function postHtmlChanged(html) {
-      // Android bridge
       try {
         if (window.AndroidBridge && typeof window.AndroidBridge.onHtmlChanged === "function") {
           window.AndroidBridge.onHtmlChanged(html);
         }
       } catch (e) {}
 
-      // iOS bridge
       try {
         if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.htmlChanged) {
           window.webkit.messageHandlers.htmlChanged.postMessage(html);
@@ -161,7 +141,6 @@
       const raw = quill.root.innerHTML;
       const clean = sanitizeHtml(raw);
 
-      // DOMPurify returns a string. Normalize links by DOM parsing.
       const tmp = document.createElement("div");
       tmp.innerHTML = clean;
       normalizeLinks(tmp);
@@ -170,9 +149,6 @@
       postHtmlChanged(finalHtml);
     }
 
-    // -----------------------------
-    // Init Quill
-    // -----------------------------
     const quill = new Quill("#editor-container", {
       theme: "snow",
       placeholder: PLACEHOLDER,
@@ -182,30 +158,36 @@
       }
     });
 
-    // When text changes, send sanitized HTML
     quill.on("text-change", function() {
       notifyHtmlChanged();
     });
 
-    // -----------------------------
-    // Public API (called from Kotlin)
-    // -----------------------------
     window.EditorApi = {
-      setHtml: function(content) {
-        const clean = sanitizeHtml(content || "");
+        setHtml: function(content) {
+            const clean = sanitizeHtml(content || "");
+            const tmp = document.createElement("div");
+            tmp.innerHTML = clean;
+            normalizeLinks(tmp);
 
-        // Normalize links after sanitize
-        const tmp = document.createElement("div");
-        tmp.innerHTML = clean;
-        normalizeLinks(tmp);
+            quill.clipboard.dangerouslyPasteHTML(tmp.innerHTML);
 
-        // Insert into editor
-        quill.clipboard.dangerouslyPasteHTML(tmp.innerHTML);
-        notifyHtmlChanged();
-      },
+            const length = quill.getLength();
+            quill.setSelection(length, 0, "silent");
+            quill.blur();
+
+            notifyHtmlChanged();
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
+                    try {
+                        window.AndroidBridge?.onEditorReady?.();
+                    } catch(e) {}
+                });
+            });
+        },
 
       getHtml: function() {
-        // Return sanitized current content
         const raw = quill.root.innerHTML;
         return sanitizeHtml(raw);
       },
@@ -233,10 +215,6 @@
         const u = (url || "").trim();
         if (!u) return;
 
-        // Basic protocol validation (optional)
-        // If you allow only https, enforce here:
-        // if (!/^https:\/\//i.test(u)) return;
-
         const range = quill.getSelection(true);
         const index = range ? range.index : quill.getLength();
 
@@ -251,8 +229,12 @@
       }
     };
 
-    // Optional: initial notify (so Kotlin knows initial state)
-    notifyHtmlChanged();
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
+            try { window.AndroidBridge?.onEditorReady?.(); } catch(e) {}
+        });
+    });
 </script>
 </body>
 </html>

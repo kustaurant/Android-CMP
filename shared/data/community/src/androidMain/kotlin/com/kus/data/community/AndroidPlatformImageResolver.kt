@@ -1,13 +1,14 @@
 package com.kus.data.community
 
 import android.content.Context
-import android.net.Uri
 import android.provider.OpenableColumns
 import com.kus.data.community.model.ResolvedImage
 import androidx.core.net.toUri
+import com.kus.domain.community.model.UploadImageException
 
 class AndroidPlatformImageResolver(
     private val context: Context,
+    private val maxBytes: Long = 1_048_576L,
 ) : PlatformImageResolver {
 
     override suspend fun resolve(imagePath: String): ResolvedImage {
@@ -16,7 +17,11 @@ class AndroidPlatformImageResolver(
 
         val mime = resolver.getType(uri) ?: "image/*"
         val bytes = resolver.openInputStream(uri)?.use { it.readBytes() }
-            ?: error("이미지를 읽을 수 없습니다.")
+            ?: throw UploadImageException.ReadFailed()
+
+        if (bytes.size.toLong() > maxBytes) {
+            throw UploadImageException.TooLarge(maxBytes)
+        }
 
         val fileName: String = resolver
             .query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)

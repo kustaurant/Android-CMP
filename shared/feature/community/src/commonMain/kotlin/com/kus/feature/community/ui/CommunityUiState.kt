@@ -23,4 +23,6 @@ data class CommunityUiState(
     val listSortType: ListSortType = ListSortType.LATEST,
     val rankingSortType: RankingSortType = RankingSortType.SEASONAL,
     val rankingListState: UiState<List<CommunityRanking>> = UiState.Loading,
+
+    val toastMessage: String? = null,
 )

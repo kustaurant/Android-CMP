@@ -85,6 +85,7 @@ fun CommunityWriteScreen(
         }
     }
 
+
     LaunchedEffect(uiState.finishState) {
         when (uiState.finishState) {
             PostFinishState.CREATE_OK -> {
@@ -249,7 +250,8 @@ fun CommunityWriteScreen(
                 editorRenderer.Render(
                     controller = controller,
                     modifier = Modifier.fillMaxSize(),
-                    onHtmlChange = viewModel::onHtmlChange
+                    onHtmlChange = viewModel::onHtmlChange,
+                    onEditorReady = viewModel::onEditorReady
                 )
 
                 if (uiState.phase == CommunityWritePhase.Loading || uiState.isImageUploading) {

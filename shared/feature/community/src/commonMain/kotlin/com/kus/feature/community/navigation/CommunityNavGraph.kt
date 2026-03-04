@@ -8,9 +8,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.kus.core.serialization.KusJson
 import com.kus.core.serialization.RouteCodec
+import com.kus.feature.community.config.CommunityKeys.COMMUNITY_LIST_REFRESH
 import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_DELETE_ID
 import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_EDIT_RESULT
-import com.kus.feature.community.config.CommunityKeys.COMMUNITY_LIST_REFRESH
 import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_UPDATE_PAYLOAD
 import com.kus.feature.community.model.CommunityPostModifyPayload
 import com.kus.feature.community.ui.CommunityScreen
@@ -93,6 +93,7 @@ fun NavGraphBuilder.communityNavGraph(
             onWriteClick = onPostWriteClick,
             onBackClick = onBackButtonClick,
             onSearchClick = onSearchClick,
+            onShowMessage = onShowMessage,
         )
     }
 

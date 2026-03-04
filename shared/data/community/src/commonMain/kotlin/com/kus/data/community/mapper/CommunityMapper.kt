@@ -1,4 +1,4 @@
-package com.kus.data.community.remote.mapper
+package com.kus.data.community.mapper
 
 import com.kus.data.community.remote.response.CommunityCommentReactionResponse
 import com.kus.data.community.remote.response.CommunityPostCommentResponse

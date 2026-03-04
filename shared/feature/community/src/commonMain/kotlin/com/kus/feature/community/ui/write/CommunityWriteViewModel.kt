@@ -3,6 +3,7 @@ package com.kus.feature.community.ui.write
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.domain.community.model.PostCategory
+import com.kus.domain.community.model.UploadImageException
 import com.kus.domain.community.usecase.PatchPostModifyUseCase
 import com.kus.domain.community.usecase.PostCommunityPostCreateUseCase
 import com.kus.domain.community.usecase.PostCommunityUploadImageUseCase
@@ -70,6 +71,10 @@ class CommunityWriteViewModel(
 
     fun clearToast() {
         _uiState.update { it.copy(toastMessage = null) }
+    }
+
+    fun onEditorReady() {
+        _uiState.update { it.copy(phase = CommunityWritePhase.Idle) }
     }
 
     fun consumeFinishState() {
@@ -154,7 +159,12 @@ class CommunityWriteViewModel(
             _uiState.update { it.copy(isImageUploading = false) }
         }.onFailure { e ->
             _uiState.update { it.copy(isImageUploading = false) }
-            _uiState.update { it.copy(toastMessage = e.message ?: "업로드 중 오류가 발생했습니다.") }
+            val msg = when (e) {
+                is UploadImageException.TooLarge -> "이미지는 1MB 이하만 업로드 가능합니다."
+                is UploadImageException.ReadFailed -> "이미지를 읽을 수 없습니다."
+                else -> e.message ?: "업로드 중 오류가 발생했습니다."
+            }
+            _uiState.update { it.copy(toastMessage = msg) }
         }.getOrNull()
     }
 

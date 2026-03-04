@@ -22,6 +22,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,7 @@ import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 @Composable
 fun CommunityScreen(
     modifier: Modifier = Modifier,
+    onShowMessage: (String) -> Unit = {},
     onPostClick: (Long) -> Unit = {},
     onBackClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
@@ -58,6 +60,13 @@ fun CommunityScreen(
 
     var boardExpanded by remember { mutableStateOf(false) }
     val (showWriteFab, fabScrollConnection) = rememberFabVisibleOnScrollUp()
+
+    LaunchedEffect(uiState.toastMessage) {
+        uiState.toastMessage?.let {
+            onShowMessage(it)
+            viewModel.clearToast()
+        }
+    }
 
     Scaffold(
         modifier = modifier

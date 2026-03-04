@@ -2,7 +2,7 @@ package com.kus.data.community.repository
 
 import com.kus.data.community.PlatformImageResolver
 import com.kus.data.community.api.CommunityApi
-import com.kus.data.community.remote.mapper.toDomain
+import com.kus.data.community.mapper.toDomain
 import com.kus.data.community.remote.request.PostCommentRequest
 import com.kus.data.community.remote.request.PostRequest
 import com.kus.data.community.remote.response.toDomain

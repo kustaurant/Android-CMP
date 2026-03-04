@@ -8,6 +8,7 @@ interface CommunityEditorRenderer {
     fun Render(
         controller: CommunityEditorController,
         modifier: Modifier,
-        onHtmlChange: (String) -> Unit
+        onHtmlChange: (String) -> Unit,
+        onEditorReady: () -> Unit,
     )
 }

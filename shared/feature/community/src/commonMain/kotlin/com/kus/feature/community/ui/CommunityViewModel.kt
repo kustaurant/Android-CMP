@@ -34,6 +34,10 @@ class CommunityViewModel(
 
     suspend fun hasLoginInfo(): Boolean = getSessionAvailabilityUseCase()
 
+    fun clearToast() {
+        _uiState.update { it.copy(toastMessage = null) }
+    }
+
     fun onTabSelected(tab: CommunityTab) {
         _uiState.update { it.copy(selectedTab = tab) }
         ensureDataForCurrentTab()
@@ -130,11 +134,11 @@ class CommunityViewModel(
                     )
                 }
             }.onFailure { e ->
-                KusLog.e("CommunityViewModel", "loadPostList error", e)
                 _uiState.update { cur ->
                     cur.copy(
-                        postListState = UiState.Failure(UiError.Message(e.message ?: "loadPostList error")),
-                        postPageState = cur.postPageState.copy(phase = CommunityPhase.Idle)
+                        postListState = UiState.Failure(UiError.Message(e.message ?: "게시글 리스트를 불러오는데 오류가 발생했습니다.")),
+                        postPageState = cur.postPageState.copy(phase = CommunityPhase.Idle),
+                        toastMessage = "게시글 리스트를 불러오는데 오류가 발생했습니다."
                     )
                 }
             }
@@ -182,7 +186,10 @@ class CommunityViewModel(
             }.onFailure { e ->
                 KusLog.e("CommunityViewModel", "loadRanking error", e)
                 _uiState.update {
-                    it.copy(rankingListState = UiState.Failure(UiError.Message(e.message ?: "loadRanking error")))
+                    it.copy(
+                        rankingListState = UiState.Failure(UiError.Message(e.message ?: "랭킹 리스트를 불러오는데 오류가 발생했습니다.")),
+                        toastMessage = "랭킹 리스트를 불러오는데 오류가 발생했습니다."
+                    )
                 }
             }
         }

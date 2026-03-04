@@ -19,8 +19,7 @@
           display: flex;
           flex-direction: column;
         }
-
-        /* Quill mounts into this element */
+ 
         #editor-container {
           flex: 1;
           min-height: 0;
@@ -28,12 +27,10 @@
           padding: 0;
           box-sizing: border-box;
         }
-
-        /* Remove Quill borders / toolbar */
+ 
         .ql-container.ql-snow { border: none; }
         .ql-toolbar.ql-snow { display: none; }
-
-        /* Make Quill internals stretch */
+ 
         #editor-container .ql-container {
           height: 100%;
           min-height: 0;
@@ -70,8 +67,7 @@
           display: block;
           margin: 8px 0;
         }
-
-        /* Code block style */
+ 
         #editor-container .ql-editor pre {
           padding: 10px;
           border-radius: 8px;
@@ -89,7 +85,6 @@
       "내용을 입력해주세요. 커뮤니티 이용 규칙에 의해 부적절한 게시물은 숨김, 삭제 처리될 수 있습니다.";
 
     const PURIFY_CONFIG = {
-      // Keep this list tight. Add only what you really need.
       ALLOWED_TAGS: [
         "b","strong","i","em","u",
         "p","br","div","span",
@@ -115,31 +110,26 @@
     }
 
     function normalizeLinks(container) {
-      // Ensure links are safe: remove javascript: and force rel/target
       const links = container.querySelectorAll("a");
       links.forEach(a => {
         const href = (a.getAttribute("href") || "").trim();
-
-        // Block dangerous protocols
+ 
         if (/^javascript:/i.test(href) || /^data:/i.test(href)) {
           a.removeAttribute("href");
         }
-
-        // Optional: open in new tab (WebView may handle differently)
+ 
         a.setAttribute("target", "_blank");
         a.setAttribute("rel", "noopener noreferrer");
       });
     }
 
     function postHtmlChanged(html) {
-      // Android bridge
       try {
         if (window.AndroidBridge && typeof window.AndroidBridge.onHtmlChanged === "function") {
           window.AndroidBridge.onHtmlChanged(html);
         }
       } catch (e) {}
-
-      // iOS bridge
+ 
       try {
         if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.htmlChanged) {
           window.webkit.messageHandlers.htmlChanged.postMessage(html);
@@ -167,8 +157,7 @@
         history: { delay: 1000, maxStack: 100, userOnly: true }
       }
     });
-
-    // When text changes, send sanitized HTML
+ 
     quill.on("text-change", function() {
       notifyHtmlChanged();
     });
@@ -187,10 +176,18 @@
             quill.blur();
             
             notifyHtmlChanged();
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
+                    try {
+                        window.AndroidBridge?.onEditorReady?.();
+                    } catch(e) {}
+                });
+            });
         },
 
       getHtml: function() {
-        // Return sanitized current content
         const raw = quill.root.innerHTML;
         return sanitizeHtml(raw);
       },
@@ -231,10 +228,13 @@
         notifyHtmlChanged();
       }
     };
-
-    window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
     
-    notifyHtmlChanged();
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
+            try { window.AndroidBridge?.onEditorReady?.(); } catch(e) {}
+        });
+    });
 </script>
 </body>
 </html>

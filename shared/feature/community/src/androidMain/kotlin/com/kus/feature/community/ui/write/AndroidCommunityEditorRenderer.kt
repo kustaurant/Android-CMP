@@ -8,12 +8,14 @@ class AndroidCommunityEditorRenderer : CommunityEditorRenderer {
     override fun Render(
         controller: CommunityEditorController,
         modifier: Modifier,
-        onHtmlChange: (String) -> Unit
+        onHtmlChange: (String) -> Unit,
+        onEditorReady: () -> Unit
     ) {
         AndroidCommunityEditor(
             controller = controller,
             modifier = modifier,
-            onHtmlChange = onHtmlChange
+            onHtmlChange = onHtmlChange,
+            onEditorReady = onEditorReady
         )
     }
 }

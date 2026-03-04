@@ -13,7 +13,9 @@ fun AndroidCommunityEditor(
     controller: CommunityEditorController,
     modifier: Modifier,
     onHtmlChange: (String) -> Unit,
+    onEditorReady: () -> Unit
 ) {
+    val onEditorReadyState = rememberUpdatedState(onEditorReady)
 
     AndroidView(
         modifier = modifier,
@@ -32,6 +34,11 @@ fun AndroidCommunityEditor(
                         @JavascriptInterface
                         fun onHtmlChanged(html: String) {
                             onHtmlChange(html)
+                        }
+
+                        @JavascriptInterface
+                        fun onEditorReady() {
+                            onEditorReadyState.value.invoke()
                         }
                     },
                     "AndroidBridge"
