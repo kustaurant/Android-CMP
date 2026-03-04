@@ -110,6 +110,7 @@ fun TierScreen(
                         TierListScreen(
                             viewModel = viewModel,
                             listState = listState,
+                            onRestaurantClick = { onNavigateRestaurantDetail() },
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(top = 44.dp)
