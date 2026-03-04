@@ -3,6 +3,7 @@ package com.kus.kustaurant.di
 import com.kus.core.config.di.configModule
 import com.kus.data.auth.di.authDataModule
 import com.kus.data.firstLaunch.di.firstLaunchDataModule
+import com.kus.data.my.di.myDataModule
 import com.kus.data.network.di.networkModule
 import com.kus.domain.auth.di.authDomainModule
 import com.kus.domain.firstLaunch.di.firstLaunchDomainModule
@@ -44,6 +45,7 @@ fun initKoin(
             authDataModule,
             tierDataModule,
             homeDataModule,
+            myDataModule,
 
             // feature
             splashFeatureModule,

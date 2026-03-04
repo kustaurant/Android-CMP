@@ -65,6 +65,7 @@ kotlin {
             implementation(project(":shared:data:tier"))
             implementation(project(":shared:data:auth"))
             implementation(project(":shared:data:home"))
+            implementation(project(":shared:data:my"))
 
             implementation(project(":shared:feature:community"))
             implementation(project(":shared:feature:draw"))
