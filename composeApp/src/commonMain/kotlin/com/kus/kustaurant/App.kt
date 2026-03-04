@@ -134,7 +134,7 @@ private fun NavHostController.navigateToTab(key: String) {
 
 private fun shouldShowBottomBar(currentRoute: String?): Boolean {
     val route = currentRoute ?: return true
-    val hiddenRoutes = listOf("Splash", "Onboarding", "Login")
+    val hiddenRoutes = listOf("Splash", "Onboarding", "Login", "Detail", "Evaluate")
 
     return hiddenRoutes.none { route.contains(it) }
 }

@@ -74,4 +74,6 @@ include(
     ":shared:feature:tier",
     ":shared:feature:my",
     ":shared:feature:search",
+    ":shared:feature:detail",
+    ":shared:feature:evaluate"
 )

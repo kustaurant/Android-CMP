@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 val C_43AB38 = Color(0xFF43AB38)
 val C_43AB38_20 = Color(0xFFE6F3EA)
 val C_046B40 = Color(0xFF046B40)
+val C_098C62 = Color(0xFF098C62)
 val C_FFFFFF = Color(0xFFFFFFFF)
 val C_F5F5F5 = Color(0xFFF5F5F5)
 val C_F3F3F3 = Color(0xFFF3F3F3)
@@ -23,6 +24,7 @@ val C_0093FF = Color(0xFF0093FF)
 val C_01BAA6 = Color(0xFF01BAA6)
 val C_FFB900 = Color(0xFFFFB900)
 val C_9BA5B0 = Color(0xFF9BA5B0)
+val C_FF0000 = Color(0xFFFF0000)
 
 
 @Stable
@@ -30,6 +32,7 @@ class KusColors(
     c_43AB38: Color,
     c_43AB38_20: Color,
     c_046B40: Color,
+    c_098C62: Color,
     c_FFFFFF: Color,
     c_F5F5F5: Color,
     c_F3F3F3: Color,
@@ -44,12 +47,15 @@ class KusColors(
     c_01BAA6: Color,
     c_FFB900: Color,
     c_9BA5B0: Color,
+    c_FF0000: Color,
 ) {
     var c_43AB38 by mutableStateOf(c_43AB38)
         private set
     var c_43AB38_20 by mutableStateOf(c_43AB38_20)
         private set
     var c_046B40 by mutableStateOf(c_046B40)
+        private set
+    var c_098C62 by mutableStateOf(c_098C62)
         private set
     var c_FFFFFF by mutableStateOf(c_FFFFFF)
         private set
@@ -79,11 +85,14 @@ class KusColors(
         private set
     var c_9BA5B0 by mutableStateOf(c_9BA5B0)
         private set
+    var c_FF0000 by mutableStateOf(c_FF0000)
+        private set
 
     fun copy(): KusColors = KusColors(
         c_43AB38,
         c_43AB38_20,
         c_046B40,
+        c_098C62,
         c_FFFFFF,
         c_F5F5F5,
         c_F3F3F3,
@@ -98,12 +107,14 @@ class KusColors(
         c_01BAA6,
         c_FFB900,
         c_9BA5B0,
+        c_FF0000,
     )
 
     fun update(other: KusColors) {
         c_43AB38 = other.c_43AB38
         c_43AB38_20 = other.c_43AB38_20
         c_046B40 = other.c_046B40
+        c_098C62 = other.c_098C62
         c_FFFFFF = other.c_FFFFFF
         c_F5F5F5 = other.c_F5F5F5
         c_F3F3F3 = other.c_F3F3F3
@@ -118,6 +129,7 @@ class KusColors(
         c_01BAA6 = other.c_01BAA6
         c_FFB900 = other.c_FFB900
         c_9BA5B0 = other.c_9BA5B0
+        c_FF0000 = other.c_FF0000
     }
 }
 
@@ -125,6 +137,7 @@ fun KusLightColors(
     c_43AB38: Color = C_43AB38,
     c_43AB38_20: Color = C_43AB38_20,
     c_046B40: Color = C_046B40,
+    c_098C62: Color = C_098C62,
     c_FFFFFF: Color = C_FFFFFF,
     c_F5F5F5: Color = C_F5F5F5,
     c_F3F3F3: Color = C_F3F3F3,
@@ -139,10 +152,12 @@ fun KusLightColors(
     c_01BAA6: Color = C_01BAA6,
     c_FFB900: Color = C_FFB900,
     c_9BA5B0: Color = C_9BA5B0,
+    c_FF0000: Color = C_FF0000,
 ) = KusColors(
     c_43AB38,
     c_43AB38_20,
     c_046B40,
+    c_098C62,
     c_FFFFFF,
     c_F5F5F5,
     c_F3F3F3,
@@ -157,4 +172,5 @@ fun KusLightColors(
     c_01BAA6,
     c_FFB900,
     c_9BA5B0,
+    c_FF0000,
 )
