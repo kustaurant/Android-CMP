@@ -53,7 +53,8 @@ include(
     ":shared:data:network",
     ":shared:data:tier",
     ":shared:data:auth",
-    ":shared:data:home"
+    ":shared:data:home",
+    ":shared:data:mypage",
 )
 
 include(
