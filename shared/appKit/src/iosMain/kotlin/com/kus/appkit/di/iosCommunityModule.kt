@@ -12,6 +12,6 @@ import org.koin.dsl.module
 
 val iosCommunityModule = module {
     singleOf(::IosCommunityEditorRenderer) bind CommunityEditorRenderer::class
-    singleOf(::IosPlatformImageResolver) bind PlatformImageResolver::class
+    single<PlatformImageResolver> { IosPlatformImageResolver() }
     singleOf(::IosImagePickerFactory) bind PlatformImagePickerFactory::class
 }

@@ -10,12 +10,14 @@ class IosCommunityEditorRenderer : CommunityEditorRenderer {
     override fun Render(
         controller: CommunityEditorController,
         modifier: Modifier,
-        onHtmlChange: (String) -> Unit
+        onHtmlChange: (String) -> Unit,
+        onEditorReady: () -> Unit
     ) {
         IosCommunityEditor(
             controller = controller,
             modifier = modifier,
-            onHtmlChange = onHtmlChange
+            onHtmlChange = onHtmlChange,
+            onEditorReady = onEditorReady
         )
     }
 }

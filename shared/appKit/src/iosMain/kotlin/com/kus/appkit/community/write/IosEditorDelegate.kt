@@ -1,22 +1,32 @@
 package com.kus.appkit.community.write
 
 import com.kus.feature.community.ui.util.jsQuote
+import com.kus.feature.community.ui.write.CommunityEditorController
 import com.kus.feature.community.ui.write.EditorDelegate
 import platform.WebKit.WKWebView
 
 class IosEditorDelegate(
-    private val webView: WKWebView
+    private val webView: WKWebView,
+    private val controller: CommunityEditorController
 ) : EditorDelegate {
 
-    private var isReady = false
+    var isReady = false
     private var pendingHtml: String? = null
+    var onContentReady: (() -> Unit)? = null
 
     fun onEditorReady() {
         isReady = true
-        pendingHtml?.let { html ->
+        val html = pendingHtml
+        if (html != null) {
             eval("window.EditorApi.setHtml(${html.jsQuote()});")
             pendingHtml = null
+        } else if (!controller.expectsContent) {
+            onContentReady?.invoke()
         }
+    }
+
+    fun onContentReady() {
+        onContentReady?.invoke()
     }
 
     private fun eval(js: String) {
@@ -27,7 +37,7 @@ class IosEditorDelegate(
         if (isReady) {
             eval("window.EditorApi.setHtml(${html.jsQuote()});")
         } else {
-            pendingHtml = html  // 준비될 때까지 보관
+            pendingHtml = html
         }
     }
 

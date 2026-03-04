@@ -1,26 +1,20 @@
 package com.kus.appkit.community.write
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
-import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.community.ui.write.CommunityEditorController
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readValue
 import platform.CoreGraphics.CGRectZero
 import platform.Foundation.NSBundle
 import platform.Foundation.NSLog
-import platform.Foundation.NSURL
+import platform.Foundation.NSOperationQueue
+import platform.UIKit.UIColor
 import platform.WebKit.WKScriptMessage
 import platform.WebKit.WKScriptMessageHandlerProtocol
 import platform.WebKit.WKUserContentController
@@ -35,9 +29,10 @@ fun IosCommunityEditor(
     controller: CommunityEditorController,
     modifier: Modifier,
     onHtmlChange: (String) -> Unit,
+    onEditorReady: () -> Unit
 ) {
     val editorDelegate = remember { mutableStateOf<IosEditorDelegate?>(null) }
-    var isEditorReady by remember { mutableStateOf(false) }
+    val onEditorReadyState = rememberUpdatedState(onEditorReady)
 
     val webView = remember {
         val config = WKWebViewConfiguration()
@@ -54,8 +49,18 @@ fun IosCommunityEditor(
                     userContentController: WKUserContentController,
                     didReceiveScriptMessage: WKScriptMessage
                 ) {
-                    editorDelegate.value?.onEditorReady()
-                    isEditorReady = true
+                    NSOperationQueue.mainQueue.addOperationWithBlock {
+                        val delegate = editorDelegate.value
+                        if (delegate != null) {
+                            if (!delegate.isReady) {
+                                delegate.onEditorReady()
+                            } else {
+                                delegate.onContentReady()
+                            }
+                        } else {
+                            onEditorReadyState.value.invoke()
+                        }
+                    }
                 }
             },
             name = "editorReady"
@@ -64,52 +69,33 @@ fun IosCommunityEditor(
         config.userContentController = userController
         config.preferences.javaScriptEnabled = true
 
-        WKWebView(frame = CGRectZero.readValue(), configuration = config)
+        WKWebView(frame = CGRectZero.readValue(), configuration = config).also { wv ->
+            wv.opaque = false
+            wv.backgroundColor = UIColor.whiteColor
+        }
     }
 
     LaunchedEffect(Unit) {
         val bundle = NSBundle.mainBundle
-
-        val htmlUrl: NSURL = bundle.URLForResource(
-            name = "quill",
-            withExtension = "html"
-        ) ?: run {
-            NSLog("❌ quill.html not found in bundle root")
-            return@LaunchedEffect
+        val htmlUrl = bundle.URLForResource("quill", withExtension = "html") ?: run {
+            NSLog("❌ quill.html not found"); return@LaunchedEffect
+        }
+        val baseUrl = bundle.resourceURL ?: run {
+            NSLog("❌ bundle.resourceURL is null"); return@LaunchedEffect
         }
 
-        val baseUrl: NSURL = bundle.resourceURL ?: run {
-            NSLog("❌ bundle.resourceURL is null")
-            return@LaunchedEffect
-        }
-
-        val delegate = IosEditorDelegate(webView)
+        val delegate = IosEditorDelegate(webView, controller)
+        delegate.onContentReady = { onEditorReadyState.value.invoke() }
         editorDelegate.value = delegate
         controller.delegate = delegate
 
-        webView.loadFileURL(
-            URL = htmlUrl,
-            allowingReadAccessToURL = baseUrl
-        )
+        webView.loadFileURL(URL = htmlUrl, allowingReadAccessToURL = baseUrl)
     }
 
-    Box(modifier = modifier.background(KusTheme.colors.c_FFFFFF)) {
-        UIKitView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { webView }
-        )
-
-        if (!isEditorReady) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(KusTheme.colors.c_FFFFFF),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
-            }
-        }
-    }
+    UIKitView(
+        modifier = modifier,
+        factory = { webView }
+    )
 }
 
 private class HtmlChangedMessageHandler(

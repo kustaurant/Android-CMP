@@ -21,13 +21,17 @@ import platform.PhotosUI.PHPickerViewControllerDelegateProtocol
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 import platform.darwin.NSObject
+import platform.darwin.dispatch_async
+import platform.darwin.dispatch_get_main_queue
 
 
 class IosImagePickerFactory : PlatformImagePickerFactory {
     @Composable
     override fun rememberPicker(): PlatformImagePicker {
         val presenter = LocalUIViewController.current
-        var callback by remember { mutableStateOf<(String?) -> Unit>({}) }
+
+        var callback: ((String?) -> Unit)? by remember { mutableStateOf(null) }
+        val delegateRef = remember { mutableStateOf<NSObject?>(null) }
 
         return remember(presenter) {
             PlatformImagePicker { onPicked ->
@@ -39,7 +43,7 @@ class IosImagePickerFactory : PlatformImagePickerFactory {
                 }
 
                 val picker = PHPickerViewController(configuration = config)
-                picker.delegate = object : NSObject(), PHPickerViewControllerDelegateProtocol {
+                val delegate  = object : NSObject(), PHPickerViewControllerDelegateProtocol {
                     override fun picker(
                         picker: PHPickerViewController,
                         didFinishPicking: List<*>
@@ -49,35 +53,36 @@ class IosImagePickerFactory : PlatformImagePickerFactory {
                         val result = didFinishPicking.firstOrNull() as? PHPickerResult
                         val provider = result?.itemProvider
                         if (provider == null) {
-                            callback(null); return
+                            dispatch_async(dispatch_get_main_queue()) { callback?.invoke(null) }
+                            return
                         }
 
                         val typeId = "public.image"
-
                         if (!provider.hasItemConformingToTypeIdentifier(typeId)) {
-                            callback(null)
+                            dispatch_async(dispatch_get_main_queue()) { callback?.invoke(null) }
                             return
                         }
 
                         provider.loadDataRepresentationForTypeIdentifier(typeId) { data, error ->
                             if (data == null || error != null) {
-                                callback(null)
+                                dispatch_async(dispatch_get_main_queue()) { callback?.invoke(null) }
                                 return@loadDataRepresentationForTypeIdentifier
                             }
 
                             val image = UIImage(data = data)
                             val jpeg = UIImageJPEGRepresentation(image, 0.9)
-
                             if (jpeg == null) {
-                                callback(null)
+                                dispatch_async(dispatch_get_main_queue()) { callback?.invoke(null) }
                                 return@loadDataRepresentationForTypeIdentifier
                             }
 
                             val path = saveToTempFile(jpeg, "jpg")
-                            callback(path)
+                            dispatch_async(dispatch_get_main_queue()) { callback?.invoke(path) }
                         }
                     }
                 }
+                delegateRef.value = delegate
+                picker.delegate = delegate
 
                 presenter.presentViewController(picker, animated = true, completion = null)
             }
