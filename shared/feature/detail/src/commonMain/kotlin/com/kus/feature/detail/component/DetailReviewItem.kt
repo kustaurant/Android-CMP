@@ -26,6 +26,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
@@ -80,6 +82,7 @@ fun DetailReviewItem(
             reactionType = review.reactionType,
             likeCount = review.evalLikeCount,
             dislikeCount = review.evalDislikeCount,
+            imgUrl = review.evalImgUrl,
             isMine = review.isEvaluationMine,
             onLikeClick = { onReviewLikeClick(review.evalId) },
             onDislikeClick = { onReviewDislikeClick(review.evalId) },
@@ -143,6 +146,7 @@ private fun ReviewContent(
     likeCount: Int,
     dislikeCount: Int,
     isMine: Boolean,
+    imgUrl: String? = null,
     isComment: Boolean = false,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
@@ -151,7 +155,16 @@ private fun ReviewContent(
     onReportClick: () -> Unit = {},
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }
+    var isBodyExpanded by remember(body) { mutableStateOf(false) }
     val density = LocalDensity.current
+    val bodyTextStyle = KusTheme.typography.type14r.copy(
+        color = KusTheme.colors.c_000000
+    )
+    val bodyMoreTextStyle = SpanStyle(
+        color = KusTheme.colors.c_000000,
+        fontFamily = KusTheme.typography.type15sb.fontFamily,
+        textDecoration = TextDecoration.Underline
+    )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -213,13 +226,25 @@ private fun ReviewContent(
         }
     }
 
+    if (imgUrl != null && imgUrl.startsWith("http")) {
+        KamelImage(
+            resource = { asyncPainterResource(imgUrl) },
+            contentDescription = "음식 카테고리 이미지",
+            modifier = Modifier.size(128.dp)
+                .clip(shape = RoundedCornerShape(10.dp))
+                .padding(top = 10.dp)
+        )
+    }
+
     if (body.isNotEmpty()) {
-        Text(
+        ExpandableSeeMoreText(
             text = body,
+            textStyle = bodyTextStyle,
+            moreTextStyle = bodyMoreTextStyle,
+            isExpanded = isBodyExpanded,
+            maxCollapsedLines = 4,
+            onExpandedChange = { isBodyExpanded = it },
             modifier = Modifier.padding(top = 10.dp),
-            style = KusTheme.typography.type14r.copy(
-                color = KusTheme.colors.c_000000
-            )
         )
     }
 
