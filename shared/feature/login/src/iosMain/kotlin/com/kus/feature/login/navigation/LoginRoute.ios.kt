@@ -11,7 +11,6 @@ import com.kus.feature.login.model.SocialAuthResult
 import com.kus.feature.login.ui.LoginPhase
 import com.kus.feature.login.ui.LoginScreen
 import com.kus.feature.login.ui.LoginViewModel
-import com.kus.logging.KusLog
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -50,7 +49,6 @@ actual fun LoginRoute(
                         )
 
                     is NaverAuthResult.Failure -> {
-                        KusLog.d("iOS LoginRoute","NAVER LOGIN FAIL: code=${res.code}, message=${res.message}")
                         viewModel.onNaverAuthFail(
                             SocialAuthResult.Failure(res.code, res.message)
                         )

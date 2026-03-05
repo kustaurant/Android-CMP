@@ -62,11 +62,6 @@ import kustaurant.shared.feature.tier.generated.resources.ic_filter
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
-enum class TierTab(val title: String) {
-    LIST("티어표"),
-    MAP("지도"),
-}
-
 @Composable
 fun TierScreen(
     modifier: Modifier = Modifier,

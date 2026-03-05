@@ -1,6 +1,7 @@
 package com.kus.designsystem.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -57,7 +58,9 @@ fun KusButton(
     isShadowVisible: Boolean = false,
     onClick: () -> Unit,
 ) {
-    Box {
+    Box(
+        modifier = modifier
+    ) {
         if (isShadowVisible) {
             Box(
                 modifier = Modifier
@@ -73,8 +76,8 @@ fun KusButton(
         Button(
             onClick = onClick,
             enabled = enabled,
+            modifier = Modifier.fillMaxWidth(),
             shape = roundedCornerShape,
-            modifier = modifier,
             colors = ButtonDefaults.buttonColors(
                 containerColor = containerColor,
                 contentColor = contentColor,
@@ -86,7 +89,8 @@ fun KusButton(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
             ) {
 
                 if (leftIcon != null) {

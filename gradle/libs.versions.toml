@@ -34,6 +34,7 @@ uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.4.1"
 napier = "2.7.1"
 kamel = "1.0.8"
+peekaboo = "0.5.2"
 naverMaps = "3.23.0"
 buildkonfig = "0.15.1"
 naverOauth = "5.11.0"
@@ -95,6 +96,9 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 napier-log = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 
 kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
+
+peekaboo-ui = { module = "io.github.onseok:peekaboo-ui", version.ref = "peekaboo" }
+peekaboo-image-picker = { module = "io.github.onseok:peekaboo-image-picker", version.ref = "peekaboo" }
 
 naver-maps = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMaps" }
 naver-oauth = { group = "com.navercorp.nid", name = "oauth", version.ref = "naverOauth" }

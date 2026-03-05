@@ -50,6 +50,7 @@ class TierViewModel(
                 filterState = newFilter,
                 selectedCategories = newFilter.selectedCategoriesForDisplay(),
                 pageState = it.pageState.copy(page = 1),
+                tierListLastPosition = 0,
                 categoryChangeList = true,
                 categoryChangeMap = true,
             )
@@ -107,8 +108,6 @@ class TierViewModel(
         }
     }
 
-
-
     fun onTabSelected(tab: TierTab) {
         _uiState.update { it.copy(selectedTab = tab) }
         ensureDataForCurrentTab()
@@ -116,7 +115,6 @@ class TierViewModel(
 
     private fun ensureDataForCurrentTab(force: Boolean = false) {
         val s = _uiState.value
-        val filter = s.filterState.normalized()
 
         when (s.selectedTab) {
             TierTab.LIST -> {
@@ -164,83 +162,12 @@ class TierViewModel(
         }
     }
 
-    fun onBottomSheetHidden() {
-        _uiState.update { cur ->
-            cur.copy(
-                mapUiState = cur.mapUiState.copy(
-                    selectedRestaurantId = null
-                )
-            )
-        }
-    }
-
-
     fun fetchNextRestaurants() {
         val s = _uiState.value.pageState
         if (s.phase != TierPhase.Idle || s.isLastPage) return
 
         _uiState.update { it.copy(pageState = s.copy(phase = TierPhase.Paging)) }
         loadRestaurantList(requestedPage = s.page + 1)
-    }
-
-
-    private fun mockLoadRestaurantList(requestedPage: Int) {
-        val snapshot = _uiState.value
-        val page = snapshot.pageState
-        if (page.phase != TierPhase.Refreshing && page.phase != TierPhase.Paging) return
-
-        val filter = snapshot.filterState.normalized()
-        val isPartnership = filter.isPartnership
-
-        viewModelScope.launch {
-            val all = mutableListOf<TierRestaurant>()
-            for (i in 1..100) {
-                val tier = (i % 4) + 1
-                all += TierRestaurant(
-                    restaurantId = i.toLong(),
-                    restaurantRanking = i,
-                    restaurantName = "꾸아 건대점 #$i",
-                    restaurantCuisine = listOf("한식", "일식", "중식", "양식", "카페/디저트")[i % 5],
-                    restaurantPosition = listOf("건입~중문", "중문~어대", "후문", "정문", "구의역")[i % 5],
-                    restaurantImgUrl = "",
-                    mainTier = if (isPartnership) -1 else tier,
-                    isEvaluated = (i % 3 == 0),
-                    isFavorite = (i % 4 == 0),
-                    longitude = 127.0 + (i * 0.0001),
-                    latitude = 37.0 + (i * 0.0001),
-                    partnershipInfo = if (i % 5 == 0) "어디다 학생증 제시하면 10% 할인" else "해당사항 없음",
-                    restaurantScore = ((i % 50) / 10.0),
-                    isTempTier = false,
-                )
-            }
-
-            val pageSize = 30
-            val from = (requestedPage - 1) * pageSize
-            val to = minOf(from + pageSize, all.size)
-
-            val fetched = if (from in 0 until all.size) {
-                all.subList(from, to)
-            } else {
-                emptyList()
-            }
-
-            val last = fetched.size < 30
-
-            _uiState.update { cur ->
-                val currentList = (cur.listState as? UiState.Success)?.data ?: emptyList()
-                val merged = if (requestedPage == 1) fetched else currentList + fetched
-                val deduped = merged.distinctBy { it.restaurantId }
-
-                cur.copy(
-                    listState = UiState.Success(deduped),
-                    pageState = cur.pageState.copy(
-                        phase = TierPhase.Idle,
-                        page = requestedPage,
-                        isLastPage = last
-                    )
-                )
-            }
-        }
     }
 
     private fun loadRestaurantList(requestedPage: Int) {

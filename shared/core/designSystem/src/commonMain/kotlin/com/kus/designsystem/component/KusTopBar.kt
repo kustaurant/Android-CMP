@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -44,6 +45,7 @@ fun KusTopBar(
     rightFirstIcon: Painter? = null,
     rightSecondIcon: Painter? = null,
     onLeftClicked: () -> Unit = {},
+    iconTint: Color? = null,
     onRightFirstClicked: () -> Unit = {},
     onRightSecondClicked: () -> Unit = {},
     leftIconModifier: Modifier = Modifier,
@@ -54,6 +56,7 @@ fun KusTopBar(
 ) {
     var leftWidthPx by remember { mutableIntStateOf(0) }
     var rightWidthPx by remember { mutableIntStateOf(0) }
+    val iconTintColor: Color = iconTint ?: Color.Unspecified
 
     val density = LocalDensity.current
     val leftWidth = with(density) { leftWidthPx.toDp() }
@@ -84,7 +87,11 @@ fun KusTopBar(
                     onClick = onLeftClicked,
                     modifier = leftIconModifier
                 ) {
-                    Icon(painter = leftIcon, contentDescription = null)
+                    Icon(
+                        painter = leftIcon,
+                        contentDescription = null,
+                        tint = iconTintColor
+                    )
                 }
             }
         } else {
@@ -102,6 +109,7 @@ fun KusTopBar(
                 Icon(
                     painter = rightFirstIcon,
                     contentDescription = null,
+                    tint = iconTintColor,
                     modifier = rightFirstIconModifier
                         .onGloballyPositioned { coords ->
                             onRightFirstIconBoundsChanged?.invoke(coords.boundsInWindow())
@@ -114,7 +122,11 @@ fun KusTopBar(
                     onClick = onRightSecondClicked,
                     modifier = rightSecondIconModifier
                 ) {
-                    Icon(painter = rightSecondIcon, contentDescription = null)
+                    Icon(
+                        painter = rightSecondIcon,
+                        contentDescription = null,
+                        tint = iconTintColor
+                    )
                 }
             }
         }
