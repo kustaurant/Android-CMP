@@ -30,8 +30,12 @@ DerivedData/
 *.xcodeproj/xcuserdata/
 *.xcuserstate
 *.car
+*.xcworkspace
+*.xcprivacy
 
 secrets/
+
+*.xcconfig
 
 # Build
 build/
