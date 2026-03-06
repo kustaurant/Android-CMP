@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.naver.maps.map.MapView
 
-class TierMapPlatformAndroid : TierMapPlatform {
+class TierMapAndroidPlatform : TierMapPlatform {
     @Composable
     override fun rememberMapInstance(): Any {
         val context = LocalContext.current

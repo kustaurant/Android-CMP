@@ -1,6 +1,7 @@
 {
-  "colors" : [
+  "images" : [
     {
+      "filename" : "ic_marker_none.pdf",
       "idiom" : "universal"
     }
   ],

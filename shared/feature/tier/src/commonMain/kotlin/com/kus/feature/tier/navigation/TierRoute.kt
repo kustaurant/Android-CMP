@@ -15,6 +15,7 @@ fun TierRoute(
     navigateToDetail: () -> Unit,
     resultFilter: TierFilterState?,
     consumeResult: () -> Unit,
+    onShowMessage: (String) -> Unit,
 ) {
     val viewModel: TierViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -33,6 +34,7 @@ fun TierRoute(
 
     TierScreen(
         onFilterClick = { navigateToTierCategorySelect(uiState.filterState) },
+        onShowMessage = onShowMessage,
         onNavigateRestaurantDetail = navigateToDetail,
     )
 }

@@ -1,4 +1,4 @@
-package com.kust.kustaurant
+package com.kus.kustaurant
 
 import android.app.Application
 import com.kus.core.config.BuildKonfig

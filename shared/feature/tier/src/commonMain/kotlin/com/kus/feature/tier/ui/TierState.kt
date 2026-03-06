@@ -70,4 +70,5 @@ data class TierUiState(
     val categoryChangeMap: Boolean = true,
 
     val mapUiState: TierMapUiState = TierMapUiState(),
+    val toastMessage: String? = null,
 )

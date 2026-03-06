@@ -58,14 +58,6 @@ class TierViewModel(
         ensureDataForCurrentTab(force = true)
     }
 
-    fun loadRestaurant() {
-        _uiState.update { it.copy(selectedCategories = it.filterState.selectedCategoriesForDisplay()) }
-        when (_uiState.value.selectedTab) {
-            TierTab.LIST -> fetchFirstRestaurants()
-            TierTab.MAP -> fetchMap()
-        }
-    }
-
     fun fetchFirstRestaurants() {
         _uiState.update {
             it.copy(
@@ -108,6 +100,10 @@ class TierViewModel(
         }
     }
 
+    fun clearToast() {
+        _uiState.update { it.copy(toastMessage = null) }
+    }
+
     fun onTabSelected(tab: TierTab) {
         _uiState.update { it.copy(selectedTab = tab) }
         ensureDataForCurrentTab()
@@ -138,8 +134,6 @@ class TierViewModel(
             }
         }
     }
-
-
 
     fun onRestaurantMarkerClicked(id: Long) {
         _uiState.update { cur ->
@@ -225,8 +219,9 @@ class TierViewModel(
             }.onFailure { e ->
                 _uiState.update {
                     it.copy(
-                        listState = UiState.Failure(UiError.Message(e.message ?: "loadRestaurantList error")),
-                        pageState = it.pageState.copy(phase = TierPhase.Idle)
+                        listState = UiState.Failure(UiError.Message(e.message ?: "음식점 리스트를 불러오는데 오류가 발생했습니다.")),
+                        pageState = it.pageState.copy(phase = TierPhase.Idle),
+                        toastMessage = "음식점 리스트를 불러오는데 오류가 발생했습니다."
                     )
                 }
             }

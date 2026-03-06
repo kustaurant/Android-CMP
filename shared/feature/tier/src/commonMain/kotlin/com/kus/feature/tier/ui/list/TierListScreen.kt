@@ -2,7 +2,6 @@ package com.kus.feature.tier.ui.list
 
 import UiState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items 
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -82,7 +81,7 @@ fun TierListScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
                 }
             }
 
@@ -141,8 +140,7 @@ fun TierListScreen(
                         ) { restaurant ->
                             KusRestThumbnail(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { onRestaurantClick(restaurant) },
+                                    .fillMaxWidth(),
                                 tier = restaurant.mainTier,
                                 restName = restaurant.restaurantName,
                                 restThumbnail = restaurant.restaurantImgUrl,
@@ -163,7 +161,7 @@ fun TierListScreen(
                                         .padding(vertical = 14.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    CircularProgressIndicator()
+                                    CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
                                 }
                             }
                         }

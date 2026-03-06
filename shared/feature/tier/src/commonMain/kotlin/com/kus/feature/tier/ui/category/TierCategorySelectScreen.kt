@@ -126,8 +126,7 @@ fun TierCategorySelectScreen(
                 buttonName = "적용하기",
                 roundedCornerShape = RoundedCornerShape(50.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(32.dp),
+                    .fillMaxWidth() ,
                 containerColor = container,
                 borderColor = container,
                 onClick = { onApply(viewModel.buildResult()) }

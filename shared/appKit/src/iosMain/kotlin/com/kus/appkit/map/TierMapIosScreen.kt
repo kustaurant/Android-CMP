@@ -7,7 +7,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +35,7 @@ import com.kus.designsystem.toUIColor
 import com.kus.feature.tier.ui.map.MapCameraState
 import com.kus.feature.tier.ui.map.TierMapUiState
 import com.kus.feature.tier.ui.map.TierRestaurantBottomSheetCard
+import platform.Foundation.NSLog
 
 @Composable
 fun TierMapIosScreen(
@@ -51,13 +54,14 @@ fun TierMapIosScreen(
     val polygonOverlays = holder.polygonOverlays
     val polylineOverlays = holder.polylineOverlays
     val restaurantMarkers = holder.restaurantMarkers
+    val isCameraReady = remember { mutableStateOf(false) }
 
-    var currentZoom by remember {
-        mutableDoubleStateOf(holder.lastCameraState?.zoom ?: 11.0)
-    }
+    val outlineUiColor = KusTheme.colors.c_43AB38.toUIColor()
+    val currentZoomState = remember { mutableIntStateOf((holder.lastCameraState?.zoom ?: 11.0).toInt()) }
 
     val latestOnMapTapped by rememberUpdatedState(onMapTapped)
     val latestOnRestaurantSelected by rememberUpdatedState(onRestaurantSelected)
+    val latestState by rememberUpdatedState(state)
 
     val touchDelegate = remember {
         object : NSObject(), NMFMapViewTouchDelegateProtocol {
@@ -77,11 +81,11 @@ fun TierMapIosScreen(
                 val camera = mapView.cameraPosition
 
                 if (!holder.didApplyInitialBounds) {
-                    currentZoom = camera.zoom
+                    currentZoomState.intValue = camera.zoom.toInt()
                     return
                 }
 
-                val state = MapCameraState(
+                val cameraState = MapCameraState(
                     latitude = camera.target.lat(),
                     longitude = camera.target.lng(),
                     zoom = camera.zoom,
@@ -89,9 +93,21 @@ fun TierMapIosScreen(
                     bearing = camera.heading
                 )
 
-                holder.lastCameraState = state
-                currentZoom = camera.zoom
-                onCameraIdle(state)
+                holder.lastCameraState = cameraState
+                currentZoomState.intValue = camera.zoom.toInt()
+                onCameraIdle(cameraState)
+
+                val data = (latestState.map as? UiState.Success)?.data ?: return
+                updateMapIos(
+                    mapView = mapView,
+                    mapData = data,
+                    currentZoom = camera.zoom.toInt(),
+                    polygonOverlays = polygonOverlays,
+                    polylineOverlays = polylineOverlays,
+                    restaurantMarkers = restaurantMarkers,
+                    onRestaurantSelected = latestOnRestaurantSelected,
+                    outlineColor = outlineUiColor,
+                )
             }
         }
     }
@@ -105,35 +121,56 @@ fun TierMapIosScreen(
         }
     }
 
-
     LaunchedEffect(state.map) {
         val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
 
         if (!holder.didApplyInitialBounds) {
             mapView.minZoomLevel = data.minZoom.toDouble()
-            moveCameraToVisibleBoundsIos(mapView, data.visibleBounds)
             holder.didApplyInitialBounds = true
+            moveCameraToVisibleBoundsIos(mapView, data.visibleBounds) {
+                isCameraReady.value = true
+                updateMapIos(
+                    mapView = mapView,
+                    mapData = data,
+                    currentZoom = currentZoomState.intValue,
+                    polygonOverlays = polygonOverlays,
+                    polylineOverlays = polylineOverlays,
+                    restaurantMarkers = restaurantMarkers,
+                    onRestaurantSelected = onRestaurantSelected,
+                    outlineColor = outlineUiColor,
+                )
+            }
+            holder.lastVisibleBounds = data.visibleBounds
+        } else {
+            if (holder.lastVisibleBounds != data.visibleBounds) {
+                holder.lastVisibleBounds = data.visibleBounds
+                moveCameraToVisibleBoundsIos(mapView, data.visibleBounds) {
+                    updateMapIos(
+                        mapView = mapView,
+                        mapData = data,
+                        currentZoom = currentZoomState.intValue,
+                        polygonOverlays = polygonOverlays,
+                        polylineOverlays = polylineOverlays,
+                        restaurantMarkers = restaurantMarkers,
+                        onRestaurantSelected = onRestaurantSelected,
+                        outlineColor = outlineUiColor,
+                    )
+                }
+            } else {
+                updateMapIos(
+                    mapView = mapView,
+                    mapData = data,
+                    currentZoom = currentZoomState.intValue,
+                    polygonOverlays = polygonOverlays,
+                    polylineOverlays = polylineOverlays,
+                    restaurantMarkers = restaurantMarkers,
+                    onRestaurantSelected = onRestaurantSelected,
+                    outlineColor = outlineUiColor,
+                )
+            }
         }
     }
 
-
-
-    val outlineUiColor = KusTheme.colors.c_43AB38.toUIColor()
-
-    LaunchedEffect(state.map, currentZoom) {
-        val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
-
-        updateMapIos(
-            mapView = mapView,
-            mapData = data,
-            currentZoom = currentZoom,
-            polygonOverlays = polygonOverlays,
-            polylineOverlays = polylineOverlays,
-            restaurantMarkers = restaurantMarkers,
-            onRestaurantSelected = latestOnRestaurantSelected,
-            outlineColor = outlineUiColor,
-        )
-    }
 
     val selectedRestaurant: TierRestaurant? = remember(state.map, state.selectedRestaurantId) {
         val data = (state.map as? UiState.Success)?.data ?: return@remember null
@@ -172,13 +209,24 @@ fun TierMapIosScreen(
                 onClick = { onBottomSheetClick(r.restaurantId) }
             )
         }
+
+        if (!isCameraReady.value) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(KusTheme.colors.c_FFFFFF),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+            }
+        }
     }
 }
 
 private fun updateMapIos(
     mapView: NMFMapView,
     mapData: TierMapData,
-    currentZoom: Double,
+    currentZoom: Int,
     polygonOverlays: MutableList<NMFPolygonOverlay>,
     polylineOverlays: MutableList<NMFPolylineOverlay>,
     restaurantMarkers: MutableList<NMFMarker>,
@@ -320,6 +368,15 @@ private fun createRestaurantMarkerIos(
             setLng(restaurant.longitude)
         }
         iconImage = getMarkerIconIos(restaurant)
+
+        val isNoneMarker = !restaurant.isFavorite &&
+                restaurant.partnershipInfo.isNotEmpty() ||
+                restaurant.mainTier !in 1..4
+        if (isNoneMarker) {
+            width = 15.0
+            height = 20.0
+        }
+
         this.mapView = mapView
 
         zIndex = when {
@@ -345,20 +402,22 @@ private fun getMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
     val imageName = if(restaurant.isTempTier) {
         when {
             restaurant.isFavorite -> "ic_saved"
+            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership"
             restaurant.mainTier == 1 -> "ic_temp_tier_1"
             restaurant.mainTier == 2 -> "ic_temp_tier_2"
             restaurant.mainTier == 3 -> "ic_temp_tier_3"
             restaurant.mainTier == 4 -> "ic_temp_tier_4"
-            else -> "ic_map_marker"
+            else -> "ic_marker_none"
         }
     } else {
         when {
             restaurant.isFavorite -> "ic_saved"
+            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership"
             restaurant.mainTier == 1 -> "ic_tier_1"
             restaurant.mainTier == 2 -> "ic_tier_2"
             restaurant.mainTier == 3 -> "ic_tier_3"
             restaurant.mainTier == 4 -> "ic_tier_4"
-            else -> "ic_map_marker"
+            else -> "ic_marker_none"
         }
     }
     return NMFOverlayImage.overlayImageWithName(imageName)!!
@@ -368,6 +427,7 @@ private fun getMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
 private fun moveCameraToVisibleBoundsIos(
     mapView: NMFMapView,
     visibleBounds: List<Double>,
+    onComplete: () -> Unit
 ) {
     if (visibleBounds.size < 4) return
 
@@ -387,6 +447,8 @@ private fun moveCameraToVisibleBoundsIos(
         bounds = bounds,
     )
 
-    mapView.moveCamera(update)
+    mapView.moveCamera(update) {
+        onComplete()
+    }
 }
 

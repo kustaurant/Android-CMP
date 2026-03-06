@@ -12,5 +12,9 @@
 	<string>$(NAVER_LOGIN_URL_SCHEMA)</string>
 	<key>NMFClientId</key>
 	<string>$(NAVER_MAP_CLIENT_ID)</string>
+	<key>PRODUCT_NAME</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleDisplayName</key>
+	<string>${CFBundleDisplayName}</string>
 </dict>
 </plist>

@@ -17,6 +17,7 @@ data object Tier
 data object TierCategorySelect
 
 fun NavGraphBuilder.tierNavGraph(
+    onShowMessage: (String) -> Unit,
     initialProvider: () -> TierFilterState,
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
     navigateToDetail: () -> Unit,
@@ -37,6 +38,7 @@ fun NavGraphBuilder.tierNavGraph(
             navigateToDetail = navigateToDetail,
             resultFilter = result,
             consumeResult = { entry.savedStateHandle[TierKeys.RESULT_FILTER] = null },
+            onShowMessage = onShowMessage
         )
     }
 

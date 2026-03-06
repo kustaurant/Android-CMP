@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -409,13 +410,15 @@ private fun ReactionRow(
             painter = painterResource(CoreRes.drawable.ic_like),
             count = likeCount,
             selected = selectedReaction == "LIKE",
-            onClick = onLike
+            onClick = onLike,
+            activeColor = KusTheme.colors.c_43AB38
         )
         ReactionIconWithCount(
             painter = painterResource(CoreRes.drawable.ic_dislike),
             count = dislikeCount,
             selected = selectedReaction == "DISLIKE",
-            onClick = onDislike
+            onClick = onDislike,
+            activeColor = KusTheme.colors.c_FF0000
         )
 
         if (showReplyAction) {
@@ -433,10 +436,11 @@ private fun ReactionIconWithCount(
     painter: Painter,
     count: Int,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    activeColor : Color,
 ) {
-    val tint = if (selected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_AAAAAA
-    val textColor = if (selected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_AAAAAA
+    val tint = if (selected) activeColor else KusTheme.colors.c_AAAAAA
+    val textColor = if (selected) activeColor else KusTheme.colors.c_AAAAAA
 
     Row(
         modifier = Modifier.noRippleClickable { onClick() },

@@ -8,25 +8,30 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kus.designsystem.component.KusSnackBarOverlay
+import com.kus.designsystem.component.snackbar.LocalSnackBarBottomPadding
 import com.kus.designsystem.theme.KusTheme
 import com.kus.domain.auth.session.SessionEvent
 import com.kus.domain.auth.session.SessionEventBus
 import com.kus.feature.community.navigation.Community
+import com.kus.feature.community.navigation.CommunityWrite
+import com.kus.feature.community.navigation.CommunityWriteModify
 import com.kus.feature.draw.navigation.Draw
 import com.kus.feature.home.navigation.Home
 import com.kus.feature.login.navigation.Login
@@ -36,6 +41,7 @@ import com.kus.kustaurant.navigation.BottomTab
 import com.kus.kustaurant.navigation.KusBottomBar
 import com.kus.kustaurant.navigation.KusNavHost
 import com.kus.kustaurant.navigation.util.shouldShowBottomBar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -54,6 +60,7 @@ fun App() {
 fun SetNavigation() {
     val navController = rememberNavController()
     val durationMillis = 400
+    val snackDuration = 2800L
 
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -61,11 +68,22 @@ fun SetNavigation() {
     val onShowMessage: (String) -> Unit = remember(snackBarHostState, scope) {
         { message ->
             scope.launch {
+                snackBarHostState.currentSnackbarData?.dismiss()
+                val dismissJob = launch {
+                    delay(snackDuration)
+                    val current = snackBarHostState.currentSnackbarData
+                    if (current?.visuals?.message == message) {
+                        current.dismiss()
+                    }
+                }
+
                 snackBarHostState.showSnackbar(
                     message = message,
                     withDismissAction = false,
-                    duration = SnackbarDuration.Short
+                    duration = SnackbarDuration.Indefinite
                 )
+
+                dismissJob.cancel()
             }
         }
     }
@@ -85,45 +103,48 @@ fun SetNavigation() {
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val destination = navBackStackEntry?.destination
-
+    val destination = navBackStackEntry?.destination 
     val showBottomBar = shouldShowBottomBar(destination)
     val currentRoute = destination?.route
     val selectedKey = BottomTab.fromRoute(currentRoute).key
 
+    val isWriter =
+        navBackStackEntry?.destination?.hasRoute<CommunityWrite>() == true ||
+                navBackStackEntry?.destination?.hasRoute<CommunityWriteModify>() == true
 
-    LaunchedEffect(destination) {
-        println("hierarchy dest.route = ${destination?.route}")
-        println("hierarchy.routes = ${destination?.hierarchy?.map { it.route }}")
-    }
-
-    Scaffold(
-        bottomBar = {
-            SetBottomBar(
-                showBottomBar = showBottomBar,
-                selectedKey = selectedKey,
+    CompositionLocalProvider(
+        LocalSnackBarBottomPadding provides if (isWriter) 52.dp else 16.dp
+    ) {
+        Scaffold(
+            bottomBar = {
+                SetBottomBar(
+                    showBottomBar = showBottomBar,
+                    selectedKey = selectedKey,
+                    navController = navController,
+                )
+            },
+            modifier =
+                Modifier
+                    .background(KusTheme.colors.c_FFFFFF)
+                    .systemBarsPadding(),
+            contentWindowInsets = WindowInsets.systemBars,
+        ) { padding ->
+            KusNavHost(
                 navController = navController,
+                durationMillis = durationMillis,
+                onShowMessage = onShowMessage,
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize(),
             )
-        },
-        snackbarHost = {
-            KusSnackBarHost(hostState = snackBarHostState)
-        },
-        modifier =
-            Modifier
-            .background(KusTheme.colors.c_FFFFFF)
-            .systemBarsPadding(),
-        contentWindowInsets = WindowInsets.systemBars,
-    ) { padding ->
-        KusNavHost(
-            navController = navController,
-            durationMillis = durationMillis,
-            onShowMessage = onShowMessage,
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
-        )
+
+            KusSnackBarOverlay(
+                hostState = snackBarHostState
+            )
+        }
     }
 }
+
 
 @Composable
 private fun SetBottomBar(
@@ -150,23 +171,11 @@ private fun NavHostController.navigateToTab(key: String) {
         BottomTab.MY.key -> navigate(My) { tabOptions(this@navigateToTab) }
     }
 }
+
 private fun NavOptionsBuilder.tabOptions(navController: NavHostController) {
     launchSingleTop = true
     restoreState = true
     popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-}
-
-@Composable
-fun KusSnackBarHost(
-    hostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
-) {
-    SnackbarHost(
-        hostState = hostState,
-        modifier = modifier,
-    ) { snackBarData ->
-        // TODO Custom Snackbar Composable
-    }
 }
 
 @Preview

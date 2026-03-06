@@ -119,7 +119,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.kust.kustaurant"
+    namespace = "com.kus.kustaurant"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -157,11 +157,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.kus.kustaurant.MainKt"
+        mainClass = "com.kust.kustaurant.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.kus.kustaurant"
+            packageName = "com.kust.kustaurant"
             packageVersion = "1.0.0"
         }
     }

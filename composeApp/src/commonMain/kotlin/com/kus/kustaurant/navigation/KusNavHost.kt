@@ -123,6 +123,7 @@ fun KusNavHost(
 
         drawNavGraph(onShowMessage = onShowMessage)
         tierNavGraph(
+            onShowMessage = onShowMessage,
             initialProvider = {
                 val json = navController.previousBackStackEntry
                     ?.savedStateHandle
