@@ -7,6 +7,7 @@ import com.kus.shared.domain.model.detail.FavoriteResult
 import com.kus.shared.domain.model.detail.ReactionResult
 import com.kus.shared.domain.model.detail.RestaurantDetail
 import com.kus.shared.domain.model.detail.RestaurantReview
+import com.kus.shared.domain.model.detail.ReviewComment
 
 class DetailRepositoryImpl(
     private val api: DetailApi,
@@ -34,4 +35,7 @@ class DetailRepositoryImpl(
 
     override suspend fun deleteRestaurantFavorite(restaurantId: Long): FavoriteResult =
         api.deleteRestaurantFavorite(restaurantId).toDomain()
+
+    override suspend fun postComment(restaurantId: Long, evalId: Int, body: String): ReviewComment =
+        api.postComment(restaurantId, evalId, body).toDomain()
 }
