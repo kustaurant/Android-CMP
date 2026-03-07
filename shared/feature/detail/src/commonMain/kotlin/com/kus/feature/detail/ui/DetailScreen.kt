@@ -12,19 +12,27 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -124,8 +132,11 @@ private fun DetailSuccessScreen(
     onCommentLikeClick: (Int, Int) -> Unit,
     onCommentDislikeClick: (Int, Int) -> Unit,
 ) {
-    var restInfoTopInWindow by remember { mutableStateOf(Float.POSITIVE_INFINITY) }
-    val useWhiteTopBar = restInfoTopInWindow <= 0f
+    var restInfoTopInWindow by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
+    var topBarBottomInWindow by remember { mutableFloatStateOf(0f) }
+    val useWhiteTopBar by remember {
+        derivedStateOf { restInfoTopInWindow <= topBarBottomInWindow }
+    }
     val topBarBackground = if (useWhiteTopBar) KusTheme.colors.c_FFFFFF else Color.Transparent
     val topBarIconTint = if (useWhiteTopBar) KusTheme.colors.c_000000 else null
     val evaluateButtonText = if (restaurant.isEvaluated) "다시 평가하기" else "맛집 평가하기"
@@ -134,11 +145,17 @@ private fun DetailSuccessScreen(
     var isCommentInputVisible by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val bottomBarHeight = 76.dp
+    val lazyColumnBottomPadding = bottomBarHeight + navigationBarPadding
+
     Box(
         modifier = Modifier.fillMaxSize()
+            .background(color = KusTheme.colors.c_FFFFFF)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = lazyColumnBottomPadding)
         ) {
             item {
                 val imageHeight = 269.dp
@@ -196,29 +213,33 @@ private fun DetailSuccessScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(topBarBackground)
+                .statusBarsPadding()
                 .align(Alignment.TopCenter)
+                .onGloballyPositioned { coordinates ->
+                    topBarBottomInWindow = coordinates.positionInWindow().y + coordinates.size.height
+                }
         ) {
             KusTopBar(
                 leftIcon = painterResource(Res.drawable.ic_arrow_back),
                 leftIconModifier = Modifier.noRippleClickable { onBackClick() }
                     .padding(all = 5.dp),
                 iconTint = topBarIconTint,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(topBarBackground)
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .align(Alignment.BottomCenter)
                 .background(color = KusTheme.colors.c_FFFFFF)
+                .navigationBarsPadding()
                 .border(
                     width = 1.dp,
                     color = KusTheme.colors.c_E0E0E0
                 )
-                .padding(horizontal = 20.dp, vertical = 14.dp)
-                .align(Alignment.BottomCenter),
+                .padding(horizontal = 20.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             KusButton(
@@ -279,6 +300,7 @@ private fun DetailSuccessScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = KusTheme.colors.c_FFFFFF)
+                    .navigationBarsPadding()
                     .imePadding(),
                 hasFocus = true,
                 onDismiss = { isCommentInputVisible = false }

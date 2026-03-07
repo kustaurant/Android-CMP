@@ -132,13 +132,9 @@ private fun DetailMenuContent(
     ) {
         menuList.forEachIndexed { index, menu ->
             val topPadding = if (index == 0) 6.dp else 0.dp
-            val bottomPadding = if (index == menuList.lastIndex) 80.dp else 0.dp
             DetailMenuItem(
                 menu = menu,
-                modifier = Modifier.padding(
-                    top = topPadding,
-                    bottom = bottomPadding
-                )
+                modifier = Modifier.padding(top = topPadding)
             )
             if (index != menuList.lastIndex) {
                 Box(
@@ -175,10 +171,8 @@ private fun DetailReviewContent(
         )
 
         reviewList.forEachIndexed { index, review ->
-            val bottomPadding = if (index == reviewList.lastIndex) 80.dp else 0.dp
             DetailReviewItem(
                 review = review,
-                modifier = Modifier.padding(bottom = bottomPadding),
                 onReviewLikeClick = onReviewLikeClick,
                 onReviewDislikeClick = onReviewDislikeClick,
                 onCommentClick = onCommentClick,
