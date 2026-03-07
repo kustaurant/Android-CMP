@@ -40,6 +40,7 @@ fun DetailTabSection(
     onCommentClick: (Int) -> Unit = {},
     onCommentLikeClick: (Int, Int) -> Unit = { _, _ -> },
     onCommentDislikeClick: (Int, Int) -> Unit = { _, _ -> },
+    onCommentDeleteClick: (Int, Int) -> Unit = { _, _ -> },
 ) {
     val reviewCountText = if (reviewCount > 999) "999+" else reviewCount.toString()
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
@@ -116,6 +117,7 @@ fun DetailTabSection(
                     onCommentClick = onCommentClick,
                     onCommentLikeClick = onCommentLikeClick,
                     onCommentDislikeClick = onCommentDislikeClick,
+                    onCommentDeleteClick = onCommentDeleteClick,
                 )
             }
         }
@@ -157,6 +159,7 @@ private fun DetailReviewContent(
     onCommentClick: (Int) -> Unit,
     onCommentLikeClick: (Int, Int) -> Unit,
     onCommentDislikeClick: (Int, Int) -> Unit,
+    onCommentDeleteClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     println("DEBUG: DetailReviewContent - reviewList.size=${reviewList.size}")
@@ -178,6 +181,7 @@ private fun DetailReviewContent(
                 onCommentClick = onCommentClick,
                 onCommentLikeClick = onCommentLikeClick,
                 onCommentDislikeClick = onCommentDislikeClick,
+                onCommentDeleteClick = onCommentDeleteClick,
             )
             if (index != reviewList.lastIndex) {
                 Box(

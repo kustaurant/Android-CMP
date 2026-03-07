@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.feature.detail.model.ReviewSort
 import com.kus.feature.detail.state.DetailUiState
+import com.kus.shared.domain.detail.usecase.DeleteCommentUseCase
 import com.kus.shared.domain.detail.usecase.DeleteRestaurantFavoriteUseCase
 import com.kus.shared.domain.detail.usecase.GetRestaurantDetailUseCase
 import com.kus.shared.domain.detail.usecase.GetRestaurantReviewsUseCase
@@ -27,6 +28,7 @@ class DetailViewModel(
     private val putRestaurantFavoriteUseCase: PutRestaurantFavoriteUseCase,
     private val deleteRestaurantFavoriteUseCase: DeleteRestaurantFavoriteUseCase,
     private val postCommentUseCase: PostCommentUseCase,
+    private val deleteCommentUseCase: DeleteCommentUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -192,6 +194,22 @@ class DetailViewModel(
                     if (review.evalId == evalId) {
                         review.copy(
                             evalCommentList = review.evalCommentList + newComment
+                        )
+                    } else review
+                }
+            }
+        }
+    }
+
+    fun deleteComment(evalId: Int, commentId: Int) = viewModelScope.launch {
+        runCatching {
+            deleteCommentUseCase(currentRestaurantId, commentId)
+        }.onSuccess {
+            updateReviewList { reviews ->
+                reviews.map { review ->
+                    if (review.evalId == evalId) {
+                        review.copy(
+                            evalCommentList = review.evalCommentList.filter { it.commentId != commentId }
                         )
                     } else review
                 }

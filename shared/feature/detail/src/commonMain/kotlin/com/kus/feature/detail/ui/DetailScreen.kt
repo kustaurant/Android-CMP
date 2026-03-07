@@ -99,7 +99,8 @@ fun DetailRoute(
                 onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
                 onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
                 onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
-                onCommentSubmit = { evalId, body -> viewModel.postComment(evalId, body) }
+                onCommentSubmit = { evalId, body -> viewModel.postComment(evalId, body) },
+                onCommentDeleteClick = { evalId, commentId -> viewModel.deleteComment(evalId, commentId) },
             )
         }
 
@@ -133,6 +134,7 @@ private fun DetailSuccessScreen(
     onCommentLikeClick: (Int, Int) -> Unit,
     onCommentDislikeClick: (Int, Int) -> Unit,
     onCommentSubmit: (Int, String) -> Unit,
+    onCommentDeleteClick: (Int, Int) -> Unit,
 ) {
     var restInfoTopInWindow by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
     var topBarBottomInWindow by remember { mutableFloatStateOf(0f) }
@@ -212,6 +214,7 @@ private fun DetailSuccessScreen(
                     },
                     onCommentLikeClick = onCommentLikeClick,
                     onCommentDislikeClick = onCommentDislikeClick,
+                    onCommentDeleteClick = onCommentDeleteClick,
                 )
             }
         }
