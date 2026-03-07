@@ -209,7 +209,9 @@ private fun ReviewContent(
             }
         }
 
-        if (hasContent || isMine) {
+        val showActionPopup = if (isComment) isMine else false
+
+        if (showActionPopup) {
             Box {
                 Image(
                     painter = painterResource(Res.drawable.ic_more),
@@ -358,11 +360,14 @@ private fun ReviewActionPopup(
         popupPositionProvider = positionProvider,
         properties = PopupProperties(focusable = true)
     ) {
-        val (icon, text, actionClick) = if (isMine) {
-            Triple(Res.drawable.ic_delete, "삭제하기", onDeleteClick)
-        } else {
-            Triple(Res.drawable.ic_report, "신고하기", onReportClick)
-        }
+        // 신고하기 기능 추후 예정
+//        val (icon, text, actionClick) = if (isMine) {
+//            Triple(Res.drawable.ic_delete, "삭제하기", onDeleteClick)
+//        } else {
+//            Triple(Res.drawable.ic_report, "신고하기", onReportClick)
+//        }
+
+        val (icon, text, actionClick) = Triple(Res.drawable.ic_delete, "삭제하기", onDeleteClick)
 
         Surface(
             shape = RoundedCornerShape(10.dp),
