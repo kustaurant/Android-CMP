@@ -99,6 +99,7 @@ fun DetailRoute(
                 onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
                 onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
                 onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
+                onCommentSubmit = { evalId, body -> viewModel.postComment(evalId, body) }
             )
         }
 
@@ -131,6 +132,7 @@ private fun DetailSuccessScreen(
     onReviewDislikeClick: (Int) -> Unit,
     onCommentLikeClick: (Int, Int) -> Unit,
     onCommentDislikeClick: (Int, Int) -> Unit,
+    onCommentSubmit: (Int, String) -> Unit,
 ) {
     var restInfoTopInWindow by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
     var topBarBottomInWindow by remember { mutableFloatStateOf(0f) }
@@ -143,6 +145,7 @@ private fun DetailSuccessScreen(
     val favoriteIcon = if (restaurant.isFavorite) Res.drawable.ic_saved else Res.drawable.ic_unsaved
     val favoriteCountText = restaurant.favoriteCount.toString()
     var isCommentInputVisible by remember { mutableStateOf(false) }
+    var selectedEvalId by remember { mutableStateOf<Int?>(null) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -203,7 +206,10 @@ private fun DetailSuccessScreen(
                     onReviewTabSelected = onReviewTabSelected,
                     onReviewLikeClick = onReviewLikeClick,
                     onReviewDislikeClick = onReviewDislikeClick,
-                    onCommentClick = { isCommentInputVisible = true },
+                    onCommentClick = { evalId ->
+                        selectedEvalId = evalId
+                        isCommentInputVisible = true
+                    },
                     onCommentLikeClick = onCommentLikeClick,
                     onCommentDislikeClick = onCommentDislikeClick,
                 )
@@ -303,7 +309,15 @@ private fun DetailSuccessScreen(
                     .navigationBarsPadding()
                     .imePadding(),
                 hasFocus = true,
-                onDismiss = { isCommentInputVisible = false }
+                onDismiss = {
+                    isCommentInputVisible = false
+                    selectedEvalId = null
+                },
+                onSend = { body ->
+                    selectedEvalId?.let { evalId ->
+                        onCommentSubmit(evalId, body)
+                    }
+                }
             )
         }
     }
