@@ -14,4 +14,5 @@ interface DetailRepository {
     suspend fun putRestaurantFavorite(restaurantId: Long): FavoriteResult
     suspend fun deleteRestaurantFavorite(restaurantId: Long): FavoriteResult
     suspend fun postComment(restaurantId: Long, evalId: Int, body: String): ReviewComment
+    suspend fun deleteComment(restaurantId: Long, evalCommentId: Int)
 }

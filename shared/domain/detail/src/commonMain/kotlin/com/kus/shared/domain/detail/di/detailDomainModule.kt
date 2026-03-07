@@ -1,5 +1,6 @@
 package com.kus.shared.domain.detail.di
 
+import com.kus.shared.domain.detail.usecase.DeleteCommentUseCase
 import com.kus.shared.domain.detail.usecase.DeleteRestaurantFavoriteUseCase
 import com.kus.shared.domain.detail.usecase.GetRestaurantDetailUseCase
 import com.kus.shared.domain.detail.usecase.GetRestaurantReviewsUseCase
@@ -18,4 +19,5 @@ val detailDomainModule = module {
     singleOf(::PutRestaurantFavoriteUseCase)
     singleOf(::DeleteRestaurantFavoriteUseCase)
     singleOf(::PostCommentUseCase)
+    singleOf(::DeleteCommentUseCase)
 }
