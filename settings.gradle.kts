@@ -63,6 +63,7 @@ include(
     ":shared:domain:tier",
     ":shared:domain:auth",
     ":shared:domain:home",
+    ":shared:domain:my",
 )
 
 include(
