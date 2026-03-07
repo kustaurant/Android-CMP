@@ -70,4 +70,11 @@ class DetailApi(
             setBody(PostCommentRequest(body))
         }.body()
     }
+
+    suspend fun deleteComment(
+        restaurantId: Long,
+        evalCommentId: Int,
+    ) {
+        client.delete("/api/v2/auth/restaurants/$restaurantId/comments/$evalCommentId")
+    }
 }

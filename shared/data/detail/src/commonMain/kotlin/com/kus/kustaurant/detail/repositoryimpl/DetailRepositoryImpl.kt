@@ -38,4 +38,7 @@ class DetailRepositoryImpl(
 
     override suspend fun postComment(restaurantId: Long, evalId: Int, body: String): ReviewComment =
         api.postComment(restaurantId, evalId, body).toDomain()
+
+    override suspend fun deleteComment(restaurantId: Long, evalCommentId: Int) =
+        api.deleteComment(restaurantId, evalCommentId)
 }
