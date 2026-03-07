@@ -4,6 +4,7 @@ import com.kus.shared.domain.model.detail.FavoriteResult
 import com.kus.shared.domain.model.detail.ReactionResult
 import com.kus.shared.domain.model.detail.RestaurantDetail
 import com.kus.shared.domain.model.detail.RestaurantReview
+import com.kus.shared.domain.model.detail.ReviewComment
 
 interface DetailRepository {
     suspend fun getRestaurantDetail(restaurantId: Long): RestaurantDetail
@@ -12,4 +13,5 @@ interface DetailRepository {
     suspend fun putCommentReaction(evalCommentId: Int, reaction: String?): ReactionResult
     suspend fun putRestaurantFavorite(restaurantId: Long): FavoriteResult
     suspend fun deleteRestaurantFavorite(restaurantId: Long): FavoriteResult
+    suspend fun postComment(restaurantId: Long, evalId: Int, body: String): ReviewComment
 }
