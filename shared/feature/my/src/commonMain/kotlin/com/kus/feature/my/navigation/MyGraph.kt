@@ -80,18 +80,21 @@ fun NavGraphBuilder.myNavGraph(
     }
 
     composable<Feedback> { FeedbackScreen(onBackClick = navigateToUp) }
+
     composable<FavoriteRest> {
         FavoriteRestaurantScreen(
             onBackClick = navigateToUp,
             onItemClick = { }
         )
     }
+
     composable<CheckedRest> {
         CheckedRestaurantScreen(
             onBackClick = navigateToUp,
             onItemClick = {}
         )
     }
+
     composable<MyArticle> { /* MyArticleScreen(onBackClick = navigateToUp) */ }
     composable<MyComment> { /* MyCommentScreen(onBackClick = navigateToUp) */ }
     composable<Scrap> { /* ScrapScreen(onBackClick = navigateToUp) */ }
