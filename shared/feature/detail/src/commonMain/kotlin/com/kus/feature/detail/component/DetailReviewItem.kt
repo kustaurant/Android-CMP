@@ -157,6 +157,7 @@ private fun ReviewContent(
     var isMenuExpanded by remember { mutableStateOf(false) }
     var isBodyExpanded by remember(body) { mutableStateOf(false) }
     val density = LocalDensity.current
+    val hasContent = body.isNotEmpty() || (imgUrl != null && imgUrl.startsWith("http"))
     val bodyTextStyle = KusTheme.typography.type14r.copy(
         color = KusTheme.colors.c_000000
     )
@@ -208,21 +209,23 @@ private fun ReviewContent(
             }
         }
 
-        Box {
-            Image(
-                painter = painterResource(Res.drawable.ic_more),
-                modifier = Modifier.noRippleClickable { isMenuExpanded = true },
-                contentDescription = null
-            )
+        if (hasContent || isMine) {
+            Box {
+                Image(
+                    painter = painterResource(Res.drawable.ic_more),
+                    modifier = Modifier.noRippleClickable { isMenuExpanded = true },
+                    contentDescription = null
+                )
 
-            ReviewActionPopup(
-                expanded = isMenuExpanded,
-                isMine = isMine,
-                density = density,
-                onDismissRequest = { isMenuExpanded = false },
-                onDeleteClick = onDeleteClick,
-                onReportClick = onReportClick
-            )
+                ReviewActionPopup(
+                    expanded = isMenuExpanded,
+                    isMine = isMine,
+                    density = density,
+                    onDismissRequest = { isMenuExpanded = false },
+                    onDeleteClick = onDeleteClick,
+                    onReportClick = onReportClick
+                )
+            }
         }
     }
 
@@ -248,7 +251,7 @@ private fun ReviewContent(
         )
     }
 
-    if (!isComment) {
+    if (!isComment && hasContent) {
         KusReactionButton(
             modifier = Modifier.padding(top = 12.dp),
             likeText = likeCount.toString(),
@@ -258,7 +261,7 @@ private fun ReviewContent(
             onDislikeClick = onDislikeClick,
             onCommentClick = onCommentClick,
         )
-    } else {
+    } else if (isComment) {
         KusReactionButton(
             modifier = Modifier.padding(top = 8.dp),
             likeText = likeCount.toString(),
