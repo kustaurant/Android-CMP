@@ -7,6 +7,7 @@ import com.kus.data.network.di.networkModule
 import com.kus.domain.firstLaunch.di.firstLaunchDomainModule
 import com.kus.domain.auth.di.authDomainModule
 import com.kus.feature.detail.di.detailFeatureModule
+import com.kus.feature.evaluate.di.evaluateFeatureModule
 import com.kus.feature.home.di.homeFeatureModule
 import com.kus.feature.login.di.featureLoginModule
 import com.kus.feature.onboarding.di.onboardingFeatureModule
@@ -16,8 +17,10 @@ import com.kus.shared.domain.tier.di.tierDomainModule
 import org.koin.core.KoinApplication
 import com.kus.feature.splash.di.splashFeatureModule
 import com.kus.kustaurant.detail.di.detailDataModule
+import com.kus.kustaurant.evaluate.di.evaluateDataModule
 import com.kus.kustaurant.home.di.homeDataModule
 import com.kus.shared.domain.detail.di.detailDomainModule
+import com.kus.shared.domain.evaluate.di.evaluateDomainModule
 import com.kus.shared.domain.home.di.homeDomainModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -40,6 +43,7 @@ fun initKoin(
             tierDomainModule,
             homeDomainModule,
             detailDomainModule,
+            evaluateDomainModule,
 
             // data (repository 등 공통)
             networkModule,
@@ -48,6 +52,7 @@ fun initKoin(
             tierDataModule,
             homeDataModule,
             detailDataModule,
+            evaluateDataModule,
 
             // feature
             splashFeatureModule,
@@ -55,7 +60,8 @@ fun initKoin(
             featureLoginModule,
             tierFeatureModule,
             homeFeatureModule,
-            detailFeatureModule
+            detailFeatureModule,
+            evaluateFeatureModule
         )
 
         modules(additionalModules)
