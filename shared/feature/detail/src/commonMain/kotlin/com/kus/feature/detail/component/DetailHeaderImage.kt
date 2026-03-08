@@ -31,7 +31,7 @@ fun DetailHeaderImage(
             .fillMaxWidth()
             .height(imageHeight)
     ) {
-        if (imageUrl.isBlank() || !imageUrl.startsWith("https")) {
+        if (imageUrl.isBlank() || !imageUrl.startsWith("https", ignoreCase = true)) {
             Image(
                 painter = painterResource(Res.drawable.ic_kus_blank),
                 contentDescription = null,
