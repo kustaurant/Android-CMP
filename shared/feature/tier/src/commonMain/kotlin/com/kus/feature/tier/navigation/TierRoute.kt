@@ -12,6 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TierRoute(
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
+    navigateToDetail: () -> Unit,
     resultFilter: TierFilterState?,
     consumeResult: () -> Unit,
 ) {
@@ -31,6 +32,7 @@ fun TierRoute(
     }
 
     TierScreen(
-        onFilterClick = { navigateToTierCategorySelect(uiState.filterState) }
+        onFilterClick = { navigateToTierCategorySelect(uiState.filterState) },
+        onNavigateRestaurantDetail = navigateToDetail,
     )
 }

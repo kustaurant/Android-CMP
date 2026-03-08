@@ -84,6 +84,8 @@ fun SetNavigation() {
     val showBottomBar = shouldShowBottomBar(currentRoute)
     val selectedKey = BottomTab.fromRoute(currentRoute).key
 
+    val applySystemBarsPadding = !isEdgeToEdgeScreen(currentRoute)
+
     Scaffold(
         bottomBar = {
             SetBottomBar(
@@ -95,7 +97,7 @@ fun SetNavigation() {
         snackbarHost = {
             KusSnackBarHost(hostState = snackBarHostState)
         },
-        modifier = Modifier.systemBarsPadding(),
+        modifier = if (applySystemBarsPadding) Modifier.systemBarsPadding() else Modifier,
     ) { padding ->
         KusNavHost(
             navController = navController,
@@ -134,9 +136,16 @@ private fun NavHostController.navigateToTab(key: String) {
 
 private fun shouldShowBottomBar(currentRoute: String?): Boolean {
     val route = currentRoute ?: return true
-    val hiddenRoutes = listOf("Splash", "Onboarding", "Login")
+    val hiddenRoutes = listOf("Splash", "Onboarding", "Login", "Detail", "Evaluate")
 
     return hiddenRoutes.none { route.contains(it) }
+}
+
+private fun isEdgeToEdgeScreen(currentRoute: String?): Boolean {
+    val route = currentRoute ?: return false
+    val edgeToEdgeRoutes = listOf("Detail")
+
+    return edgeToEdgeRoutes.any { route.contains(it) }
 }
 
 private fun NavOptionsBuilder.tabOptions(navController: NavHostController) {

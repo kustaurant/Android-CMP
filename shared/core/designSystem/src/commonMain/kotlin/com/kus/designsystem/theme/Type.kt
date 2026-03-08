@@ -55,15 +55,19 @@ private fun KusTextStyle(
 @Immutable
 class KusTypography(
     val type20b: TextStyle,
+    val type18b: TextStyle,
     val type20m: TextStyle,
     val type16b: TextStyle,
+    val type14b: TextStyle,
     val type13b: TextStyle,
+    val type26sb: TextStyle,
     val type18sb: TextStyle,
     val type17sb: TextStyle,
     val type16sb: TextStyle,
     val type15sb: TextStyle,
     val type18m: TextStyle,
     val type16m: TextStyle,
+    val type14m: TextStyle,
     val type15m: TextStyle,
     val type12m: TextStyle,
     val type11m: TextStyle,
@@ -84,13 +88,25 @@ fun createKusTypography() = KusTypography(
         fontFamily = PretendardMedium,
         fontSize = 20.sp,
     ),
+    type18b = KusTextStyle(
+        fontFamily = PretendardBold,
+        fontSize = 18.sp,
+    ),
     type16b = KusTextStyle(
         fontFamily = PretendardBold,
         fontSize = 16.sp,
     ),
+    type14b = KusTextStyle(
+        fontFamily = PretendardBold,
+        fontSize = 14.sp
+    ),
     type13b = KusTextStyle(
         fontFamily = PretendardBold,
         fontSize = 13.sp,
+    ),
+    type26sb = KusTextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 26.sp
     ),
     type18sb = KusTextStyle(
         fontFamily = PretendardSemiBold,
@@ -119,6 +135,10 @@ fun createKusTypography() = KusTypography(
     type15m = KusTextStyle(
         fontFamily = PretendardMedium,
         fontSize = 15.sp,
+    ),
+    type14m = KusTextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 14.sp
     ),
     type12m = KusTextStyle(
         fontFamily = PretendardMedium,

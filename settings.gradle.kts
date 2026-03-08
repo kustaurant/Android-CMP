@@ -55,6 +55,7 @@ include(
     ":shared:data:auth",
     ":shared:data:home",
     ":shared:data:search",
+    ":shared:data:detail"
 )
 
 include(
@@ -64,6 +65,7 @@ include(
     ":shared:domain:auth",
     ":shared:domain:home",
     ":shared:domain:search",
+    ":shared:domain:detail"
 )
 
 include(
@@ -76,4 +78,6 @@ include(
     ":shared:feature:tier",
     ":shared:feature:my",
     ":shared:feature:search",
+    ":shared:feature:detail",
+    ":shared:feature:evaluate"
 )
