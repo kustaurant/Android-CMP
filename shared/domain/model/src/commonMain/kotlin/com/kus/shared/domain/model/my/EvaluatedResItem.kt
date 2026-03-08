@@ -1,7 +1,7 @@
 package com.kus.shared.domain.model.my
 
 data class EvaluatedResItem(
-    val restaurantId: String,
+    val restaurantId: Int,
     val restaurantName: String,
     val restaurantImgURL: String,
     val cuisine: String,
