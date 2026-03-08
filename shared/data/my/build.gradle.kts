@@ -49,6 +49,7 @@ kotlin {
 
                 implementation(project(":shared:domain:auth"))
                 implementation(project(":shared:domain:model"))
+                implementation(project(":shared:domain:my"))
                 implementation(project(":shared:data:network"))
             }
         }
