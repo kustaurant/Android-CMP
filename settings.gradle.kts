@@ -54,6 +54,7 @@ include(
     ":shared:data:tier",
     ":shared:data:auth",
     ":shared:data:home",
+    ":shared:data:detail",
     ":shared:data:my",
 )
 
@@ -63,6 +64,7 @@ include(
     ":shared:domain:tier",
     ":shared:domain:auth",
     ":shared:domain:home",
+    ":shared:domain:detail",
     ":shared:domain:my",
 )
 

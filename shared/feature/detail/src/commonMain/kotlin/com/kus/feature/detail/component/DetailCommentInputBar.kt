@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_send
 import org.jetbrains.compose.resources.painterResource
@@ -37,6 +38,7 @@ fun DetailCommentInputBar(
     modifier: Modifier = Modifier,
     hasFocus: Boolean = false,
     onDismiss: () -> Unit = {},
+    onSend: (String) -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -108,7 +110,15 @@ fun DetailCommentInputBar(
                 .background(
                     shape = RoundedCornerShape(100.dp),
                     color = KusTheme.colors.c_EAEAEA
-                ),
+                )
+                .noRippleClickable {
+                    if (commentText.isNotBlank()) {
+                        onSend(commentText)
+                        commentText = ""
+                        keyboardController?.hide()
+                        onDismiss()
+                    }
+                },
             contentAlignment = Alignment.Center
         ) {
             Image(

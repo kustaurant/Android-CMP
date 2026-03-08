@@ -151,8 +151,8 @@ fun KusNavHost(
         )
 
         detailNavGraph(
+            navigateToUp = navController::popBackStack,
             navigateToEvaluate = { navController.navigate(Evaluate) },
-            onBackClick = { navController.popBackStack() }
         )
 
         evaluateNavGraph(

@@ -23,15 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.detail.ui.DetailRestaurantMenu
-import com.kus.feature.detail.ui.DetailReview
-import com.kus.feature.detail.ui.ReviewSort
+import com.kus.feature.detail.model.ReviewSort
+import com.kus.shared.domain.model.detail.RestaurantMenu
+import com.kus.shared.domain.model.detail.RestaurantReview
 
 @Composable
 fun DetailTabSection(
     reviewCount: Int,
-    menuList: List<DetailRestaurantMenu>,
-    reviewList: List<DetailReview>,
+    menuList: List<RestaurantMenu>,
+    reviewList: List<RestaurantReview>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
     onReviewTabSelected: () -> Unit = {},
@@ -40,6 +40,7 @@ fun DetailTabSection(
     onCommentClick: (Int) -> Unit = {},
     onCommentLikeClick: (Int, Int) -> Unit = { _, _ -> },
     onCommentDislikeClick: (Int, Int) -> Unit = { _, _ -> },
+    onCommentDeleteClick: (Int, Int) -> Unit = { _, _ -> },
 ) {
     val reviewCountText = if (reviewCount > 999) "999+" else reviewCount.toString()
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
@@ -116,6 +117,7 @@ fun DetailTabSection(
                     onCommentClick = onCommentClick,
                     onCommentLikeClick = onCommentLikeClick,
                     onCommentDislikeClick = onCommentDislikeClick,
+                    onCommentDeleteClick = onCommentDeleteClick,
                 )
             }
         }
@@ -124,7 +126,7 @@ fun DetailTabSection(
 
 @Composable
 private fun DetailMenuContent(
-    menuList: List<DetailRestaurantMenu>,
+    menuList: List<RestaurantMenu>,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -132,13 +134,9 @@ private fun DetailMenuContent(
     ) {
         menuList.forEachIndexed { index, menu ->
             val topPadding = if (index == 0) 6.dp else 0.dp
-            val bottomPadding = if (index == menuList.lastIndex) 80.dp else 0.dp
             DetailMenuItem(
                 menu = menu,
-                modifier = Modifier.padding(
-                    top = topPadding,
-                    bottom = bottomPadding
-                )
+                modifier = Modifier.padding(top = topPadding)
             )
             if (index != menuList.lastIndex) {
                 Box(
@@ -153,7 +151,7 @@ private fun DetailMenuContent(
 
 @Composable
 private fun DetailReviewContent(
-    reviewList: List<DetailReview>,
+    reviewList: List<RestaurantReview>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
     onReviewLikeClick: (Int) -> Unit,
@@ -161,8 +159,10 @@ private fun DetailReviewContent(
     onCommentClick: (Int) -> Unit,
     onCommentLikeClick: (Int, Int) -> Unit,
     onCommentDislikeClick: (Int, Int) -> Unit,
+    onCommentDeleteClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    println("DEBUG: DetailReviewContent - reviewList.size=${reviewList.size}")
     if (reviewList.isEmpty()) return
 
     Column(
@@ -174,15 +174,14 @@ private fun DetailReviewContent(
         )
 
         reviewList.forEachIndexed { index, review ->
-            val bottomPadding = if (index == reviewList.lastIndex) 80.dp else 0.dp
             DetailReviewItem(
                 review = review,
-                modifier = Modifier.padding(bottom = bottomPadding),
                 onReviewLikeClick = onReviewLikeClick,
                 onReviewDislikeClick = onReviewDislikeClick,
                 onCommentClick = onCommentClick,
                 onCommentLikeClick = onCommentLikeClick,
                 onCommentDislikeClick = onCommentDislikeClick,
+                onCommentDeleteClick = onCommentDeleteClick,
             )
             if (index != reviewList.lastIndex) {
                 Box(
