@@ -1,5 +1,6 @@
 package com.kus.feature.evaluate.ui
 
+import UiState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
-import UiState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.koin.compose.viewmodel.koinViewModel
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
@@ -29,73 +29,118 @@ import com.kus.feature.evaluate.component.EvaluationKeyword
 import com.kus.feature.evaluate.component.EvaluationRestInfoCard
 import com.kus.feature.evaluate.component.EvaluationReview
 import com.kus.feature.evaluate.component.EvaluationStar
+import com.kus.feature.evaluate.model.Evaluation
+import com.kus.feature.evaluate.model.EvaluateRestaurant
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import org.jetbrains.compose.resources.painterResource
-
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun EvaluateScreen(
+fun EvaluateRoute(
+    restaurantId: Long,
+    restaurant: EvaluateRestaurant,
     onBackClick: () -> Unit,
     viewModel: EvaluateViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val restaurant = uiState.restaurant
-    val evaluation = uiState.evaluation
-    val submitState = uiState.submitState
-    val isRatingSelected = evaluation.evaluationScore != 0.0
-    val isSubmitting = submitState is UiState.Loading
 
-    LaunchedEffect(submitState) {
-        if (submitState is UiState.Success) {
+    LaunchedEffect(restaurantId) {
+        viewModel.initRestaurant(restaurant)
+        viewModel.getPreviousEvaluation(restaurantId)
+    }
+
+    LaunchedEffect(uiState.submitState) {
+        if (uiState.submitState is UiState.Success) {
             onBackClick()
         }
     }
 
-    val submitButtonColor = if (isRatingSelected) {
-        KusTheme.colors.c_43AB38
-    } else {
-        KusTheme.colors.c_E0E0E0
+    when (val evaluationState = uiState.evaluation) {
+        is UiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+            }
+        }
+
+        is UiState.Success -> {
+            EvaluateSuccessScreen(
+                restaurant = uiState.restaurant,
+                evaluation = evaluationState.data,
+                submitState = uiState.submitState,
+                onBackClick = onBackClick,
+                onScoreChanged = { viewModel.updateEvaluationScore(it) },
+                onSituationsChanged = { viewModel.updateEvaluationSituations(it) },
+                onCommentChanged = { viewModel.updateEvaluationComment(it) },
+                onImageSelected = { viewModel.updateImageBytes(it) },
+                onSubmitClick = { viewModel.submitEvaluation() },
+            )
+        }
+
+        is UiState.Failure -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = KusTheme.colors.c_FFFFFF),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(text = "서버 연결이 불안정합니다. 다시 시도해주세요.")
+            }
+        }
+
+        is UiState.Idle -> {}
     }
+}
+
+@Composable
+private fun EvaluateSuccessScreen(
+    restaurant: EvaluateRestaurant,
+    evaluation: Evaluation,
+    submitState: UiState<Unit>,
+    onBackClick: () -> Unit,
+    onScoreChanged: (Double) -> Unit,
+    onSituationsChanged: (List<Int>) -> Unit,
+    onCommentChanged: (String) -> Unit,
+    onImageSelected: (ByteArray) -> Unit,
+    onSubmitClick: () -> Unit,
+) {
+    val isRatingSelected = evaluation.evaluationScore != 0.0
+    val isSubmitting = submitState is UiState.Loading
+    val submitButtonColor = if (isRatingSelected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_E0E0E0
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(color = KusTheme.colors.c_FFFFFF)
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
             item {
-                EvaluationRestInfoCard(
-                    restaurant = restaurant
-                )
+                EvaluationRestInfoCard(restaurant = restaurant)
             }
 
             item {
                 EvaluationStar(
                     initialRating = evaluation.evaluationScore,
-                    onRatingChanged = { newRating ->
-                        viewModel.updateEvaluationScore(newRating)
-                    }
+                    onRatingChanged = onScoreChanged,
                 )
             }
 
             item {
                 EvaluationKeyword(
                     selectedSituations = evaluation.evaluationSituations,
-                    onSituationChanged = { situation ->
-                        viewModel.updateEvaluationSituations(situation)
-
-                    }
+                    onSituationChanged = onSituationsChanged,
                 )
             }
 
             item {
                 EvaluationReview(
                     evaluationComment = evaluation.evaluationComment,
-                    onCommentChange = { comment ->
-                        viewModel.updateEvaluationComment(comment)
-                    }
+                    onCommentChange = onCommentChanged,
                 )
             }
 
@@ -103,19 +148,17 @@ fun EvaluateScreen(
                 EvaluationImage(
                     imageUrl = evaluation.evaluationImgUrl,
                     imageBytes = evaluation.imageBytes,
-                    onImageSelected = { imageBytes ->
-                        viewModel.updateImageBytes(imageBytes)
-                    }
+                    onImageSelected = onImageSelected,
                 )
             }
 
             item {
                 Box(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .height(72.dp)
                 )
             }
-
         }
 
         Column(
@@ -125,7 +168,8 @@ fun EvaluateScreen(
         ) {
             KusTopBar(
                 leftIcon = painterResource(Res.drawable.ic_arrow_back),
-                leftIconModifier = Modifier.noRippleClickable { onBackClick() }
+                leftIconModifier = Modifier
+                    .noRippleClickable { onBackClick() }
                     .padding(all = 5.dp),
                 iconTint = KusTheme.colors.c_000000,
                 modifier = Modifier
@@ -146,7 +190,8 @@ fun EvaluateScreen(
         }
 
         Box(
-            modifier = Modifier.background(color = KusTheme.colors.c_FFFFFF)
+            modifier = Modifier
+                .background(color = KusTheme.colors.c_FFFFFF)
                 .padding(horizontal = 20.dp, vertical = 10.dp)
                 .align(Alignment.BottomCenter),
         ) {
@@ -158,8 +203,8 @@ fun EvaluateScreen(
                 borderColor = submitButtonColor,
                 onClick = {
                     if (!isRatingSelected || isSubmitting) return@KusButton
-                    viewModel.submitEvaluation()
-                }
+                    onSubmitClick()
+                },
             )
         }
     }
