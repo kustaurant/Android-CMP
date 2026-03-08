@@ -5,9 +5,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.kus.feature.my.ui.subscreen.CheckedRestaurantScreen
-import com.kus.feature.my.ui.subscreen.FavoriteRestaurantScreen
-import com.kus.feature.my.ui.subscreen.FeedbackScreen
+import com.kus.feature.my.ui.community.MyArticleScreen
+import com.kus.feature.my.ui.community.MyCommentScreen
+import com.kus.feature.my.ui.community.MyScrapScreen
+import com.kus.feature.my.ui.restaurant.CheckedRestaurantScreen
+import com.kus.feature.my.ui.restaurant.FavoriteRestaurantScreen
+import com.kus.feature.my.ui.restaurant.FeedbackScreen
 import com.kus.feature.my.ui.webview.MyPageWebViewScreen
 import kotlinx.serialization.Serializable
 
@@ -101,9 +104,26 @@ fun NavGraphBuilder.myNavGraph(
         )
     }
 
-    composable<MyArticle> { /* MyArticleScreen(onBackClick = navigateToUp) */ }
-    composable<MyComment> { /* MyCommentScreen(onBackClick = navigateToUp) */ }
-    composable<Scrap> { /* ScrapScreen(onBackClick = navigateToUp) */ }
+    composable<MyArticle> {
+        MyArticleScreen(
+            onBackClick = navigateToUp,
+            onItemClick = {},
+        )
+    }
+
+    composable<MyComment> {
+        MyCommentScreen(
+            onBackClick = navigateToUp,
+            onItemClick = {},
+        )
+    }
+
+    composable<Scrap> {
+        MyScrapScreen(
+            onBackClick = navigateToUp,
+            onItemClick = {},
+        )
+    }
 }
 
 @Serializable
