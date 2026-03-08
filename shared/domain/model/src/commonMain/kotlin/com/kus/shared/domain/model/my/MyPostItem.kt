@@ -1,6 +1,6 @@
-package com.kus.data.my.remote.response
+package com.kus.shared.domain.model.my
 
-data class MyScrapResponse(
+data class MyPostItem(
     val postId: Int,
     val postCategory: String,
     val postTitle: String,
