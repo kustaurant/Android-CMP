@@ -1,7 +1,9 @@
 package com.kus.feature.community.ui.detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,9 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,22 +25,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.theme.KusTheme
-import com.kus.domain.community.model.CommunityPost
-import com.kus.feature.community.ui.comment.CommentTreeItem
 import com.kus.feature.community.model.ReactionAction
+import com.kus.feature.community.ui.comment.CommentTreeItem
+import com.kus.feature.community.ui.model.CommunityPostUi
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 import kustaurant.shared.core.designsystem.generated.resources.ic_like
 import kustaurant.shared.core.designsystem.generated.resources.ic_scrap
 import kustaurant.shared.core.designsystem.generated.resources.ic_user_placeholder
 import org.jetbrains.compose.resources.painterResource
-import kotlin.collections.isNotEmpty
-import kotlin.collections.orEmpty
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun CommunityDetailSuccessContent(
-    post: CommunityPost,
+    post: CommunityPostUi,
+    scrollState: ScrollState,
     modifier: Modifier = Modifier,
     onPostLikeReactClick: () -> Unit = {},
     onCommentReact: (Long, ReactionAction) -> Unit = { _, _ -> },
@@ -47,72 +47,54 @@ fun CommunityDetailSuccessContent(
     onReplyClick: (Long) -> Unit = {},
     onDeleteComment: (Long) -> Unit = {}
 ) {
-    LazyColumn(
+    val comments = post.comments.orEmpty()
+
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .background(KusTheme.colors.c_FFFFFF),
+            .verticalScroll(scrollState)
+            .background(KusTheme.colors.c_FFFFFF)
     ) {
-        item { DetailAuthorHeader(post = post) }
-        item { Spacer(Modifier.height(10.dp)) }
+        DetailAuthorHeader(post = post)
+        Spacer(Modifier.height(10.dp))
+        Text(
+            text = post.title,
+            style = KusTheme.typography.type18b,
+            color = KusTheme.colors.c_323232,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        Spacer(Modifier.height(12.dp))
+        HtmlBodyView(
+            html = post.body,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        Spacer(Modifier.height(20.dp))
+        DetailStatsRow(
+            post = post,
+            onLikeClick = { onPostLikeReactClick() },
+            onScrapClick = { onScrapClick() }
+        )
+        Spacer(Modifier.height(20.dp))
+        HorizontalDivider(color = KusTheme.colors.c_EAEAEA, thickness = 8.dp)
+        Spacer(Modifier.height(8.dp))
 
-        item {
-            Text(
-                text = post.title,
-                style = KusTheme.typography.type18b,
-                color = KusTheme.colors.c_323232,
-                modifier = Modifier.padding(horizontal = 16.dp)
+        comments.forEach { comment ->
+            CommentTreeItem(
+                comment = comment,
+                indentLevel = 0,
+                onReplyClick = onReplyClick,
+                onDeleteComment = onDeleteComment,
+                onLike = { id -> onCommentReact(id, ReactionAction.LIKE) },
+                onDislike = { id -> onCommentReact(id, ReactionAction.DISLIKE) }
             )
         }
 
-        item { Spacer(Modifier.height(12.dp)) }
-
-        item {
-            HtmlBodyView(
-                html = post.body,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-        }
-
-        item { Spacer(Modifier.height(20.dp)) }
-
-        item {
-            DetailStatsRow(
-                post = post,
-                onLikeClick = { onPostLikeReactClick() },
-                onScrapClick = { onScrapClick() }
-            )
-        }
-
-        item { Spacer(Modifier.height(20.dp)) }
-
-        item { HorizontalDivider(color = KusTheme.colors.c_EAEAEA, thickness = 8.dp) }
-
-        item { Spacer(Modifier.height(8.dp)) }
-
-        val comments = post.comments.orEmpty()
-
-        if (comments.isNotEmpty()) {
-            items(
-                items = comments,
-                key = { it.commentId }
-            ) { comment ->
-                CommentTreeItem(
-                    comment = comment,
-                    indentLevel = 0,
-                    onReplyClick = onReplyClick,
-                    onDeleteComment = onDeleteComment,
-                    onLike = { id -> onCommentReact(id, ReactionAction.LIKE) },
-                    onDislike = { id -> onCommentReact(id, ReactionAction.DISLIKE) }
-                )
-            }
-        }
-
-        item { Spacer(Modifier.height(12.dp)) }
+        Spacer(Modifier.height(12.dp))
     }
 }
 
 @Composable
-private fun DetailAuthorHeader(post: CommunityPost) {
+private fun DetailAuthorHeader(post: CommunityPostUi) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -173,7 +155,7 @@ private fun DetailAuthorHeader(post: CommunityPost) {
 
 @Composable
 private fun DetailStatsRow(
-    post: CommunityPost,
+    post: CommunityPostUi,
     onLikeClick: () -> Unit,
     onScrapClick: () -> Unit
 ) {

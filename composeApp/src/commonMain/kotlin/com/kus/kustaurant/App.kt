@@ -33,6 +33,7 @@ import com.kus.designsystem.theme.KusTheme
 import com.kus.domain.auth.session.SessionEvent
 import com.kus.domain.auth.session.SessionEventBus
 import com.kus.feature.community.navigation.Community
+import com.kus.feature.community.navigation.CommunityDetail
 import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.CommunityWriteModify
 import com.kus.feature.draw.navigation.Draw
@@ -119,6 +120,7 @@ fun SetNavigation() {
 
     val isWriter =
         navBackStackEntry?.destination?.hasRoute<CommunityWrite>() == true ||
+        navBackStackEntry?.destination?.hasRoute<CommunityDetail>() == true ||
                 navBackStackEntry?.destination?.hasRoute<CommunityWriteModify>() == true
 
     CompositionLocalProvider(

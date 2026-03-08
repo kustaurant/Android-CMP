@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
-import com.kus.domain.community.model.CommunityPostComment
+import com.kus.feature.community.ui.model.CommunityPostCommentUi
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.core.designsystem.generated.resources.ic_chat
@@ -52,7 +52,7 @@ import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun CommentTreeItem(
-    comment: CommunityPostComment,
+    comment: CommunityPostCommentUi,
     indentLevel: Int,
     modifier: Modifier = Modifier,
     onLike: (Long) -> Unit = {},
@@ -105,7 +105,7 @@ fun CommentTreeItem(
 
 @Composable
 private fun RootCommentCard(
-    comment: CommunityPostComment,
+    comment: CommunityPostCommentUi,
     onLike: (Long) -> Unit,
     onDislike: (Long) -> Unit,
     onDeleteComment: (Long) -> Unit,
@@ -208,7 +208,7 @@ private fun RootCommentCard(
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = comment.body,
+            text = if (comment.isDeleted) "삭제된 댓글입니다." else comment.body,
             style = KusTheme.typography.type14r,
             color = KusTheme.colors.c_323232,
             modifier = Modifier.padding(end = 16.dp, bottom = 8.dp)
@@ -230,7 +230,7 @@ private fun RootCommentCard(
 
 @Composable
 private fun ReplyCommentCard(
-    comment: CommunityPostComment,
+    comment: CommunityPostCommentUi,
     onLike: (Long) -> Unit,
     onDislike: (Long) -> Unit,
     onDeleteComment: (Long) -> Unit,

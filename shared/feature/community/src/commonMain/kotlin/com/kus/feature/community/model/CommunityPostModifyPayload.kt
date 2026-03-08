@@ -1,7 +1,7 @@
 package com.kus.feature.community.model
 
-import com.kus.domain.community.model.CommunityPost
 import com.kus.domain.community.model.PostCategory
+import com.kus.feature.community.ui.model.CommunityPostUi
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,7 +14,7 @@ data class CommunityPostModifyPayload(
     val commentCount: Long,
 )
 
-fun CommunityPost.toModifyPayload(): CommunityPostModifyPayload =
+fun CommunityPostUi.toModifyPayload(): CommunityPostModifyPayload =
     CommunityPostModifyPayload(
         postId = postId,
         category = category,

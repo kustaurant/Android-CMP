@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -50,6 +51,7 @@ import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.community.model.DeleteCommunityEvent
 import com.kus.feature.community.model.toModifyPayload
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
@@ -82,6 +84,8 @@ fun CommunityDetailScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
+
+    val scrollState = rememberScrollState()
 
     BackHandler { onBackButtonClick() }
 
@@ -132,7 +136,7 @@ fun CommunityDetailScreen(
                             IconButton(onClick = {
                                 focusManager.clearFocus(force = true)
                                 scope.launch {
-                                    kotlinx.coroutines.delay(16)
+                                    delay(16)
                                     keyboardController?.hide()
                                     moreExpanded = true
                                 }
@@ -267,11 +271,12 @@ fun CommunityDetailScreen(
                                         showReplyConfirmDialog = true
                                     },
                                     onDeleteComment = { commentId ->
-                                        viewModel.deleteComment(postId, commentId)
+                                        viewModel.deleteComment(commentId)
                                     },
                                     onCommentReact = { commentId, action ->
                                         viewModel.reactComment(commentId, action)
-                                    }
+                                    },
+                                    scrollState = scrollState,
                                 )
                             }
                         }

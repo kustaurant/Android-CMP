@@ -4,7 +4,6 @@ import GetSessionAvailabilityUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.designsystem.util.stripHtml
-import com.kus.domain.community.model.CommunityPostComment
 import com.kus.domain.community.model.LikeEvent
 import com.kus.domain.community.usecase.DeleteCommunityCommentUseCase
 import com.kus.domain.community.usecase.DeleteCommunityPostUseCase
@@ -16,6 +15,8 @@ import com.kus.domain.community.usecase.PostPostLikeUseCase
 import com.kus.feature.community.model.CommunityPostModifyPayload
 import com.kus.feature.community.model.DeleteCommunityEvent
 import com.kus.feature.community.model.ReactionAction
+import com.kus.feature.community.ui.mapper.toUiModel
+import com.kus.feature.community.ui.model.CommunityPostCommentUi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,8 +44,6 @@ class CommunityDetailViewModel(
     )
     val events: SharedFlow<DeleteCommunityEvent> = _events.asSharedFlow()
 
-    suspend fun hasLoginInfo(): Boolean = getSessionAvailabilityUseCase()
-
     private val _uiState = MutableStateFlow(CommunityDetailUiState())
     val uiState: StateFlow<CommunityDetailUiState> = _uiState.asStateFlow()
 
@@ -67,7 +66,9 @@ class CommunityDetailViewModel(
             runCatching {
                 getCommunityPostDetailUseCase(postId, isLoggedIn)
             }.onSuccess { post ->
-                _uiState.update { it.copy(phase = CommunityDetailPhase.Success, post = post) }
+                _uiState.update {
+                    it.copy(phase = CommunityDetailPhase.Success, post = post.toUiModel())
+                }
             }.onFailure {
                 _uiState.update { it.copy(phase = CommunityDetailPhase.Failure) }
             }
@@ -155,21 +156,22 @@ class CommunityDetailViewModel(
 
             runCatching { postCreateCommentReplyUseCase(content, postId, parentCommentId) }
                 .onSuccess { created ->
+                    val createdUi = created.toUiModel()  // 변환
                     _uiState.update { state ->
                         val post = state.post ?: return@update state
                         val currentComments = post.comments.orEmpty()
 
                         val newComments =
-                            if (created.parentCommentId == null) {
-                                listOf(created) + currentComments
+                            if (createdUi.parentCommentId == null) {
+                                listOf(createdUi) + currentComments
                             } else {
-                                val parentId = created.parentCommentId ?: return@update state
+                                val parentId = createdUi.parentCommentId
                                 val (updated, inserted) = insertReply(
                                     list = currentComments,
                                     parentId = parentId,
-                                    child = created
+                                    child = createdUi
                                 )
-                                if (inserted) updated else listOf(created) + currentComments
+                                if (inserted) updated else listOf(createdUi) + currentComments
                             }
 
                         state.copy(
@@ -180,16 +182,15 @@ class CommunityDetailViewModel(
                         )
                     }
                 }
-                .onFailure {
-                }
+                .onFailure { }
         }
     }
 
     private fun insertReply(
-        list: List<CommunityPostComment>,
+        list: List<CommunityPostCommentUi>,
         parentId: Long,
-        child: CommunityPostComment,
-    ): Pair<List<CommunityPostComment>, Boolean> {
+        child: CommunityPostCommentUi,
+    ): Pair<List<CommunityPostCommentUi>, Boolean> {
         var inserted = false
         val updated = list.map { c ->
             when {
@@ -197,6 +198,7 @@ class CommunityDetailViewModel(
                     inserted = true
                     c.copy(repliesList = listOf(child) + c.repliesList)
                 }
+
                 else -> {
                     val (newReplies, did) = insertReply(c.repliesList, parentId, child)
                     if (did) {
@@ -218,6 +220,7 @@ class CommunityDetailViewModel(
             val likeEvent: LikeEvent? = when (action) {
                 ReactionAction.LIKE ->
                     if (currentReaction == "LIKE") null else LikeEvent.LIKE
+
                 ReactionAction.DISLIKE ->
                     if (currentReaction == "DISLIKE") null else LikeEvent.DISLIKE
             }
@@ -243,9 +246,9 @@ class CommunityDetailViewModel(
     }
 
     private fun findCommentById(
-        comments: List<CommunityPostComment>,
+        comments: List<CommunityPostCommentUi>,
         targetId: Long,
-    ): CommunityPostComment? {
+    ): CommunityPostCommentUi? {
         comments.forEach { c ->
             if (c.commentId == targetId) return c
             findCommentById(c.repliesList, targetId)?.let { return it }
@@ -254,12 +257,12 @@ class CommunityDetailViewModel(
     }
 
     private fun updateCommentTree(
-        comment: CommunityPostComment,
+        comment: CommunityPostCommentUi,
         targetId: Long,
         likeCount: Int,
         dislikeCount: Int,
         reactionType: String?,
-    ): CommunityPostComment {
+    ): CommunityPostCommentUi {
         if (comment.commentId == targetId) {
             return comment.copy(
                 likeCount = likeCount,
@@ -286,14 +289,51 @@ class CommunityDetailViewModel(
         }
     }
 
-    fun deleteComment(postId: Long, commentId: Long) {
+    fun deleteComment(commentId: Long) {
         viewModelScope.launch {
             runCatching { deleteCommentUseCase(commentId) }
                 .onSuccess {
-                    fetchDetail(postId)
+                    _uiState.update { state ->
+                        val post = state.post ?: return@update state
+                        val comments = post.comments.orEmpty()
+                        val updatedComments = removeOrMarkComment(comments, commentId)
+                        state.copy(
+                            post = post.copy(
+                                comments = updatedComments,
+                                commentCount = post.commentCount - 1
+                            )
+                        )
+                    }
                 }
-                .onFailure {
+                .onFailure { }
+        }
+    }
+
+    private fun removeOrMarkComment(
+        comments: List<CommunityPostCommentUi>,
+        targetId: Long,
+    ): List<CommunityPostCommentUi> {
+        return comments.mapNotNull { comment ->
+            when {
+                comment.commentId == targetId && comment.repliesList.isEmpty() -> null
+
+                comment.commentId == targetId && comment.repliesList.isNotEmpty() -> {
+                    comment.copy(
+                        body = "삭제된 댓글입니다.",
+                        isCommentMine = false,
+                        isDeleted = true,
+                    )
                 }
+
+                else -> {
+                    val updatedReplies = comment.repliesList.filter { it.commentId != targetId }
+                    if (comment.isDeleted && updatedReplies.isEmpty()) {
+                        null
+                    } else {
+                        comment.copy(repliesList = updatedReplies)
+                    }
+                }
+            }
         }
     }
 
