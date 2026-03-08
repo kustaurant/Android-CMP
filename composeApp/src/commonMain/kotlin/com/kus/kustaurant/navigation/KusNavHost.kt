@@ -38,9 +38,11 @@ import com.kus.feature.splash.navigation.Splash
 import com.kus.feature.splash.navigation.splashNavGraph
 import com.kus.feature.tier.config.TierKeys.TIER_INITIAL_JSON
 import com.kus.feature.tier.config.TierKeys.TIER_RESULT_JSON
+import com.kus.feature.tier.navigation.Tier
 import com.kus.feature.tier.navigation.TierCategorySelect
 import com.kus.feature.tier.navigation.tierNavGraph
 import com.kus.feature.tier.ui.TierFilterState
+import com.kus.shared.domain.model.tier.filter.Cuisine
 
 @Composable
 fun KusNavHost(
@@ -119,7 +121,17 @@ fun KusNavHost(
         homeNavGraph(
             navigateToSearch = navController::navigateToSearch,
             navigateToAlert = { },
-            navigateToTier = { /* TODO */ },
+            navigateToTier = { cuisine: Cuisine ->
+                val cuisine = Cuisine.entries.find { it == cuisine } ?: Cuisine.ALL
+                val filter = TierFilterState(cuisines = setOf(cuisine)).normalized()
+                val json = KusJson.json.encodeToString(filter)
+
+                navController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(TIER_INITIAL_JSON, json)
+
+                navController.navigate(Tier)
+            },
             navigateToDetail = { },
         )
 

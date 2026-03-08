@@ -130,10 +130,12 @@ fun TierListScreen(
                 } else {
                     LazyColumn(
                         state = listState,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().background(KusTheme.colors.c_F3F3F3),
                         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 18.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
+                        item { Spacer(modifier = Modifier.height(8.dp))}
+
                         items(
                             items = list,
                             key = { it.restaurantId }

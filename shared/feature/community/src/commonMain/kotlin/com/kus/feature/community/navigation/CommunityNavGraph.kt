@@ -163,6 +163,7 @@ fun NavGraphBuilder.communityNavGraph(
             onBackButtonClick = { onDetailBackClick(viewModel.currentPayload()) },
             onPostModifyClick = onPostModifyClick,
             onPostDeleted = { onPostDeletedInDetail(args.postId) },
+            onShowMessage = onShowMessage
         )
     }
 }

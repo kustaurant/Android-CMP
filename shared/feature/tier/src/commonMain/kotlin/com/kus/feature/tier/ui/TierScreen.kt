@@ -88,6 +88,10 @@ fun TierScreen(
     val sharedMapInstance = mapPlatform.rememberMapInstance()
     val listState = rememberLazyListState()
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchFirstRestaurants()
+    } 
+
     LaunchedEffect(uiState.toastMessage) {
         uiState.toastMessage?.let {
             onShowMessage(it)

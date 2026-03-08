@@ -15,16 +15,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
 class TierViewModel(
    private val getTierRestaurantListUseCase: GetTierRestaurantListUseCase,
     private val getTierRestaurantMapUseCase: GetTierRestaurantMapUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TierUiState())
     val uiState: StateFlow<TierUiState> = _uiState.asStateFlow()
-
-    init {
-        fetchFirstRestaurants()
-    }
 
     fun setShowBottomSheet(show: Boolean) {
         _uiState.update { it.copy(mapUiState = it.mapUiState.copy(isShowBottomSheet = show)) }

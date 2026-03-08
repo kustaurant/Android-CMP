@@ -6,5 +6,6 @@ enum class CommunityDetailPhase { Idle, Loading, Success, Failure }
 
 data class CommunityDetailUiState(
     val phase: CommunityDetailPhase = CommunityDetailPhase.Idle,
-    val post: CommunityPostUi? = null
+    val post: CommunityPostUi? = null,
+    val toastMessage :String? = null,
 )

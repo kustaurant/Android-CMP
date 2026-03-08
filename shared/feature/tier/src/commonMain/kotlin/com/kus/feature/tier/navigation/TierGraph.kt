@@ -34,6 +34,7 @@ fun NavGraphBuilder.tierNavGraph(
         }
 
         TierRoute(
+            initialFilter = initialProvider,
             navigateToTierCategorySelect = navigateToTierCategorySelect,
             navigateToDetail = navigateToDetail,
             resultFilter = result,

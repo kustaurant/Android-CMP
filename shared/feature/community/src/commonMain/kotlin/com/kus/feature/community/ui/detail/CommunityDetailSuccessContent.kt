@@ -103,7 +103,7 @@ private fun DetailAuthorHeader(post: CommunityPostUi) {
     ) {
         if (!post.writerIconUrl.isNullOrBlank()) {
             KamelImage(
-                resource = asyncPainterResource(post.writerIconUrl!!),
+                resource = asyncPainterResource(post.writerIconUrl),
                 contentDescription = "사용자 이미지입니다.",
                 modifier = Modifier.size(25.dp),
                 onFailure = {

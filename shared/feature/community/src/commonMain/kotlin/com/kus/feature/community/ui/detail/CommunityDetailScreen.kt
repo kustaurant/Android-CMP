@@ -67,6 +67,7 @@ fun CommunityDetailScreen(
     onBackButtonClick: () -> Unit = {},
     onPostModifyClick: (String) -> Unit = {},
     onPostDeleted: () -> Unit = {},
+    onShowMessage: (String) -> Unit,
 ) {
     val viewModel: CommunityDetailViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -93,10 +94,17 @@ fun CommunityDetailScreen(
         viewModel.loadDetail(postId)
     }
 
+    LaunchedEffect(uiState.toastMessage) {
+        uiState.toastMessage?.let {
+            onShowMessage(it)
+            viewModel.clearToast()
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.events.collectLatest { event ->
             when (event) {
-                is DeleteCommunityEvent.Deleted -> onPostDeleted()
+                is DeleteCommunityEvent.Deleted -> { onPostDeleted() }
                 is DeleteCommunityEvent.Error -> {}
             }
         }

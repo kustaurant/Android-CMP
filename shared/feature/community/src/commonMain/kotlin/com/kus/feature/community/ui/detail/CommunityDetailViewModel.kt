@@ -277,13 +277,27 @@ class CommunityDetailViewModel(
         return comment.copy(repliesList = updatedReplies)
     }
 
+    fun clearToast() {
+        _uiState.update { it.copy(toastMessage = null) }
+    }
+
     fun deletePost(postId: Long) {
         viewModelScope.launch {
             runCatching { deletePostUseCase(postId) }
                 .onSuccess {
+                    _uiState.update {
+                        it.copy(
+                            toastMessage = "게시글이 삭제되었어요."
+                        )
+                    }
                     _events.tryEmit(DeleteCommunityEvent.Deleted)
                 }
                 .onFailure { e ->
+                    _uiState.update {
+                        it.copy(
+                            toastMessage = "게시글 삭제에 실패했어요."
+                        )
+                    }
                     _events.tryEmit(DeleteCommunityEvent.Error(e.message ?: "삭제에 실패했어요."))
                 }
         }
