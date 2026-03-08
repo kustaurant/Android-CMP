@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,13 +38,22 @@ internal fun FeedbackScreen(
     val focusManager = LocalFocusManager.current
     var text by remember { mutableStateOf("") }
 
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { message ->
+            onShowMessage(message)
+            if (!message.contains("오류")) {
+                onBackClick()
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(KusTheme.colors.c_FFFFFF),
     ) {
         MyPageTopBar(
-            title ="의견 보내기",
+            title = "의견 보내기",
             onBackClick = onBackClick,
         )
 
@@ -80,7 +90,7 @@ internal fun FeedbackScreen(
             }
 
             KusButton(
-                enabled = text.isNotEmpty(),
+                enabled = text.isNotEmpty() && text.length >= 10 && text.length <= 500,
                 buttonName = "의견 보내기",
                 roundedCornerShape = RoundedCornerShape(50.dp),
                 onClick = { viewModel.postFeedback(text) },
