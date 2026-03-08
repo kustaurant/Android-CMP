@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.evaluate.ui.EvaluateRestaurant
+import com.kus.feature.evaluate.model.EvaluateRestaurant
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_location
 import org.jetbrains.compose.resources.painterResource
