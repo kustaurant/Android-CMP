@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,9 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.community.ui.ranking.RankingContent
 import com.kus.feature.community.ui.floatingButton.WriteFab
 import com.kus.feature.community.ui.list.CommunityListContent
+import com.kus.feature.community.ui.ranking.RankingContent
+import kotlinx.coroutines.launch
 import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import kustaurant.shared.core.designsystem.generated.resources.ic_search
@@ -60,6 +62,12 @@ fun CommunityScreen(
 
     var boardExpanded by remember { mutableStateOf(false) }
     val (showWriteFab, fabScrollConnection) = rememberFabVisibleOnScrollUp()
+
+    val scope = rememberCoroutineScope()
+
+    val selectedIndex = remember(uiState.selectedTab) {
+        CommunityTab.entries.indexOf(uiState.selectedTab).coerceAtLeast(0)
+    }
 
     LaunchedEffect(uiState.toastMessage) {
         uiState.toastMessage?.let {
@@ -94,10 +102,6 @@ fun CommunityScreen(
                     )
                 }
 
-                val selectedIndex = remember(uiState.selectedTab) {
-                    CommunityTab.entries.indexOf(uiState.selectedTab).coerceAtLeast(0)
-                }
-
                 CommunityTabs(
                     selectedIndex = selectedIndex,
                     onSelect = { index ->
@@ -122,7 +126,13 @@ fun CommunityScreen(
                             animationSpec = tween(160, easing = FastOutSlowInEasing)
                         )
             ) {
-                WriteFab(onClick = onWriteClick)
+                WriteFab(onClick = {
+                    scope.launch {
+                        if (viewModel.checkLoginAndEmit()) {
+                            onWriteClick()
+                        }
+                    }
+                })
             }
         }
     ) { inner ->

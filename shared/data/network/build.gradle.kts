@@ -47,6 +47,7 @@ kotlin {
                 implementation(libs.bundles.ktor)
 
                 implementation(project(":shared:core:config"))
+                implementation(project(":shared:domain:auth"))
             }
         }
 

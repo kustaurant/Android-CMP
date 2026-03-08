@@ -5,6 +5,8 @@ import UiError
 import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kus.domain.auth.session.SessionEvent
+import com.kus.domain.auth.session.SessionEventEmitter
 import com.kus.domain.community.model.ListSortType
 import com.kus.domain.community.model.PostCategory
 import com.kus.domain.community.model.RankingSortType
@@ -20,11 +22,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CommunityViewModel(
-    private val getSessionAvailabilityUseCase : GetSessionAvailabilityUseCase,
+    private val getSessionAvailabilityUseCase: GetSessionAvailabilityUseCase,
     private val getCommunityPostListUseCase: GetCommunityPostListUseCase,
     private val getCommunityRankingListUseCase: GetCommunityRankingListUseCase,
+    private val sessionEvents: SessionEventEmitter,
 ) : ViewModel() {
-
+    
     private val _uiState = MutableStateFlow(CommunityUiState())
     val uiState: StateFlow<CommunityUiState> = _uiState.asStateFlow()
 
@@ -32,10 +35,16 @@ class CommunityViewModel(
         ensureDataForCurrentTab(force = true)
     }
 
-    suspend fun hasLoginInfo(): Boolean = getSessionAvailabilityUseCase()
-
     fun clearToast() {
         _uiState.update { it.copy(toastMessage = null) }
+    }
+
+    suspend fun checkLoginAndEmit(): Boolean {
+        if (!getSessionAvailabilityUseCase()) {
+            sessionEvents.emit(SessionEvent.LoginRequired)
+            return false
+        }
+        return true
     }
 
     fun onTabSelected(tab: CommunityTab) {
@@ -96,6 +105,7 @@ class CommunityViewModel(
                 val need = force || _uiState.value.postListState !is UiState.Success
                 if (need) fetchFirstPosts()
             }
+
             CommunityTab.RANKING -> {
                 val need = force || _uiState.value.rankingListState !is UiState.Success
                 if (need) loadRanking()
@@ -136,7 +146,11 @@ class CommunityViewModel(
             }.onFailure { e ->
                 _uiState.update { cur ->
                     cur.copy(
-                        postListState = UiState.Failure(UiError.Message(e.message ?: "게시글 리스트를 불러오는데 오류가 발생했습니다.")),
+                        postListState = UiState.Failure(
+                            UiError.Message(
+                                e.message ?: "게시글 리스트를 불러오는데 오류가 발생했습니다."
+                            )
+                        ),
                         postPageState = cur.postPageState.copy(phase = CommunityPhase.Idle),
                         toastMessage = "게시글 리스트를 불러오는데 오류가 발생했습니다."
                     )
@@ -187,7 +201,11 @@ class CommunityViewModel(
                 KusLog.e("CommunityViewModel", "loadRanking error", e)
                 _uiState.update {
                     it.copy(
-                        rankingListState = UiState.Failure(UiError.Message(e.message ?: "랭킹 리스트를 불러오는데 오류가 발생했습니다.")),
+                        rankingListState = UiState.Failure(
+                            UiError.Message(
+                                e.message ?: "랭킹 리스트를 불러오는데 오류가 발생했습니다."
+                            )
+                        ),
                         toastMessage = "랭킹 리스트를 불러오는데 오류가 발생했습니다."
                     )
                 }

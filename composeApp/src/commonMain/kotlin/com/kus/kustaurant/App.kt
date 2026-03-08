@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -25,6 +27,7 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kus.designsystem.component.KusSnackBarOverlay
+import com.kus.designsystem.component.LoginRequiredOverlay
 import com.kus.designsystem.component.snackbar.LocalSnackBarBottomPadding
 import com.kus.designsystem.theme.KusTheme
 import com.kus.domain.auth.session.SessionEvent
@@ -65,6 +68,9 @@ fun SetNavigation() {
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    val sessionBus: SessionEventBus = koinInject()
+    var showRequireLoginPopup by remember { mutableStateOf<Boolean>(false) }
+
     val onShowMessage: (String) -> Unit = remember(snackBarHostState, scope) {
         { message ->
             scope.launch {
@@ -88,7 +94,6 @@ fun SetNavigation() {
         }
     }
 
-    val sessionBus: SessionEventBus = koinInject()
     LaunchedEffect(Unit) {
         sessionBus.events.collect { ev ->
             when (ev) {
@@ -98,12 +103,16 @@ fun SetNavigation() {
                         launchSingleTop = true
                     }
                 }
+
+                SessionEvent.LoginRequired -> {
+                    showRequireLoginPopup = true
+                }
             }
         }
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val destination = navBackStackEntry?.destination 
+    val destination = navBackStackEntry?.destination
     val showBottomBar = shouldShowBottomBar(destination)
     val currentRoute = destination?.route
     val selectedKey = BottomTab.fromRoute(currentRoute).key
@@ -141,6 +150,19 @@ fun SetNavigation() {
             KusSnackBarOverlay(
                 hostState = snackBarHostState
             )
+
+            if (showRequireLoginPopup) {
+                LoginRequiredOverlay(
+                    onLoginButtonClick = {
+                        showRequireLoginPopup = false
+                        navController.navigate(Login) {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onDismissRequest = { showRequireLoginPopup = false },
+                )
+            }
         }
     }
 }

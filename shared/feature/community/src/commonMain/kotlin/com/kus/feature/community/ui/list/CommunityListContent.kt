@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.kus.designsystem.theme.KusTheme
@@ -85,7 +84,7 @@ fun CommunityListContent(
                 LazyColumn(
                     modifier = modifier
                         .fillMaxSize()
-                        .background(Color.White),
+                        .background(KusTheme.colors.c_FFFFFF),
                 ) {
                     item {
                         HorizontalDivider(
