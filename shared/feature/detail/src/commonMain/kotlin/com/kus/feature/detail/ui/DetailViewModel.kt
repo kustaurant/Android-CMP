@@ -1,454 +1,254 @@
 package com.kus.feature.detail.ui
 
+import UiError
+import UiState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.kus.feature.detail.model.ReviewSort
+import com.kus.feature.detail.state.DetailUiState
+import com.kus.shared.domain.detail.usecase.DeleteCommentUseCase
+import com.kus.shared.domain.detail.usecase.DeleteRestaurantFavoriteUseCase
+import com.kus.shared.domain.detail.usecase.GetRestaurantDetailUseCase
+import com.kus.shared.domain.detail.usecase.GetRestaurantReviewsUseCase
+import com.kus.shared.domain.detail.usecase.PostCommentUseCase
+import com.kus.shared.domain.detail.usecase.PutCommentReactionUseCase
+import com.kus.shared.domain.detail.usecase.PutEvaluationReactionUseCase
+import com.kus.shared.domain.detail.usecase.PutRestaurantFavoriteUseCase
+import com.kus.shared.domain.model.detail.RestaurantReview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(
+    private val getRestaurantDetailUseCase: GetRestaurantDetailUseCase,
+    private val getRestaurantReviewsUseCase: GetRestaurantReviewsUseCase,
+    private val putEvaluationReactionUseCase: PutEvaluationReactionUseCase,
+    private val putCommentReactionUseCase: PutCommentReactionUseCase,
+    private val putRestaurantFavoriteUseCase: PutRestaurantFavoriteUseCase,
+    private val deleteRestaurantFavoriteUseCase: DeleteRestaurantFavoriteUseCase,
+    private val postCommentUseCase: PostCommentUseCase,
+    private val deleteCommentUseCase: DeleteCommentUseCase,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
-    val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
-    private val _reviewUiState = MutableStateFlow(DetailReviewUiState())
-    val reviewUiState: StateFlow<DetailReviewUiState> = _reviewUiState.asStateFlow()
+    private var currentRestaurantId: Long = 0L
+    private var fetchReviewsJob: Job? = null
 
-    private val dummyReviewList = listOf(
-        DetailReview(
-            evalId = 1,
-            evalScore = 4.5,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer1/80/80",
-            writerNickname = "역병",
-            timeAgo = "2분전",
-            evalImgUrl = "https://picsum.photos/seed/review1/300/200",
-            evalBody = "오 좀 맛있는데?",
-            reactionType = "LIKE",
-            evalLikeCount = 14,
-            evalDislikeCount = 3,
-            isEvaluationMine = true,
-            evalCommentList = listOf(
-                DetailReviewComment(
-                    commentId = 1,
-                    writerIconImgUrl = "https://picsum.photos/seed/commenter1/60/60",
-                    writerNickname = "역병",
-                    timeAgo = "2분전",
-                    commentBody = "저두 이 의견에 동의합니당",
-                    reactionType = "LIKE",
-                    commentLikeCount = 14,
-                    commentDislikeCount = 3,
-                    isCommentMine = true,
-                )
-            )
-        ),
-        DetailReview(
-            evalId = 2,
-            evalScore = 4.0,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer2/80/80",
-            writerNickname = "칼국수러버",
-            timeAgo = "5분전",
-            evalImgUrl = "https://picsum.photos/seed/review2/300/200",
-            evalBody = "국물이 깔끔했어요.",
-            reactionType = "LIKE",
-            evalLikeCount = 9,
-            evalDislikeCount = 1,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 3,
-            evalScore = 3.5,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer3/80/80",
-            writerNickname = "면덕후",
-            timeAgo = "10분전",
-            evalImgUrl = "https://picsum.photos/seed/review3/300/200",
-            evalBody = "면이 쫄깃해서 좋았어요.",
-            reactionType = "NONE",
-            evalLikeCount = 4,
-            evalDislikeCount = 0,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 4,
-            evalScore = 5.0,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer4/80/80",
-            writerNickname = "단골손님",
-            timeAgo = "20분전",
-            evalImgUrl = "https://picsum.photos/seed/review4/300/200",
-            evalBody = "여긴 진짜 찐맛집!",
-            reactionType = "LIKE",
-            evalLikeCount = 32,
-            evalDislikeCount = 2,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 5,
-            evalScore = 4.2,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer5/80/80",
-            writerNickname = "맛집탐방",
-            timeAgo = "30분전",
-            evalImgUrl = "https://picsum.photos/seed/review5/300/200",
-            evalBody = "가격 대비 만족!",
-            reactionType = "LIKE",
-            evalLikeCount = 11,
-            evalDislikeCount = 1,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 6,
-            evalScore = 3.8,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer6/80/80",
-            writerNickname = "배고파",
-            timeAgo = "1시간전",
-            evalImgUrl = "https://picsum.photos/seed/review6/300/200",
-            evalBody = "양이 많아서 좋아요.",
-            reactionType = "NONE",
-            evalLikeCount = 6,
-            evalDislikeCount = 1,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 7,
-            evalScore = 4.7,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer7/80/80",
-            writerNickname = "리뷰왕",
-            timeAgo = "2시간전",
-            evalImgUrl = "https://picsum.photos/seed/review7/300/200",
-            evalBody = "재방문 의사 100%",
-            reactionType = "LIKE",
-            evalLikeCount = 21,
-            evalDislikeCount = 0,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 8,
-            evalScore = 3.2,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer8/80/80",
-            writerNickname = "솔직후기",
-            timeAgo = "3시간전",
-            evalImgUrl = "https://picsum.photos/seed/review8/300/200",
-            evalBody = "살짝 짰어요.",
-            reactionType = "DISLIKE",
-            evalLikeCount = 2,
-            evalDislikeCount = 3,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 9,
-            evalScore = 4.1,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer9/80/80",
-            writerNickname = "맛알못",
-            timeAgo = "4시간전",
-            evalImgUrl = "https://picsum.photos/seed/review9/300/200",
-            evalBody = "무난하게 맛있어요.",
-            reactionType = "LIKE",
-            evalLikeCount = 7,
-            evalDislikeCount = 1,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-        DetailReview(
-            evalId = 10,
-            evalScore = 4.9,
-            writerIconImgUrl = "https://picsum.photos/seed/reviewer10/80/80",
-            writerNickname = "최고최고",
-            timeAgo = "1일전",
-            evalImgUrl = "https://picsum.photos/seed/review10/300/200",
-            evalBody = "여기만 오면 행복",
-            reactionType = "LIKE",
-            evalLikeCount = 40,
-            evalDislikeCount = 0,
-            isEvaluationMine = false,
-            evalCommentList = emptyList()
-        ),
-    )
+    private var isFavoriteInFlight = false
+    private val inFlightReviewReactions = mutableSetOf<Int>()
+    private val inFlightCommentReactions = mutableSetOf<Int>()
+    private val inFlightPostComments = mutableSetOf<Int>()
 
-    init {
-        _uiState.value = DetailUiState(
-            restaurant = DetailRestaurant(
-                restaurantId = 1,
-                restaurantImgUrl = "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20221219_73%2F1671415873694AWTMq_JPEG%2FDSC04440.jpg",
-                mainTier = 1,
-                isTempTier = false,
-                restaurantCuisine = "한식",
-                restaurantCuisineImgUrl = "https://kustaurant.s3.ap-northeast-2.amazonaws.com/common/cuisine-icon/카페디저트.svg",
-                restaurantPosition = "건입~중문",
-                restaurantName = "제주곤이칼국수 건대점",
-                restaurantAddress = "서울시 광진구 어딘가 222-22, 304호",
-                isOpen = true,
-                businessHours = "오늘 10:00~20:00",
-                naverMapUrl = "https://map.naver.com/p/entry/place/12785886?c=20.00,0,0,0,dh",
-                situationList = arrayListOf("혼밥", "배달"),
-                partnershipInfo = "학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!! 학생증 제시 시에 전메뉴 10% 할인 대박!!!!",
-                evaluationCount = 100,
-                restaurantScore = 4.4,
-                isEvaluated = true,
-                isFavorite = true,
-                favoriteCount = 44,
-                restaurantMenuList = listOf(
-                    DetailRestaurantMenu(
-                        menuId = 1,
-                        restaurantId = 1,
-                        menuName = "곤이칼국수",
-                        menuPrice = "9,000원",
-                        naverType = "대표",
-                        menuImgUrl = "https://search.pstatic.net/common/?autoRotate=true&amp;quality=95&amp;type=f320_320&amp;src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20230703_3%2F1688371416401iXlcd_JPEG%2FEmmoBollP-9f7S9t1Tm8Ia0MCo4L7avZscDoUWphehEnIczhsCfxtBcVpWjFku8X.jpg&quot",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 2,
-                        restaurantId = 1,
-                        menuName = "얼큰칼국수",
-                        menuPrice = "9,500원",
-                        naverType = "추천",
-                        menuImgUrl = "https://picsum.photos/seed/menu2/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 3,
-                        restaurantId = 1,
-                        menuName = "해물파전",
-                        menuPrice = "12,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu3/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 4,
-                        restaurantId = 1,
-                        menuName = "왕만두",
-                        menuPrice = "6,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu4/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 5,
-                        restaurantId = 1,
-                        menuName = "수제비",
-                        menuPrice = "8,500원",
-                        naverType = "메인",
-                        menuImgUrl = "https://picsum.photos/seed/menu5/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 6,
-                        restaurantId = 1,
-                        menuName = "비빔국수",
-                        menuPrice = "8,000원",
-                        naverType = "메인",
-                        menuImgUrl = "https://picsum.photos/seed/menu6/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 7,
-                        restaurantId = 1,
-                        menuName = "볶음밥",
-                        menuPrice = "7,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu7/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 8,
-                        restaurantId = 1,
-                        menuName = "김치전",
-                        menuPrice = "10,000원",
-                        naverType = "사이드",
-                        menuImgUrl = "https://picsum.photos/seed/menu8/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 9,
-                        restaurantId = 1,
-                        menuName = "공기밥",
-                        menuPrice = "1,000원",
-                        naverType = "기타",
-                        menuImgUrl = "https://picsum.photos/seed/menu9/200/200",
-                    ),
-                    DetailRestaurantMenu(
-                        menuId = 10,
-                        restaurantId = 1,
-                        menuName = "음료",
-                        menuPrice = "2,000원",
-                        naverType = "기타",
-                        menuImgUrl = "https://picsum.photos/seed/menu10/200/200",
-                    ),
-                )
-            )
-        )
-    }
-
-    fun loadReviewsIfNeeded() {
-        if (_reviewUiState.value.hasLoaded || _reviewUiState.value.isLoading) return
-        loadReviews(_reviewUiState.value.sort)
-    }
-
-    fun loadReviews(sort: ReviewSort) {
-        _reviewUiState.value = _reviewUiState.value.copy(isLoading = true, sort = sort)
-        val list = when (sort) {
-            ReviewSort.Popular -> dummyReviewList
-            ReviewSort.Latest -> dummyReviewList.reversed()
+    fun getRestaurantDetail(restaurantId: Long) = viewModelScope.launch {
+        if (currentRestaurantId != restaurantId) {
+            currentRestaurantId = restaurantId
+            fetchReviewsJob?.cancel()
+            fetchReviewsJob = null
+            isFavoriteInFlight = false
+            inFlightReviewReactions.clear()
+            inFlightCommentReactions.clear()
+            inFlightPostComments.clear()
+            _uiState.value = DetailUiState()
         }
-        _reviewUiState.value = DetailReviewUiState(
-            reviewList = list,
-            isLoading = false,
-            hasLoaded = true,
-            sort = sort,
-        )
+        runCatching {
+            getRestaurantDetailUseCase(restaurantId)
+        }.onSuccess { detail ->
+            _uiState.update { it.copy(restaurant = UiState.Success(detail)) }
+        }.onFailure {
+            _uiState.update { it.copy(restaurant = UiState.Failure(UiError.Network)) }
+        }
+    }
+
+    fun getRestaurantReviewsIfNeeded() {
+        val currentReviews = _uiState.value.reviews
+        if (currentReviews is UiState.Success || currentReviews is UiState.Loading) return
+        getRestaurantReviews(_uiState.value.reviewSort)
+    }
+
+    fun getRestaurantReviews(sort: ReviewSort) {
+        fetchReviewsJob?.cancel()
+        fetchReviewsJob = viewModelScope.launch {
+            _uiState.update { it.copy(reviews = UiState.Loading, reviewSort = sort) }
+            val apiSort = when (sort) {
+                ReviewSort.Popular -> "POPULARITY"
+                ReviewSort.Latest -> "LATEST"
+            }
+            runCatching {
+                getRestaurantReviewsUseCase(currentRestaurantId, apiSort)
+            }.onSuccess { reviews ->
+                _uiState.update { it.copy(reviews = UiState.Success(reviews)) }
+            }.onFailure { e ->
+                _uiState.update { it.copy(reviews = UiState.Failure(UiError.Network)) }
+            }
+        }
     }
 
     fun onReviewLikeClick(evalId: Int) {
-        val currentList = _reviewUiState.value.reviewList
-        val updatedList = currentList.map { review ->
-            if (review.evalId == evalId) {
-                when (review.reactionType.uppercase()) {
-                    "LIKE" -> {
-                        review.copy(
-                            reactionType = "NONE",
-                            evalLikeCount = review.evalLikeCount - 1
-                        )
-                    }
-                    "DISLIKE" -> {
-                        review.copy(
-                            reactionType = "LIKE",
-                            evalLikeCount = review.evalLikeCount + 1,
-                            evalDislikeCount = review.evalDislikeCount - 1
-                        )
-                    }
-                    else -> {
-                        review.copy(
-                            reactionType = "LIKE",
-                            evalLikeCount = review.evalLikeCount + 1
-                        )
-                    }
-                }
-            } else {
-                review
-            }
-        }
-        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+        onReviewReactionClick(evalId, targetReaction = "LIKE")
     }
 
     fun onReviewDislikeClick(evalId: Int) {
-        val currentList = _reviewUiState.value.reviewList
-        val updatedList = currentList.map { review ->
-            if (review.evalId == evalId) {
-                when (review.reactionType.uppercase()) {
-                    "DISLIKE" -> {
-                        review.copy(
-                            reactionType = "NONE",
-                            evalDislikeCount = review.evalDislikeCount - 1
-                        )
-                    }
-                    "LIKE" -> {
-                        review.copy(
-                            reactionType = "DISLIKE",
-                            evalLikeCount = review.evalLikeCount - 1,
-                            evalDislikeCount = review.evalDislikeCount + 1
-                        )
-                    }
-                    else -> {
-                        review.copy(
-                            reactionType = "DISLIKE",
-                            evalDislikeCount = review.evalDislikeCount + 1
-                        )
-                    }
-                }
-            } else {
-                review
-            }
-        }
-        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+        onReviewReactionClick(evalId, targetReaction = "DISLIKE")
     }
 
     fun onCommentLikeClick(evalId: Int, commentId: Int) {
-        val currentList = _reviewUiState.value.reviewList
-        val updatedList = currentList.map { review ->
-            if (review.evalId == evalId) {
-                val updatedComments = review.evalCommentList.map { comment ->
-                    if (comment.commentId == commentId) {
-                        when (comment.reactionType.uppercase()) {
-                            "LIKE" -> {
-                                comment.copy(
-                                    reactionType = "NONE",
-                                    commentLikeCount = comment.commentLikeCount - 1
-                                )
-                            }
-                            "DISLIKE" -> {
-                                comment.copy(
-                                    reactionType = "LIKE",
-                                    commentLikeCount = comment.commentLikeCount + 1,
-                                    commentDislikeCount = comment.commentDislikeCount - 1
-                                )
-                            }
-                            else -> {
-                                comment.copy(
-                                    reactionType = "LIKE",
-                                    commentLikeCount = comment.commentLikeCount + 1
-                                )
-                            }
-                        }
-                    } else {
-                        comment
-                    }
-                }
-                review.copy(evalCommentList = updatedComments)
-            } else {
-                review
-            }
-        }
-        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+        onCommentReactionClick(evalId, commentId, targetReaction = "LIKE")
     }
 
     fun onCommentDislikeClick(evalId: Int, commentId: Int) {
-        val currentList = _reviewUiState.value.reviewList
-        val updatedList = currentList.map { review ->
-            if (review.evalId == evalId) {
-                val updatedComments = review.evalCommentList.map { comment ->
-                    if (comment.commentId == commentId) {
-                        when (comment.reactionType.uppercase()) {
-                            "DISLIKE" -> {
-                                comment.copy(
-                                    reactionType = "NONE",
-                                    commentDislikeCount = comment.commentDislikeCount - 1
-                                )
-                            }
-                            "LIKE" -> {
-                                comment.copy(
-                                    reactionType = "DISLIKE",
-                                    commentLikeCount = comment.commentLikeCount - 1,
-                                    commentDislikeCount = comment.commentDislikeCount + 1
-                                )
-                            }
-                            else -> {
-                                comment.copy(
-                                    reactionType = "DISLIKE",
-                                    commentDislikeCount = comment.commentDislikeCount + 1
-                                )
-                            }
-                        }
-                    } else {
-                        comment
-                    }
-                }
-                review.copy(evalCommentList = updatedComments)
-            } else {
-                review
-            }
-        }
-        _reviewUiState.value = _reviewUiState.value.copy(reviewList = updatedList)
+        onCommentReactionClick(evalId, commentId, targetReaction = "DISLIKE")
     }
 
-    fun onFavoriteClick() {
-        val current = _uiState.value.restaurant
-        val newIsFavorite = !current.isFavorite
-        val newFavoriteCount = if (newIsFavorite) {
-            current.favoriteCount + 1
-        } else {
-            current.favoriteCount - 1
+    fun onFavoriteClick() = viewModelScope.launch {
+        if (isFavoriteInFlight) return@launch
+        val currentState = _uiState.value.restaurant
+        if (currentState !is UiState.Success) return@launch
+
+        val current = currentState.data
+        isFavoriteInFlight = true
+        runCatching {
+            if (current.isFavorite) {
+                deleteRestaurantFavoriteUseCase(current.restaurantId)
+            } else {
+                putRestaurantFavoriteUseCase(current.restaurantId)
+            }
+        }.onSuccess { result ->
+            _uiState.update { state ->
+                val restaurantState = state.restaurant
+                if (restaurantState !is UiState.Success) return@update state
+
+                state.copy(
+                    restaurant = UiState.Success(
+                        restaurantState.data.copy(
+                            isFavorite = result.isFavorite,
+                            favoriteCount = result.favoriteCount
+                        )
+                    )
+                )
+            }
+        }.also {
+            isFavoriteInFlight = false
         }
-        _uiState.value = _uiState.value.copy(
-            restaurant = current.copy(
-                isFavorite = newIsFavorite,
-                favoriteCount = newFavoriteCount
-            )
+    }
+
+    private fun updateReviewList(transform: (List<RestaurantReview>) -> List<RestaurantReview>) {
+        val currentReviews = _uiState.value.reviews
+        if (currentReviews !is UiState.Success) return
+        _uiState.update { it.copy(reviews = UiState.Success(transform(currentReviews.data))) }
+    }
+
+    private fun onReviewReactionClick(evalId: Int, targetReaction: String) = viewModelScope.launch {
+        if (evalId in inFlightReviewReactions) return@launch
+        val currentReviews = _uiState.value.reviews
+        if (currentReviews !is UiState.Success) return@launch
+
+        val review = currentReviews.data.find { it.evalId == evalId } ?: return@launch
+        val newReaction = setChangeReaction(
+            currentReaction = review.reactionType,
+            targetReaction = targetReaction
         )
+
+        inFlightReviewReactions.add(evalId)
+        runCatching {
+            putEvaluationReactionUseCase(evalId, newReaction)
+        }.onSuccess { result ->
+            updateReviewList { reviews ->
+                reviews.map {
+                    if (it.evalId == evalId) {
+                        it.copy(
+                            reactionType = result.reaction,
+                            evalLikeCount = result.likeCount,
+                            evalDislikeCount = result.dislikeCount
+                        )
+                    } else it
+                }
+            }
+        }.also {
+            inFlightReviewReactions.remove(evalId)
+        }
+    }
+
+    private fun onCommentReactionClick(
+        evalId: Int,
+        commentId: Int,
+        targetReaction: String
+    ) = viewModelScope.launch {
+        if (commentId in inFlightCommentReactions) return@launch
+        val currentReviews = _uiState.value.reviews
+        if (currentReviews !is UiState.Success) return@launch
+
+        val review = currentReviews.data.find { it.evalId == evalId } ?: return@launch
+        val comment = review.evalCommentList.find { it.commentId == commentId } ?: return@launch
+        val newReaction = setChangeReaction(
+            currentReaction = comment.reactionType,
+            targetReaction = targetReaction
+        )
+
+        inFlightCommentReactions.add(commentId)
+        runCatching {
+            putCommentReactionUseCase(commentId, newReaction)
+        }.onSuccess { result ->
+            updateReviewList { reviews ->
+                reviews.map {
+                    if (it.evalId == evalId) {
+                        it.copy(
+                            evalCommentList = it.evalCommentList.map { currentComment ->
+                                if (currentComment.commentId == commentId) {
+                                    currentComment.copy(
+                                        reactionType = result.reaction,
+                                        commentLikeCount = result.likeCount,
+                                        commentDislikeCount = result.dislikeCount
+                                    )
+                                } else currentComment
+                            }
+                        )
+                    } else it
+                }
+            }
+        }.also {
+            inFlightCommentReactions.remove(commentId)
+        }
+    }
+
+    private fun setChangeReaction(currentReaction: String, targetReaction: String): String? =
+        if (currentReaction.equals(targetReaction, ignoreCase = true)) null else targetReaction
+
+    fun postComment(evalId: Int, body: String) = viewModelScope.launch {
+        if (evalId in inFlightPostComments) return@launch
+        inFlightPostComments.add(evalId)
+        runCatching {
+            postCommentUseCase(currentRestaurantId, evalId, body)
+        }.onSuccess { newComment ->
+            updateReviewList { reviews ->
+                reviews.map { review ->
+                    if (review.evalId == evalId) {
+                        review.copy(
+                            evalCommentList = review.evalCommentList + newComment
+                        )
+                    } else review
+                }
+            }
+        }.also {
+            inFlightPostComments.remove(evalId)
+        }
+    }
+
+    fun deleteComment(evalId: Int, commentId: Int) = viewModelScope.launch {
+        runCatching {
+            deleteCommentUseCase(currentRestaurantId, commentId)
+        }.onSuccess {
+            updateReviewList { reviews ->
+                reviews.map { review ->
+                    if (review.evalId == evalId) {
+                        review.copy(
+                            evalCommentList = review.evalCommentList.filter { it.commentId != commentId }
+                        )
+                    } else review
+                }
+            }
+        }
     }
 }

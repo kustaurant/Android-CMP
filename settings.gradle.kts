@@ -53,7 +53,8 @@ include(
     ":shared:data:network",
     ":shared:data:tier",
     ":shared:data:auth",
-    ":shared:data:home"
+    ":shared:data:home",
+    ":shared:data:detail"
 )
 
 include(
@@ -62,6 +63,7 @@ include(
     ":shared:domain:tier",
     ":shared:domain:auth",
     ":shared:domain:home",
+    ":shared:domain:detail"
 )
 
 include(
