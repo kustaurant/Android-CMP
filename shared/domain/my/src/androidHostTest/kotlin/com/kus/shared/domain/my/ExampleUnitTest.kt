@@ -1,4 +1,4 @@
-package com.kus.domain.my
+package com.kus.shared.domain.my
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -6,7 +6,7 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "com.kus.domain.my"
+        namespace = "com.kus.shared.domain.my"
         compileSdk = 36
         minSdk = 26
 
@@ -39,6 +39,8 @@ kotlin {
             baseName = xcfName
         }
     }
+
+    jvm("desktop")
 
     sourceSets {
         commonMain {

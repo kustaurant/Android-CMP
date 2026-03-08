@@ -1,3 +1,3 @@
-package com.kus.domain.my
+package com.kus.shared.domain.my
 
 actual fun platform() = "Android"
