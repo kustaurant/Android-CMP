@@ -118,7 +118,8 @@ fun SetNavigation() {
     val showBottomBar = shouldShowBottomBar(destination)
     val currentRoute = destination?.route
     val selectedKey = BottomTab.fromRoute(currentRoute).key
-
+  
+    val applySystemBarsPadding = !isEdgeToEdgeScreen(currentRoute)
     val isWriter =
         navBackStackEntry?.destination?.hasRoute<CommunityWrite>() == true ||
                 navBackStackEntry?.destination?.hasRoute<CommunityDetail>() == true ||
@@ -135,10 +136,7 @@ fun SetNavigation() {
                     navController = navController,
                 )
             },
-            modifier =
-                Modifier
-                    .background(KusTheme.colors.c_FFFFFF)
-                    .systemBarsPadding(),
+            modifier = if (applySystemBarsPadding) Modifier.systemBarsPadding() else Modifier, 
             contentWindowInsets = WindowInsets.systemBars,
         ) { padding ->
             Box(
@@ -172,7 +170,6 @@ fun SetNavigation() {
                 }
             }
         }
-    }
 }
 
 
@@ -200,6 +197,20 @@ private fun NavHostController.navigateToTab(key: String) {
         BottomTab.COMMUNITY.key -> navigate(Community) { tabOptions(this@navigateToTab) }
         BottomTab.MY.key -> navigate(My) { tabOptions(this@navigateToTab) }
     }
+}
+
+private fun shouldShowBottomBar(currentRoute: String?): Boolean {
+    val route = currentRoute ?: return true
+    val hiddenRoutes = listOf("Splash", "Onboarding", "Login", "Detail", "Evaluate")
+
+    return hiddenRoutes.none { route.contains(it) }
+}
+
+private fun isEdgeToEdgeScreen(currentRoute: String?): Boolean {
+    val route = currentRoute ?: return false
+    val edgeToEdgeRoutes = listOf("Detail")
+
+    return edgeToEdgeRoutes.any { route.contains(it) }
 }
 
 private fun NavOptionsBuilder.tabOptions(navController: NavHostController) {

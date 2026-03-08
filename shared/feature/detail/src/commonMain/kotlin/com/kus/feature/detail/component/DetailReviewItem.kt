@@ -26,6 +26,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
@@ -40,8 +42,8 @@ import com.kus.designsystem.component.KusReactionButton
 import com.kus.designsystem.component.ReactionType
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
-import com.kus.feature.detail.ui.DetailReview
-import com.kus.feature.detail.ui.DetailReviewComment
+import com.kus.shared.domain.model.detail.RestaurantReview
+import com.kus.shared.domain.model.detail.ReviewComment
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.feature.detail.generated.resources.Res
@@ -55,7 +57,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun DetailReviewItem(
-    review: DetailReview,
+    review: RestaurantReview,
     modifier: Modifier = Modifier,
     onReviewLikeClick: (Int) -> Unit = {},
     onReviewDislikeClick: (Int) -> Unit = {},
@@ -80,6 +82,7 @@ fun DetailReviewItem(
             reactionType = review.reactionType,
             likeCount = review.evalLikeCount,
             dislikeCount = review.evalDislikeCount,
+            imgUrl = review.evalImgUrl,
             isMine = review.isEvaluationMine,
             onLikeClick = { onReviewLikeClick(review.evalId) },
             onDislikeClick = { onReviewDislikeClick(review.evalId) },
@@ -143,6 +146,7 @@ private fun ReviewContent(
     likeCount: Int,
     dislikeCount: Int,
     isMine: Boolean,
+    imgUrl: String? = null,
     isComment: Boolean = false,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
@@ -151,10 +155,21 @@ private fun ReviewContent(
     onReportClick: () -> Unit = {},
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }
+    var isBodyExpanded by remember(body) { mutableStateOf(false) }
     val density = LocalDensity.current
+    val hasContent = body.isNotEmpty() || (imgUrl != null && imgUrl.startsWith("http"))
+    val bodyTextStyle = KusTheme.typography.type14r.copy(
+        color = KusTheme.colors.c_000000
+    )
+    val bodyMoreTextStyle = SpanStyle(
+        color = KusTheme.colors.c_000000,
+        fontFamily = KusTheme.typography.type15sb.fontFamily,
+        textDecoration = TextDecoration.Underline
+    )
 
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         ReviewAvatar(
             url = writerIconImgUrl
@@ -173,7 +188,7 @@ private fun ReviewContent(
             )
 
             Row(
-                modifier = Modifier.padding(top = if (isComment) 2.dp else 4.dp),
+                modifier = Modifier.padding(top = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (!isComment) {
@@ -194,33 +209,51 @@ private fun ReviewContent(
             }
         }
 
-        Box {
-            Image(
-                painter = painterResource(Res.drawable.ic_more),
-                modifier = Modifier.noRippleClickable { isMenuExpanded = true },
-                contentDescription = null
-            )
+        val showActionPopup = if (isComment) isMine else false
 
-            ReviewActionPopup(
-                expanded = isMenuExpanded,
-                isMine = isMine,
-                density = density,
-                onDismissRequest = { isMenuExpanded = false },
-                onDeleteClick = onDeleteClick,
-                onReportClick = onReportClick
-            )
+        if (showActionPopup) {
+            Box {
+                Image(
+                    painter = painterResource(Res.drawable.ic_more),
+                    modifier = Modifier.noRippleClickable { isMenuExpanded = true },
+                    contentDescription = null
+                )
+
+                ReviewActionPopup(
+                    expanded = isMenuExpanded,
+                    isMine = isMine,
+                    density = density,
+                    onDismissRequest = { isMenuExpanded = false },
+                    onDeleteClick = onDeleteClick,
+                    onReportClick = onReportClick
+                )
+            }
         }
     }
 
-    Text(
-        text = body,
-        modifier = Modifier.padding(top = 10.dp),
-        style = KusTheme.typography.type14r.copy(
-            color = KusTheme.colors.c_000000
+    if (imgUrl != null && imgUrl.startsWith("http")) {
+        KamelImage(
+            resource = { asyncPainterResource(imgUrl) },
+            contentDescription = "음식 카테고리 이미지",
+            modifier = Modifier.size(128.dp)
+                .clip(shape = RoundedCornerShape(10.dp))
+                .padding(top = 10.dp)
         )
-    )
+    }
 
-    if (!isComment) {
+    if (body.isNotEmpty()) {
+        ExpandableSeeMoreText(
+            text = body,
+            textStyle = bodyTextStyle,
+            moreTextStyle = bodyMoreTextStyle,
+            isExpanded = isBodyExpanded,
+            maxCollapsedLines = 4,
+            onExpandedChange = { isBodyExpanded = it },
+            modifier = Modifier.padding(top = 10.dp),
+        )
+    }
+
+    if (!isComment && hasContent) {
         KusReactionButton(
             modifier = Modifier.padding(top = 12.dp),
             likeText = likeCount.toString(),
@@ -230,7 +263,7 @@ private fun ReviewContent(
             onDislikeClick = onDislikeClick,
             onCommentClick = onCommentClick,
         )
-    } else {
+    } else if (isComment) {
         KusReactionButton(
             modifier = Modifier.padding(top = 8.dp),
             likeText = likeCount.toString(),
@@ -246,7 +279,7 @@ private fun ReviewContent(
 
 @Composable
 private fun ReviewCommentItem(
-    comment: DetailReviewComment,
+    comment: ReviewComment,
     onLikeClick: () -> Unit = {},
     onDislikeClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
@@ -327,11 +360,14 @@ private fun ReviewActionPopup(
         popupPositionProvider = positionProvider,
         properties = PopupProperties(focusable = true)
     ) {
-        val (icon, text, actionClick) = if (isMine) {
-            Triple(Res.drawable.ic_delete, "삭제하기", onDeleteClick)
-        } else {
-            Triple(Res.drawable.ic_report, "신고하기", onReportClick)
-        }
+        // 신고하기 기능 추후 예정
+//        val (icon, text, actionClick) = if (isMine) {
+//            Triple(Res.drawable.ic_delete, "삭제하기", onDeleteClick)
+//        } else {
+//            Triple(Res.drawable.ic_report, "신고하기", onReportClick)
+//        }
+
+        val (icon, text, actionClick) = Triple(Res.drawable.ic_delete, "삭제하기", onDeleteClick)
 
         Surface(
             shape = RoundedCornerShape(10.dp),

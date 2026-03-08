@@ -14,7 +14,7 @@ import com.kus.designsystem.theme.KusTheme
 
 @Composable
 fun DetailRestInfoTag(
-    situationList: ArrayList<String>,
+    situationList: List<String>,
 ) {
     LazyRow(
         contentPadding = PaddingValues(end = 4.dp)

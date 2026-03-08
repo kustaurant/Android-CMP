@@ -227,8 +227,8 @@ fun KusNavHost(
         myNavGraph(onShowMessage = onShowMessage)
 
         detailNavGraph(
+            navigateToUp = navController::popBackStack,
             navigateToEvaluate = { navController.navigate(Evaluate) },
-            onBackClick = { navController.popBackStack() }
         )
 
         evaluateNavGraph(
