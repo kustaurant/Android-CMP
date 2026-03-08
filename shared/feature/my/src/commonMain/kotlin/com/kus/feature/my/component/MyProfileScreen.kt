@@ -34,6 +34,7 @@ internal fun MyProfileScreen(
     userName: String,
     userImgUrl: String,
     modifier: Modifier = Modifier,
+    isGuest: Boolean = false,
     onEditProfileClick: () -> Unit,
     onNoticeClick: () -> Unit,
     onTermsClick: () -> Unit,
@@ -73,29 +74,44 @@ internal fun MyProfileScreen(
 
                 Spacer(Modifier.width(12.dp))
 
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                ) {
-                    Text(
-                        text = "안녕하세요,\n",
-                        style = KusTheme.typography.type14r,
-                        color = KusTheme.colors.c_666666,
-                    )
+                if (isGuest) {
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                    ) {
+                        Text(
+                            text = "로그인이 필요한 서비스입니다.",
+                            textDecoration = TextDecoration.Underline,
+                            style = KusTheme.typography.type12r,
+                            color = KusTheme.colors.c_AAAAAA,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.noRippleClickable(onEditProfileClick),
+                        )
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                    ) {
+                        Text(
+                            text = "안녕하세요,\n",
+                            style = KusTheme.typography.type14r,
+                            color = KusTheme.colors.c_666666,
+                        )
 
-                    Text(
-                        text = "$userName 님",
-                        style = KusTheme.typography.type20b,
-                        color = KusTheme.colors.c_046B40,
-                    )
+                        Text(
+                            text = "$userName 님",
+                            style = KusTheme.typography.type20b,
+                            color = KusTheme.colors.c_046B40,
+                        )
 
-                    Text(
-                        text = "프로필 편집",
-                        textDecoration = TextDecoration.Underline,
-                        style = KusTheme.typography.type12r,
-                        color = KusTheme.colors.c_AAAAAA,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.noRippleClickable(onEditProfileClick),
-                    )
+                        Text(
+                            text = "프로필 편집",
+                            textDecoration = TextDecoration.Underline,
+                            style = KusTheme.typography.type12r,
+                            color = KusTheme.colors.c_AAAAAA,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.noRippleClickable(onEditProfileClick),
+                        )
+                    }
                 }
             }
         }

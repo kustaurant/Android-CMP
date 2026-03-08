@@ -42,6 +42,7 @@ fun NavGraphBuilder.myNavGraph(
 ) {
     composable<My> {
         MyRoute(
+            onBackClick = navigateToUp,
             navigateToProfileEdit = { },
             navigateToNotice = {
                 navController.navigateToMyWebView(
