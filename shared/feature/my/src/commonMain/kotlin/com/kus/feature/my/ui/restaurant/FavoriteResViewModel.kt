@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.subscreen
+package com.kus.feature.my.ui.restaurant
 
 import UiError
 import UiState

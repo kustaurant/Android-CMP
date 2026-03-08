@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.subscreen
+package com.kus.feature.my.ui.restaurant
 
 import UiState
 import androidx.compose.foundation.background
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -18,20 +19,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.my.component.EmptyPage
-import com.kus.feature.my.component.KusFavoriteResThumbnail
 import com.kus.feature.my.component.MyPageTopBar
+import com.kus.feature.my.component.MyReviewItem
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun FavoriteRestaurantScreen(
+internal fun CheckedRestaurantScreen(
     onBackClick: () -> Unit,
     onItemClick: (Int) -> Unit,
-    viewModel: FavoriteResViewModel = koinViewModel(),
+    viewModel: CheckedResViewModel = koinViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getFavorites()
+        viewModel.getEvaluatedRes()
     }
 
     when (uiState.value.restaurants) {
@@ -48,47 +49,50 @@ internal fun FavoriteRestaurantScreen(
             val restaurants = (uiState.value.restaurants as UiState.Success).data
             if (restaurants.isEmpty()) {
                 EmptyPage(
-                    title = "저장한 맛집",
-                    comment = "저장한 맛집이 없습니다.",
-                    onBackClick = onBackClick,
-                    modifier = Modifier.fillMaxSize(),
+                    title = "내가 남긴 평가",
+                    comment = "평가 기록이 없습니다.",
+                    onBackClick = onBackClick
                 )
             } else {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(KusTheme.colors.c_F3F3F3),
+                        .background(KusTheme.colors.c_FFFFFF),
                 ) {
                     stickyHeader {
                         MyPageTopBar(
-                            title = "저장한 맛집",
+                            title = "내가 남긴 평가",
                             onBackClick = onBackClick,
                         )
                     }
 
                     item {
-                        Spacer(Modifier.height(30.dp))
+                        Spacer(Modifier.height(10.dp))
                     }
 
                     itemsIndexed(restaurants) { index, item ->
                         Box(
-                            modifier = Modifier.padding(horizontal = 20.dp)
+                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 20.dp),
                         ) {
-                            KusFavoriteResThumbnail(
-                                tier = item.mainTier,
-                                restName = item.restaurantName,
-                                restThumbnail = item.restaurantImgURL,
-                                location = item.restaurantPosition,
-                                isSaved = true,
-                                onClick = { onItemClick(item.restaurantId) },
+                            MyReviewItem(
+                                restaurantName = item.restaurantName,
+                                restaurantImgURL = item.restaurantImgURL,
+                                evaluationScore = item.evaluationScore.toFloat(),
+                                evaluationBody = item.evaluationBody,
+                                evaluationItemScores = item.evaluationItemScores,
+                                onItemClick = { onItemClick(item.restaurantId) },
                             )
                         }
+
+                        HorizontalDivider(thickness = 1.dp, color = KusTheme.colors.c_EAEAEA)
                     }
                 }
             }
         }
 
-        is UiState.Failure -> { /* 서버 연결 실패 시 화면 */ }
+        is UiState.Failure -> { /* 서버 연결 실패 시 화면 */
+        }
+
         is UiState.Idle -> {}
     }
 }
