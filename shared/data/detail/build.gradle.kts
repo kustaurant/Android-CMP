@@ -21,7 +21,7 @@ kotlin {
         }
     }
 
-    val xcfName = "shared:data:homeKit"
+    val xcfName = "shared:data:detailKit"
 
     iosX64 {
         binaries.framework {
