@@ -1,8 +1,11 @@
 package com.kus.feature.evaluate.ui
 
+import UiState
+
 data class EvaluateUiState(
     val restaurant: EvaluateRestaurant = EvaluateRestaurant.empty(),
     val evaluation: Evaluation = Evaluation.empty(),
+    val submitState: UiState<Unit> = UiState.Idle,
 )
 
 data class EvaluateRestaurant(
