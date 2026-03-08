@@ -12,7 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TierRoute(
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
-    navigateToDetail: () -> Unit,
+    navigateToDetail: (Long) -> Unit,
     resultFilter: TierFilterState?,
     consumeResult: () -> Unit,
 ) {

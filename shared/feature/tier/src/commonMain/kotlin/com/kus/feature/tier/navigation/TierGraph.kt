@@ -19,7 +19,7 @@ data object TierCategorySelect
 fun NavGraphBuilder.tierNavGraph(
     initialProvider: () -> TierFilterState,
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
-    navigateToDetail: () -> Unit,
+    navigateToDetail: (Long) -> Unit,
     popBackStackWithResult: (TierFilterState) -> Unit,
     onBackButtonClick: () -> Unit = {},
 ) {

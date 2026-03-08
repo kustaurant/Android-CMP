@@ -130,7 +130,7 @@ fun KusNavHost(
 
                 navController.navigate(TierCategorySelect)
             },
-            navigateToDetail = { navController.navigate(Detail) },
+            navigateToDetail = { restaurantId -> navController.navigate(Detail(restaurantId)) },
             popBackStackWithResult = { result ->
                 val json = KusJson.json.encodeToString(result)
                 navController.previousBackStackEntry
