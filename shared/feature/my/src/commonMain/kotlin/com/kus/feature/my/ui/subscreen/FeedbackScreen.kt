@@ -26,10 +26,13 @@ import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.my.component.MyPageTopBar
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun FeedbackScreen(
     onBackClick: () -> Unit,
+    onShowMessage: (String) -> Unit,
+    viewModel: FeedbackViewModel = koinViewModel(),
 ) {
     val focusManager = LocalFocusManager.current
     var text by remember { mutableStateOf("") }
@@ -37,53 +40,53 @@ internal fun FeedbackScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(KusTheme.colors.c_FFFFFF)
-            .padding(start = 16.dp, end=16.dp),
+            .background(KusTheme.colors.c_FFFFFF),
     ) {
         MyPageTopBar(
             title ="의견 보내기",
             onBackClick = onBackClick,
         )
 
-        Box(
-            modifier = Modifier.weight(1f)
-                .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
-                .padding(top = 10.dp)
+        Column(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
         ) {
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                textStyle = KusTheme.typography.type14r,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(3f),
-                placeholder = {
-                    Text(
-                        text = "쿠스토랑에 대한 자유로운 의견들을 입력해주세요",
-                        style = KusTheme.typography.type14r,
-                        color = KusTheme.colors.c_AAAAAA,
-                    )
-                },
-                maxLines = 8,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = KusTheme.colors.c_AAAAAA,
-                    focusedBorderColor = KusTheme.colors.c_43AB38,
-                    cursorColor = KusTheme.colors.c_666666,
-                ),
-                shape = RoundedCornerShape(8.dp),
+            Box(
+                modifier = Modifier.weight(1f)
+                    .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
+                    .padding(top = 10.dp)
+            ) {
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    textStyle = KusTheme.typography.type14r,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(3f),
+                    placeholder = {
+                        Text(
+                            text = "쿠스토랑에 대한 자유로운 의견들을 입력해주세요",
+                            style = KusTheme.typography.type14r,
+                            color = KusTheme.colors.c_AAAAAA,
+                        )
+                    },
+                    maxLines = 8,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedBorderColor = KusTheme.colors.c_AAAAAA,
+                        focusedBorderColor = KusTheme.colors.c_43AB38,
+                        cursorColor = KusTheme.colors.c_666666,
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                )
+            }
+
+            KusButton(
+                enabled = text.isNotEmpty(),
+                buttonName = "의견 보내기",
+                roundedCornerShape = RoundedCornerShape(50.dp),
+                onClick = { viewModel.postFeedback(text) },
             )
+
+            Spacer(Modifier.height(20.dp))
         }
-
-        KusButton(
-            enabled = text.isNotEmpty(),
-            buttonName = "의견 보내기",
-            roundedCornerShape = RoundedCornerShape(50.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(32.dp),
-            onClick = { }
-        )
-
-        Spacer(Modifier.height(20.dp))
     }
 }

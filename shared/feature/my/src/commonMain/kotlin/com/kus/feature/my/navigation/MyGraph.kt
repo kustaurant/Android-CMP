@@ -80,7 +80,12 @@ fun NavGraphBuilder.myNavGraph(
         )
     }
 
-    composable<Feedback> { FeedbackScreen(onBackClick = navigateToUp) }
+    composable<Feedback> {
+        FeedbackScreen(
+            onBackClick = navigateToUp,
+            onShowMessage = onShowMessage,
+        )
+    }
 
     composable<FavoriteRest> {
         FavoriteRestaurantScreen(
