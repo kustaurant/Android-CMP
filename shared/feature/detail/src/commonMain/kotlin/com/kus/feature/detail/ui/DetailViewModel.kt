@@ -40,6 +40,7 @@ class DetailViewModel(
     private var isFavoriteInFlight = false
     private val inFlightReviewReactions = mutableSetOf<Int>()
     private val inFlightCommentReactions = mutableSetOf<Int>()
+    private val inFlightPostComments = mutableSetOf<Int>()
 
     fun getRestaurantDetail(restaurantId: Long) = viewModelScope.launch {
         if (currentRestaurantId != restaurantId) {
@@ -49,6 +50,7 @@ class DetailViewModel(
             isFavoriteInFlight = false
             inFlightReviewReactions.clear()
             inFlightCommentReactions.clear()
+            inFlightPostComments.clear()
             _uiState.value = DetailUiState()
         }
         runCatching {
@@ -215,6 +217,8 @@ class DetailViewModel(
         if (currentReaction.equals(targetReaction, ignoreCase = true)) null else targetReaction
 
     fun postComment(evalId: Int, body: String) = viewModelScope.launch {
+        if (evalId in inFlightPostComments) return@launch
+        inFlightPostComments.add(evalId)
         runCatching {
             postCommentUseCase(currentRestaurantId, evalId, body)
         }.onSuccess { newComment ->
@@ -227,6 +231,8 @@ class DetailViewModel(
                     } else review
                 }
             }
+        }.also {
+            inFlightPostComments.remove(evalId)
         }
     }
 
