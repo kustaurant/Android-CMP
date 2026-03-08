@@ -75,6 +75,6 @@ class DetailApi(
         restaurantId: Long,
         evalCommentId: Int,
     ) {
-        client.delete("/api/v2/auth/restaurants/$restaurantId/comments/$evalCommentId")
+        client.delete("/api/v2/auth/restaurants/$restaurantId/comments/$evalCommentId").body<Unit>()
     }
 }
