@@ -42,7 +42,15 @@ class DetailViewModel(
     private val inFlightCommentReactions = mutableSetOf<Int>()
 
     fun getRestaurantDetail(restaurantId: Long) = viewModelScope.launch {
-        currentRestaurantId = restaurantId
+        if (currentRestaurantId != restaurantId) {
+            currentRestaurantId = restaurantId
+            fetchReviewsJob?.cancel()
+            fetchReviewsJob = null
+            isFavoriteInFlight = false
+            inFlightReviewReactions.clear()
+            inFlightCommentReactions.clear()
+            _uiState.value = DetailUiState()
+        }
         runCatching {
             getRestaurantDetailUseCase(restaurantId)
         }.onSuccess { detail ->
