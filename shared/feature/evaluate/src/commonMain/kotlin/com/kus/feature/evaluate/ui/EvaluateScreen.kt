@@ -11,13 +11,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import UiState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
@@ -35,12 +37,21 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun EvaluateScreen(
     onBackClick: () -> Unit,
-    viewModel: EvaluateViewModel = viewModel { EvaluateViewModel() },
+    viewModel: EvaluateViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val restaurant = uiState.restaurant
     val evaluation = uiState.evaluation
+    val submitState = uiState.submitState
     val isRatingSelected = evaluation.evaluationScore != 0.0
+    val isSubmitting = submitState is UiState.Loading
+
+    LaunchedEffect(submitState) {
+        if (submitState is UiState.Success) {
+            onBackClick()
+        }
+    }
+
     val submitButtonColor = if (isRatingSelected) {
         KusTheme.colors.c_43AB38
     } else {
@@ -140,15 +151,14 @@ fun EvaluateScreen(
                 .align(Alignment.BottomCenter),
         ) {
             KusButton(
-                enabled = isRatingSelected,
-                buttonName = "평가 제출하기",
+                enabled = isRatingSelected && !isSubmitting,
+                buttonName = if (isSubmitting) "제출 중..." else "평가 제출하기",
                 roundedCornerShape = RoundedCornerShape(50.dp),
                 containerColor = submitButtonColor,
                 borderColor = submitButtonColor,
                 onClick = {
-                    if (!isRatingSelected) return@KusButton
+                    if (!isRatingSelected || isSubmitting) return@KusButton
                     viewModel.submitEvaluation()
-                    onBackClick()
                 }
             )
         }
