@@ -217,8 +217,10 @@ fun KusNavHost(
                 navController.popBackStack()
             },
             onPostDeletedInDetail = { postId ->
-                navController.getBackStackEntry<Community>()
-                    .savedStateHandle[COMMUNITY_POST_DELETE_ID] = postId
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(COMMUNITY_POST_DELETE_ID, postId)
+
                 navController.popBackStack()
             },
         )

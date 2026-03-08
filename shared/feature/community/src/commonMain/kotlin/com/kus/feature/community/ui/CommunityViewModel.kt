@@ -27,7 +27,7 @@ class CommunityViewModel(
     private val getCommunityRankingListUseCase: GetCommunityRankingListUseCase,
     private val sessionEvents: SessionEventEmitter,
 ) : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(CommunityUiState())
     val uiState: StateFlow<CommunityUiState> = _uiState.asStateFlow()
 
@@ -182,7 +182,13 @@ class CommunityViewModel(
         if (currentState !is UiState.Success) return
 
         val updatedList = currentState.data.filter { it.postId != postId }
-        _uiState.update { it.copy(postListState = UiState.Success(updatedList)) }
+
+        _uiState.update {
+            it.copy(
+                postListState = UiState.Success(updatedList),
+                toastMessage = "게시글이 삭제되었어요."
+            )
+        }
     }
 
     private fun loadRanking() {

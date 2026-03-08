@@ -1,4 +1,4 @@
-package com.kus.designsystem.component
+package com.kus.designsystem.component.snackbar
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,8 +11,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.kus.designsystem.component.snackbar.KusSnackBarHost
-import com.kus.designsystem.component.snackbar.LocalSnackBarBottomPadding
 
 @Composable
 fun KusSnackBarOverlay(

@@ -1,6 +1,7 @@
 package com.kus.kustaurant
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,8 +27,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.kus.designsystem.component.KusSnackBarOverlay
 import com.kus.designsystem.component.LoginRequiredOverlay
+import com.kus.designsystem.component.snackbar.KusSnackBarOverlay
 import com.kus.designsystem.component.snackbar.LocalSnackBarBottomPadding
 import com.kus.designsystem.theme.KusTheme
 import com.kus.domain.auth.session.SessionEvent
@@ -120,7 +121,7 @@ fun SetNavigation() {
 
     val isWriter =
         navBackStackEntry?.destination?.hasRoute<CommunityWrite>() == true ||
-        navBackStackEntry?.destination?.hasRoute<CommunityDetail>() == true ||
+                navBackStackEntry?.destination?.hasRoute<CommunityDetail>() == true ||
                 navBackStackEntry?.destination?.hasRoute<CommunityWriteModify>() == true
 
     CompositionLocalProvider(
@@ -140,30 +141,35 @@ fun SetNavigation() {
                     .systemBarsPadding(),
             contentWindowInsets = WindowInsets.systemBars,
         ) { padding ->
-            KusNavHost(
-                navController = navController,
-                durationMillis = durationMillis,
-                onShowMessage = onShowMessage,
+            Box(
                 modifier = Modifier
                     .padding(padding)
-                    .fillMaxSize(),
-            )
-
-            KusSnackBarOverlay(
-                hostState = snackBarHostState
-            )
-
-            if (showRequireLoginPopup) {
-                LoginRequiredOverlay(
-                    onLoginButtonClick = {
-                        showRequireLoginPopup = false
-                        navController.navigate(Login) {
-                            popUpTo(0) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    },
-                    onDismissRequest = { showRequireLoginPopup = false },
+                    .fillMaxSize()
+            ) {
+                KusNavHost(
+                    navController = navController,
+                    durationMillis = durationMillis,
+                    onShowMessage = onShowMessage,
+                    modifier = Modifier
+                        .fillMaxSize(),
                 )
+
+                KusSnackBarOverlay(
+                    hostState = snackBarHostState
+                )
+
+                if (showRequireLoginPopup) {
+                    LoginRequiredOverlay(
+                        onLoginButtonClick = {
+                            showRequireLoginPopup = false
+                            navController.navigate(Login) {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
+                        onDismissRequest = { showRequireLoginPopup = false },
+                    )
+                }
             }
         }
     }

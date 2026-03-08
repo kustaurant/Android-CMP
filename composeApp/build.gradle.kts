@@ -85,6 +85,7 @@ kotlin {
             implementation(project(":shared:domain:auth"))
             implementation(project(":shared:domain:community"))
             implementation(project(":shared:domain:home"))
+            implementation(project(":shared:domain:model"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
