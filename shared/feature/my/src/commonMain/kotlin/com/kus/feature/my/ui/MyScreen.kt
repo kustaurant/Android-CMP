@@ -51,7 +51,7 @@ fun MyScreen(
             )
         }
 
-        is UiState.Success<*>, UiState.Idle -> {
+        is UiState.Success<*> -> {
             MySuccessScreen(
                 modifier = Modifier,
                 selectedTab = uiState.selectedTab,

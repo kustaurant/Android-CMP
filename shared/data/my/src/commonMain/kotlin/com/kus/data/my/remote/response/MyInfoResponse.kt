@@ -11,6 +11,6 @@ data class MyInfoResponse(
     val postCommentCnt: Int,
     val savedPostCnt: Int,
     val email: String,
-    val phoneNumber: String,
+    val phoneNumber: String?,
     val iconUrl: String,
 )

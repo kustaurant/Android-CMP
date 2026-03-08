@@ -1,6 +1,7 @@
 package com.kus.feature.my.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -90,6 +91,7 @@ internal fun MyProfileScreen(
                 } else {
                     Column(
                         modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Text(
                             text = "안녕하세요,\n",
