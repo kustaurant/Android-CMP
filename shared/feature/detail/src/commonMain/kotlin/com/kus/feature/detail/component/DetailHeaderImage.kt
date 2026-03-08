@@ -40,7 +40,7 @@ fun DetailHeaderImage(
             )
         } else {
             KamelImage(
-                resource = asyncPainterResource(imageUrl),
+                resource =  {asyncPainterResource(imageUrl) },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
@@ -53,17 +53,17 @@ fun DetailHeaderImage(
                     )
                 }
             )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, KusTheme.colors.c_000000)
-                        )
-                    )
-            )
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.BottomCenter)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, KusTheme.colors.c_000000)
+                    )
+                )
+        )
     }
 }
