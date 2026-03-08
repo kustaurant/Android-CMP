@@ -36,6 +36,8 @@ import com.kus.feature.search.navigation.navigateToSearch
 import com.kus.feature.search.navigation.searchNavGraph
 import com.kus.feature.splash.navigation.Splash
 import com.kus.feature.splash.navigation.splashNavGraph
+import com.kus.feature.tier.config.TierKeys.TIER_INITIAL_JSON
+import com.kus.feature.tier.config.TierKeys.TIER_RESULT_JSON
 import com.kus.feature.tier.navigation.TierCategorySelect
 import com.kus.feature.tier.navigation.tierNavGraph
 import com.kus.feature.tier.ui.TierFilterState
@@ -127,7 +129,7 @@ fun KusNavHost(
             initialProvider = {
                 val json = navController.previousBackStackEntry
                     ?.savedStateHandle
-                    ?.get<String>("tier_initial_json")
+                    ?.get<String>(TIER_INITIAL_JSON)
 
                 if (json == null) TierFilterState()
                 else KusJson.json.decodeFromString<TierFilterState>(json)
@@ -136,7 +138,7 @@ fun KusNavHost(
                 val json = KusJson.json.encodeToString(initial)
                 navController.currentBackStackEntry
                     ?.savedStateHandle
-                    ?.set("tier_initial_json", json)
+                    ?.set(TIER_INITIAL_JSON, json)
 
                 navController.navigate(TierCategorySelect)
             },
@@ -145,7 +147,7 @@ fun KusNavHost(
                 val json = KusJson.json.encodeToString(result)
                 navController.previousBackStackEntry
                     ?.savedStateHandle
-                    ?.set("tier_result_json", json)
+                    ?.set(TIER_RESULT_JSON, json)
 
                 navController.popBackStack()
             },
@@ -186,13 +188,17 @@ fun KusNavHost(
             },
             onSearchClick = {},
             onPostModifiedInDetail = { payload ->
-                val json = KusJson.json.encodeToString(CommunityPostModifyPayload.serializer(), payload)
+                val json =
+                    KusJson.json.encodeToString(CommunityPostModifyPayload.serializer(), payload)
                 navController.getBackStackEntry<Community>()
                     .savedStateHandle[COMMUNITY_POST_UPDATE_PAYLOAD] = json
             },
             onDetailBackClick = { payload ->
                 if (payload != null) {
-                    val json = KusJson.json.encodeToString(CommunityPostModifyPayload.serializer(), payload)
+                    val json = KusJson.json.encodeToString(
+                        CommunityPostModifyPayload.serializer(),
+                        payload
+                    )
                     navController.getBackStackEntry<Community>()
                         .savedStateHandle[COMMUNITY_POST_UPDATE_PAYLOAD] = json
                 }
