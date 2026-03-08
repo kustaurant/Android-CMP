@@ -1,12 +1,17 @@
 package com.kus.kustaurant.evaluate.repositoryimpl
 
 import com.kus.kustaurant.evaluate.api.EvaluateApi
+import com.kus.kustaurant.evaluate.remote.mapper.toDomain
 import com.kus.kustaurant.evaluate.remote.request.EvaluationRequest
 import com.kus.shared.domain.evaluate.repository.EvaluateRepository
+import com.kus.shared.domain.model.evaluate.PreviousEvaluation
 
 class EvaluateRepositoryImpl(
     private val api: EvaluateApi,
 ) : EvaluateRepository {
+    override suspend fun getEvaluation(restaurantId: Long): PreviousEvaluation =
+        api.getEvaluation(restaurantId).toDomain()
+
     override suspend fun postEvaluation(
         restaurantId: Long,
         evaluationScore: Double,
