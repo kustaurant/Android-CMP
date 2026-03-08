@@ -1,5 +1,6 @@
 package com.kus.feature.my.ui
 
+import UiState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import com.kus.feature.my.component.MyActivityScreen
 import com.kus.feature.my.component.MyProfileScreen
 import com.kus.feature.my.component.MyTabRow
 import com.kus.feature.my.ui.type.MyTab
+import com.kus.shared.domain.model.my.MyInfo
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -35,11 +37,61 @@ fun MyScreen(
     onMyCommentNavigate: () -> Unit,
     onScrapNavigate: () -> Unit,
 ) {
+    val viewModel: MyViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    when (uiState.userProfileState) {
+        is UiState.Idle -> {
+
+        }
+
+        is UiState.Success<*> -> {
+            MySuccessScreen(
+                modifier = modifier,
+                selectedTab = uiState.selectedTab,
+                myInfo = (uiState.userProfileState as UiState.Success<MyInfo>).data,
+                onTabSelected = viewModel::onTabSelected,
+                onProfileEditNavigate = onProfileEditNavigate,
+                onNoticeNavigate = onNoticeNavigate,
+                onTermsNavigate = onTermsNavigate,
+                onPrivacyPolicyNavigate = onPrivacyPolicyNavigate,
+                onFeedbackNavigate = onFeedbackNavigate,
+                onSavedRestNavigate = onSavedRestNavigate,
+                onCheckedRestNavigate = onCheckedRestNavigate,
+                onMyArticleNavigate = onMyArticleNavigate,
+                onMyCommentNavigate = onMyCommentNavigate,
+                onScrapNavigate = onScrapNavigate,
+            )
+        }
+
+        is UiState.Loading -> {
+
+        }
+
+        else -> {}
+    }
+}
+
+@Composable
+fun MySuccessScreen(
+    modifier: Modifier,
+    selectedTab: Int,
+    myInfo: MyInfo,
+    onTabSelected: (Int) -> Unit,
+    onProfileEditNavigate: () -> Unit,
+    onNoticeNavigate: () -> Unit,
+    onTermsNavigate: () -> Unit,
+    onPrivacyPolicyNavigate: () -> Unit,
+    onFeedbackNavigate: () -> Unit,
+    onSavedRestNavigate: () -> Unit,
+    onCheckedRestNavigate: () -> Unit,
+    onMyArticleNavigate: () -> Unit,
+    onMyCommentNavigate: () -> Unit,
+    onScrapNavigate: () -> Unit,
+) {
     val tabs = remember { MyTab.entries }
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
-    val viewModel: MyViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier.fillMaxSize().background(Color.White),
@@ -47,9 +99,9 @@ fun MyScreen(
     ) {
         MyTabRow(
             tabs = MyTab.entries,
-            selectedIndex = uiState.selectedTab,
+            selectedIndex = selectedTab,
             onTabClick = { index ->
-                viewModel.onTabSelected(index)
+                onTabSelected(index)
                 scope.launch {
                     pagerState.animateScrollToPage(index)
                 }
@@ -65,16 +117,16 @@ fun MyScreen(
                 when (tabs[page]) {
                     MyTab.PROFILE -> {
                         MyProfileScreen(
-                            userName = "쿠쿠스토랑",
-                            userImgUrl = "",
+                            userName = myInfo.nickname,
+                            userImgUrl = myInfo.iconUrl,
                             modifier = Modifier,
                             onEditProfileClick = onProfileEditNavigate,
                             onNoticeClick = onNoticeNavigate,
                             onTermsClick = onTermsNavigate,
                             onPrivacyPolicyClick = onPrivacyPolicyNavigate,
                             onFeedbackClick = onFeedbackNavigate,
-                            onLogoutClick = { },
-                            onDeleteAccountClick = { },
+                            onLogoutClick = {},
+                            onDeleteAccountClick = {},
                         )
                     }
 
@@ -93,4 +145,3 @@ fun MyScreen(
         }
     }
 }
-
