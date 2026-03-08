@@ -15,6 +15,7 @@ import com.kus.shared.domain.detail.usecase.PutCommentReactionUseCase
 import com.kus.shared.domain.detail.usecase.PutEvaluationReactionUseCase
 import com.kus.shared.domain.detail.usecase.PutRestaurantFavoriteUseCase
 import com.kus.shared.domain.model.detail.RestaurantReview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,6 +35,11 @@ class DetailViewModel(
     val uiState = _uiState.asStateFlow()
 
     private var currentRestaurantId: Long = 0L
+    private var fetchReviewsJob: Job? = null
+
+    private var isFavoriteInFlight = false
+    private val inFlightReviewReactions = mutableSetOf<Int>()
+    private val inFlightCommentReactions = mutableSetOf<Int>()
 
     fun getRestaurantDetail(restaurantId: Long) = viewModelScope.launch {
         currentRestaurantId = restaurantId
@@ -52,18 +58,21 @@ class DetailViewModel(
         getRestaurantReviews(_uiState.value.reviewSort)
     }
 
-    fun getRestaurantReviews(sort: ReviewSort) = viewModelScope.launch {
-        _uiState.update { it.copy(reviews = UiState.Loading, reviewSort = sort) }
-        val apiSort = when (sort) {
-            ReviewSort.Popular -> "POPULARITY"
-            ReviewSort.Latest -> "LATEST"
-        }
-        runCatching {
-            getRestaurantReviewsUseCase(currentRestaurantId, apiSort)
-        }.onSuccess { reviews ->
-            _uiState.update { it.copy(reviews = UiState.Success(reviews)) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(reviews = UiState.Failure(UiError.Network)) }
+    fun getRestaurantReviews(sort: ReviewSort) {
+        fetchReviewsJob?.cancel()
+        fetchReviewsJob = viewModelScope.launch {
+            _uiState.update { it.copy(reviews = UiState.Loading, reviewSort = sort) }
+            val apiSort = when (sort) {
+                ReviewSort.Popular -> "POPULARITY"
+                ReviewSort.Latest -> "LATEST"
+            }
+            runCatching {
+                getRestaurantReviewsUseCase(currentRestaurantId, apiSort)
+            }.onSuccess { reviews ->
+                _uiState.update { it.copy(reviews = UiState.Success(reviews)) }
+            }.onFailure { e ->
+                _uiState.update { it.copy(reviews = UiState.Failure(UiError.Network)) }
+            }
         }
     }
 
@@ -84,10 +93,12 @@ class DetailViewModel(
     }
 
     fun onFavoriteClick() = viewModelScope.launch {
+        if (isFavoriteInFlight) return@launch
         val currentState = _uiState.value.restaurant
         if (currentState !is UiState.Success) return@launch
 
         val current = currentState.data
+        isFavoriteInFlight = true
         runCatching {
             if (current.isFavorite) {
                 deleteRestaurantFavoriteUseCase(current.restaurantId)
@@ -108,6 +119,8 @@ class DetailViewModel(
                     )
                 )
             }
+        }.also {
+            isFavoriteInFlight = false
         }
     }
 
@@ -118,6 +131,7 @@ class DetailViewModel(
     }
 
     private fun onReviewReactionClick(evalId: Int, targetReaction: String) = viewModelScope.launch {
+        if (evalId in inFlightReviewReactions) return@launch
         val currentReviews = _uiState.value.reviews
         if (currentReviews !is UiState.Success) return@launch
 
@@ -127,6 +141,7 @@ class DetailViewModel(
             targetReaction = targetReaction
         )
 
+        inFlightReviewReactions.add(evalId)
         runCatching {
             putEvaluationReactionUseCase(evalId, newReaction)
         }.onSuccess { result ->
@@ -141,6 +156,8 @@ class DetailViewModel(
                     } else it
                 }
             }
+        }.also {
+            inFlightReviewReactions.remove(evalId)
         }
     }
 
@@ -149,6 +166,7 @@ class DetailViewModel(
         commentId: Int,
         targetReaction: String
     ) = viewModelScope.launch {
+        if (commentId in inFlightCommentReactions) return@launch
         val currentReviews = _uiState.value.reviews
         if (currentReviews !is UiState.Success) return@launch
 
@@ -159,6 +177,7 @@ class DetailViewModel(
             targetReaction = targetReaction
         )
 
+        inFlightCommentReactions.add(commentId)
         runCatching {
             putCommentReactionUseCase(commentId, newReaction)
         }.onSuccess { result ->
@@ -179,6 +198,8 @@ class DetailViewModel(
                     } else it
                 }
             }
+        }.also {
+            inFlightCommentReactions.remove(commentId)
         }
     }
 
