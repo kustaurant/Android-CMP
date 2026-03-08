@@ -65,7 +65,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailRoute(
     restaurantId: Long = 510L,
-    navigateToEvaluate: () -> Unit,
+    navigateToEvaluate: (RestaurantDetail) -> Unit,
     navigateToUp: () -> Unit,
     viewModel: DetailViewModel = koinViewModel(),
 ) {
@@ -90,7 +90,7 @@ fun DetailRoute(
                 restaurant = restaurantState.data,
                 reviewsState = uiState.reviews,
                 reviewSort = uiState.reviewSort,
-                navigateToEvaluate = navigateToEvaluate,
+                navigateToEvaluate = { navigateToEvaluate(restaurantState.data) },
                 onBackClick = navigateToUp,
                 onFavoriteClick = { viewModel.onFavoriteClick() },
                 onSortSelected = { sort -> viewModel.getRestaurantReviews(sort) },

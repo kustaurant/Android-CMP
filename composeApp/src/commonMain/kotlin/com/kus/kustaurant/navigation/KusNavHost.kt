@@ -147,7 +147,21 @@ fun KusNavHost(
 
         detailNavGraph(
             navigateToUp = navController::popBackStack,
-            navigateToEvaluate = { navController.navigate(Evaluate) },
+            navigateToEvaluate = { restaurant ->
+                navController.navigate(
+                    Evaluate(
+                        restaurantId = restaurant.restaurantId,
+                        restaurantName = restaurant.restaurantName,
+                        mainTier = restaurant.mainTier,
+                        restaurantCuisine = restaurant.restaurantCuisine,
+                        restaurantCuisineImgUrl = restaurant.restaurantCuisineImgUrl,
+                        restaurantPosition = restaurant.restaurantPosition,
+                        restaurantAddress = restaurant.restaurantAddress,
+                        situationList = restaurant.situationList,
+                        partnershipInfo = restaurant.partnershipInfo,
+                    )
+                )
+            },
         )
 
         evaluateNavGraph(
