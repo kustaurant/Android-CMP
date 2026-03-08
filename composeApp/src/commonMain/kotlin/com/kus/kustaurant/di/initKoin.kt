@@ -16,6 +16,7 @@ import com.kus.feature.tier.di.tierFeatureModule
 import com.kus.kustaurant.home.di.homeDataModule
 import com.kus.shared.data.tier.di.tierDataModule
 import com.kus.shared.domain.home.di.homeDomainModule
+import com.kus.shared.domain.my.di.myDomainModule
 import com.kus.shared.domain.tier.di.tierDomainModule
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -38,6 +39,7 @@ fun initKoin(
             authDomainModule,
             tierDomainModule,
             homeDomainModule,
+            myDomainModule,
 
             // data (repository 등 공통)
             networkModule,
