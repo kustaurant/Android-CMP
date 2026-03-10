@@ -35,11 +35,11 @@ class CommunityViewModel(
         ensureDataForCurrentTab(force = true)
     }
 
-    fun clearToast() {
+    fun clearToastMessage() {
         _uiState.update { it.copy(toastMessage = null) }
     }
 
-    suspend fun checkLoginAndEmit(): Boolean {
+    suspend fun requireLogin(): Boolean {
         if (!getSessionAvailabilityUseCase()) {
             sessionEvents.emit(SessionEvent.LoginRequired)
             return false
@@ -47,18 +47,18 @@ class CommunityViewModel(
         return true
     }
 
-    fun onTabSelected(tab: CommunityTab) {
+    fun selectTab(tab: CommunityTab) {
         _uiState.update { it.copy(selectedTab = tab) }
         ensureDataForCurrentTab()
     }
 
-    fun onPostCategoryChanged(newCategory: PostCategory) {
+    fun changePostCategory(newCategory: PostCategory) {
         if (_uiState.value.postCategory == newCategory) return
         _uiState.update { it.copy(postCategory = newCategory) }
         fetchFirstPosts()
     }
 
-    fun onOrderChanged(newOrder: ListSortType) {
+    fun changeListSortOrder(newOrder: ListSortType) {
         if (_uiState.value.listSortType == newOrder) return
         _uiState.update { it.copy(listSortType = newOrder) }
 
@@ -69,20 +69,20 @@ class CommunityViewModel(
         }
     }
 
-    fun onRankingSortTypeChanged(newSort: RankingSortType) {
+    fun changeRankingSortType(newSort: RankingSortType) {
         if (_uiState.value.rankingSortType == newSort) return
         _uiState.update { it.copy(rankingSortType = newSort) }
         loadRanking()
     }
 
-    fun fetchNextPosts() {
+    fun loadNextPosts() {
         val s = _uiState.value.postPageState
         if (s.phase != CommunityPhase.Idle || s.isLastPage) return
 
         _uiState.update {
             it.copy(postPageState = s.copy(phase = CommunityPhase.Paging))
         }
-        loadPostList(requestedPage = s.page + 1)
+        loadPosts(requestedPage = s.page + 1)
     }
 
     fun fetchFirstPosts() {
@@ -96,7 +96,7 @@ class CommunityViewModel(
                 )
             )
         }
-        loadPostList(requestedPage = 0)
+        loadPosts(requestedPage = 0)
     }
 
     private fun ensureDataForCurrentTab(force: Boolean = false) {
@@ -113,7 +113,7 @@ class CommunityViewModel(
         }
     }
 
-    private fun loadPostList(requestedPage: Int) {
+    private fun loadPosts(requestedPage: Int) {
         val snapshot = _uiState.value
         val page = snapshot.postPageState
         if (page.phase != CommunityPhase.Refreshing && page.phase != CommunityPhase.Paging) return

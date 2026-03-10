@@ -72,7 +72,7 @@ fun CommunityScreen(
     LaunchedEffect(uiState.toastMessage) {
         uiState.toastMessage?.let {
             onShowMessage(it)
-            viewModel.clearToast()
+            viewModel.clearToastMessage()
         }
     }
 
@@ -105,7 +105,7 @@ fun CommunityScreen(
                 CommunityTabs(
                     selectedIndex = selectedIndex,
                     onSelect = { index ->
-                        viewModel.onTabSelected(CommunityTab.entries[index])
+                        viewModel.selectTab(CommunityTab.entries[index])
                     }
                 )
             }
@@ -128,7 +128,7 @@ fun CommunityScreen(
             ) {
                 WriteFab(onClick = {
                     scope.launch {
-                        if (viewModel.checkLoginAndEmit()) {
+                        if (viewModel.requireLogin()) {
                             onWriteClick()
                         }
                     }
@@ -147,16 +147,16 @@ fun CommunityScreen(
                     boardExpanded = boardExpanded,
                     onBoardExpandedChange = { boardExpanded = it },
                     onPostClick = onPostClick,
-                    onBoardSelect = viewModel::onPostCategoryChanged,
-                    onSortChange = viewModel::onOrderChanged,
-                    onLoadNext = viewModel::fetchNextPosts,
+                    onBoardSelect = viewModel::changePostCategory,
+                    onSortChange = viewModel::changeListSortOrder,
+                    onLoadNext = viewModel::loadNextPosts,
                     onRefresh = viewModel::fetchFirstPosts,
                     modifier = Modifier.nestedScroll(fabScrollConnection)
                 )
 
                 CommunityTab.RANKING -> RankingContent(
                     uiState = uiState,
-                    onSortChange = viewModel::onRankingSortTypeChanged,
+                    onSortChange = viewModel::changeRankingSortType,
                 )
             }
         }
