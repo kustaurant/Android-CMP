@@ -55,6 +55,8 @@ fun KusButton(
     isShadowVisible: Boolean = false,
     onClick: () -> Unit,
 ) {
+    val resolvedBorderColor = if (enabled) borderColor else KusTheme.colors.c_E0E0E0
+
     Box(
         modifier = modifier
     ) {
@@ -81,7 +83,7 @@ fun KusButton(
                 disabledContainerColor = KusTheme.colors.c_E0E0E0,
                 disabledContentColor = KusTheme.colors.c_AAAAAA,
             ),
-            border = BorderStroke(1.dp, borderColor),
+            border = BorderStroke(1.dp, resolvedBorderColor),
             contentPadding = contentPadding,
         ) {
             Row(
