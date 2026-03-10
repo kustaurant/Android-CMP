@@ -2,9 +2,9 @@ package com.kus.shared.data.tier.repository
 
 import com.kus.shared.data.tier.api.TierApi
 import com.kus.shared.data.tier.mapper.toCuisineQuery
+import com.kus.shared.data.tier.mapper.toDomain
 import com.kus.shared.data.tier.mapper.toLocationQuery
 import com.kus.shared.data.tier.mapper.toSituationQuery
-import com.kus.shared.data.tier.remote.mapper.toDomain
 import com.kus.shared.domain.model.tier.TierMapData
 import com.kus.shared.domain.model.tier.TierRestaurant
 import com.kus.shared.domain.model.tier.filter.Cuisine

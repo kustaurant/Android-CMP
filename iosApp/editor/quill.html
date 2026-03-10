@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="quill.snow.css">
+    <script src="quill.min.js"></script>
+    <script src="purify.min.js"></script>
+
+    <style>
+        html, body {
+          height: 100%;
+          margin: 0;
+          background: #ffffff;
+        }
+
+        body {
+          display: flex;
+          flex-direction: column;
+        }
+ 
+        #editor-container {
+          flex: 1;
+          min-height: 0;
+          background-color: #ffffff;
+          padding: 0;
+          box-sizing: border-box;
+        }
+ 
+        .ql-container.ql-snow { border: none; }
+        .ql-toolbar.ql-snow { display: none; }
+ 
+        #editor-container .ql-container {
+          height: 100%;
+          min-height: 0;
+          border: none;
+          box-sizing: border-box;
+        }
+
+        #editor-container .ql-editor {
+          height: 100%;
+          min-height: 100%;
+          left: 16px;
+          right: 16px;
+          box-sizing: border-box;
+          overflow-y: auto;
+
+          font-size: 14px;
+          line-height: 1.6;
+          color: #222;
+          word-break: break-word;
+          white-space: pre-wrap;
+        }
+
+        #editor-container .ql-editor.ql-blank::before {
+          left: 12px;
+          right: 12px;
+          margin: 0;
+          color: #888;
+          font-style: italic;
+        }
+
+        #editor-container .ql-editor img {
+          max-width: 100%;
+          height: auto;
+          display: block;
+          margin: 8px 0;
+        }
+ 
+        #editor-container .ql-editor pre {
+          padding: 10px;
+          border-radius: 8px;
+          background: rgba(0, 0, 0, 0.06);
+          overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+<div id="editor-container"></div>
+
+<script>
+    const PLACEHOLDER =
+      "내용을 입력해주세요. 커뮤니티 이용 규칙에 의해 부적절한 게시물은 숨김, 삭제 처리될 수 있습니다.";
+
+    const PURIFY_CONFIG = {
+      ALLOWED_TAGS: [
+        "b","strong","i","em","u",
+        "p","br","div","span",
+        "ul","ol","li",
+        "blockquote",
+        "pre","code",
+        "h1","h2","h3","h4","h5","h6",
+        "a","img"
+      ],
+      ALLOWED_ATTR: [
+        "href","src","alt","title","target","rel",
+        "class","style"
+      ],
+      ALLOW_DATA_ATTR: false,
+    };
+
+    function sanitizeHtml(html) {
+      if (!html) return "";
+      if (window.DOMPurify) {
+        return window.DOMPurify.sanitize(html, PURIFY_CONFIG);
+      }
+      return "";
+    }
+
+    function normalizeLinks(container) {
+      const links = container.querySelectorAll("a");
+      links.forEach(a => {
+        const href = (a.getAttribute("href") || "").trim();
+ 
+        if (/^javascript:/i.test(href) || /^data:/i.test(href)) {
+          a.removeAttribute("href");
+        }
+ 
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener noreferrer");
+      });
+    }
+
+    function postHtmlChanged(html) {
+      try {
+        if (window.AndroidBridge && typeof window.AndroidBridge.onHtmlChanged === "function") {
+          window.AndroidBridge.onHtmlChanged(html);
+        }
+      } catch (e) {}
+ 
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.htmlChanged) {
+          window.webkit.messageHandlers.htmlChanged.postMessage(html);
+        }
+      } catch (e) {}
+    }
+
+    function notifyHtmlChanged() {
+      const raw = quill.root.innerHTML;
+      const clean = sanitizeHtml(raw);
+ 
+      const tmp = document.createElement("div");
+      tmp.innerHTML = clean;
+      normalizeLinks(tmp);
+
+      const finalHtml = tmp.innerHTML;
+      postHtmlChanged(finalHtml);
+    }
+
+    const quill = new Quill("#editor-container", {
+      theme: "snow",
+      placeholder: PLACEHOLDER,
+      modules: {
+        toolbar: false,
+        history: { delay: 1000, maxStack: 100, userOnly: true }
+      }
+    });
+ 
+    quill.on("text-change", function() {
+      notifyHtmlChanged();
+    });
+
+    window.EditorApi = {
+        setHtml: function(content) {
+            const clean = sanitizeHtml(content || "");
+            const tmp = document.createElement("div");
+            tmp.innerHTML = clean;
+            normalizeLinks(tmp);
+
+            quill.clipboard.dangerouslyPasteHTML(tmp.innerHTML);
+             
+            const length = quill.getLength();
+            quill.setSelection(length, 0, "silent");
+            quill.blur();
+            
+            notifyHtmlChanged();
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
+                    try {
+                        window.AndroidBridge?.onEditorReady?.();
+                    } catch(e) {}
+                });
+            });
+        },
+
+      getHtml: function() {
+        const raw = quill.root.innerHTML;
+        return sanitizeHtml(raw);
+      },
+
+      toggleBold: function() {
+        const range = quill.getSelection();
+        if (!range) return;
+
+        const fmt = quill.getFormat(range);
+        quill.format("bold", !fmt.bold, "user");
+        notifyHtmlChanged();
+      },
+
+      undo: function() {
+        quill.history.undo();
+        notifyHtmlChanged();
+      },
+
+      redo: function() {
+        quill.history.redo();
+        notifyHtmlChanged();
+      },
+
+      insertImage: function(url) {
+        const u = (url || "").trim();
+        if (!u) return;
+
+        const range = quill.getSelection(true);
+        const index = range ? range.index : quill.getLength();
+
+        quill.insertEmbed(index, "image", u, "user"); 
+        quill.setSelection(index + 1, 0, "user");
+        notifyHtmlChanged();
+      },
+
+      clear: function() {
+        quill.setText("", "user");
+        notifyHtmlChanged();
+      }
+    };
+    
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            window.webkit?.messageHandlers?.editorReady?.postMessage("ready");
+            try { window.AndroidBridge?.onEditorReady?.(); } catch(e) {}
+        });
+    });
+</script>
+</body>
+</html>

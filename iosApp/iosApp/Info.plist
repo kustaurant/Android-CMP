@@ -4,13 +4,17 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
-	<key>NMFClientId</key>
-	<string>$(NAVER_MAP_CLIENT_ID)</string>
 	<key>NAVER_LOGIN_CLIENT_ID</key>
 	<string>$(NAVER_LOGIN_CLIENT_ID)</string>
 	<key>NAVER_LOGIN_CLIENT_SECRET</key>
 	<string>$(NAVER_LOGIN_CLIENT_SECRET)</string>
 	<key>NAVER_LOGIN_URL_SCHEMA</key>
 	<string>$(NAVER_LOGIN_URL_SCHEMA)</string>
+	<key>NMFClientId</key>
+	<string>$(NAVER_MAP_CLIENT_ID)</string>
+	<key>PRODUCT_NAME</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleDisplayName</key>
+	<string>${CFBundleDisplayName}</string>
 </dict>
 </plist>

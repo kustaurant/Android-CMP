@@ -1,5 +1,6 @@
 package com.kus.data.auth.di
 
+import com.kus.data.auth.DeviceIdManagerImpl
 import com.kus.data.auth.TokenManagerImpl
 import com.kus.data.auth.api.AuthApi
 import com.kus.data.auth.api.AuthRefreshApi
@@ -8,6 +9,7 @@ import com.kus.data.auth.repository.AuthTokenStoreImpl
 import com.kus.data.network.auth.TokenManager
 import com.kus.domain.auth.repository.AuthRepository
 import com.kus.domain.auth.repository.AuthTokenStore
+import com.kus.domain.auth.repository.DeviceIdManager
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -31,4 +33,5 @@ val authDataModule = module {
     singleOf(::AuthRepositoryImpl) bind AuthRepository::class
     singleOf(::AuthTokenStoreImpl) bind AuthTokenStore::class
     singleOf(::TokenManagerImpl) bind TokenManager::class
+    singleOf(::DeviceIdManagerImpl) bind DeviceIdManager::class
 }
