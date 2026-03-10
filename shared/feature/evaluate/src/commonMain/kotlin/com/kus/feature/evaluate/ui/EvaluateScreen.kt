@@ -4,6 +4,7 @@ import UiState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
-import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.evaluate.component.EvaluationImage
 import com.kus.feature.evaluate.component.EvaluationKeyword
 import com.kus.feature.evaluate.component.EvaluationRestInfoCard
@@ -56,43 +56,106 @@ fun EvaluateRoute(
         }
     }
 
-    when (val evaluationState = uiState.evaluation) {
-        is UiState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize()
-                    .background(color = KusTheme.colors.c_FFFFFF),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = KusTheme.colors.c_FFFFFF)
+    ) {
+        EvaluateTopBar(onBackClick = onBackClick)
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            when (val evaluationState = uiState.evaluation) {
+                is UiState.Loading, UiState.Idle -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                    }
+                }
+
+                is UiState.Success -> {
+                    EvaluateSuccessScreen(
+                        restaurant = uiState.restaurant,
+                        evaluation = evaluationState.data,
+                        submitState = uiState.submitState,
+                        onScoreChanged = { viewModel.updateEvaluationScore(it) },
+                        onSituationsChanged = { viewModel.updateEvaluationSituations(it) },
+                        onCommentChanged = { viewModel.updateEvaluationComment(it) },
+                        onImageSelected = { viewModel.updateImageBytes(it) },
+                        onSubmitClick = { viewModel.submitEvaluation() },
+                    )
+                }
+
+                is UiState.Failure -> {
+                    EvaluateFailureScreen(
+                        onRetryClick = { viewModel.getPreviousEvaluation(restaurantId) }
+                    )
+                }
             }
         }
+    }
+}
 
-        is UiState.Success -> {
-            EvaluateSuccessScreen(
-                restaurant = uiState.restaurant,
-                evaluation = evaluationState.data,
-                submitState = uiState.submitState,
-                onBackClick = onBackClick,
-                onScoreChanged = { viewModel.updateEvaluationScore(it) },
-                onSituationsChanged = { viewModel.updateEvaluationSituations(it) },
-                onCommentChanged = { viewModel.updateEvaluationComment(it) },
-                onImageSelected = { viewModel.updateImageBytes(it) },
-                onSubmitClick = { viewModel.submitEvaluation() },
+@Composable
+private fun EvaluateTopBar(onBackClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        KusTopBar(
+            leftIcon = painterResource(Res.drawable.ic_arrow_back),
+            onLeftClicked = onBackClick,
+            leftIconModifier = Modifier.padding(all = 5.dp),
+            iconTint = KusTheme.colors.c_000000,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(KusTheme.colors.c_FFFFFF),
+            content = {
+                Text(
+                    text = "평가하기",
+                    style = KusTheme.typography.type17sb
+                )
+            }
+        )
+
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = KusTheme.colors.c_EAEAEA
+        )
+    }
+}
+
+@Composable
+private fun EvaluateFailureScreen(onRetryClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = "서버 연결이 불안정합니다. 다시 시도해주세요.",
+            style = KusTheme.typography.type16sb,
+            color = KusTheme.colors.c_666666,
+        )
+
+        Box(
+            modifier = Modifier
+                .padding(top = 16.dp)
+        ) {
+            KusButton(
+                enabled = true,
+                buttonName = "다시 시도",
+                roundedCornerShape = RoundedCornerShape(50.dp),
+                onClick = onRetryClick,
             )
         }
-
-        is UiState.Failure -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = KusTheme.colors.c_FFFFFF),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = "서버 연결이 불안정합니다. 다시 시도해주세요.")
-            }
-        }
-
-        is UiState.Idle -> {}
     }
 }
 
@@ -101,7 +164,6 @@ private fun EvaluateSuccessScreen(
     restaurant: EvaluateRestaurant,
     evaluation: Evaluation,
     submitState: UiState<Unit>,
-    onBackClick: () -> Unit,
     onScoreChanged: (Double) -> Unit,
     onSituationsChanged: (List<Int>) -> Unit,
     onCommentChanged: (String) -> Unit,
@@ -156,38 +218,10 @@ private fun EvaluateSuccessScreen(
             item {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
+                    .fillMaxWidth()
                         .height(72.dp)
                 )
             }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-        ) {
-            KusTopBar(
-                leftIcon = painterResource(Res.drawable.ic_arrow_back),
-                leftIconModifier = Modifier
-                    .noRippleClickable { onBackClick() }
-                    .padding(all = 5.dp),
-                iconTint = KusTheme.colors.c_000000,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(KusTheme.colors.c_FFFFFF),
-                content = {
-                    Text(
-                        text = "평가하기",
-                        style = KusTheme.typography.type17sb
-                    )
-                }
-            )
-
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = KusTheme.colors.c_EAEAEA
-            )
         }
 
         Box(
