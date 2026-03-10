@@ -1,6 +1,7 @@
 package com.kus.designsystem.navigation
 
 import BottomBarItem
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.C_43AB38
 import com.kus.designsystem.theme.C_AAAAAA
 import com.kus.designsystem.theme.C_EAEAEA
+import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 
 @Composable
@@ -33,7 +35,7 @@ fun BottomBar(
     selectedTint: Color = C_43AB38,
     labelUnselected: Color = C_AAAAAA,
 ) {
-    Column(modifier) {
+    Column(modifier.background(KusTheme.colors.c_FFFFFF)) {
         Surface(color = C_EAEAEA) {
             Row(
                 modifier = Modifier

@@ -31,6 +31,7 @@ import com.kus.feature.home.component.HomeRestaurants
 import com.kus.feature.home.component.KusSearchBoxWithNoAction
 import com.kus.feature.home.model.Category
 import com.kus.shared.domain.model.restaurant.RestaurantItem
+import com.kus.shared.domain.model.tier.filter.Cuisine
 import kustaurant.shared.feature.home.generated.resources.Res
 import kustaurant.shared.feature.home.generated.resources.ic_alarm
 import kustaurant.shared.feature.home.generated.resources.img_home_logo
@@ -42,7 +43,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeRoute(
     onSearchNavigate: () -> Unit,
     onAlertNavigate: () -> Unit,
-    onTierNavigate: (String) -> Unit,
+    onTierNavigate: (Cuisine) -> Unit,
     onRestaurantDetailNavigate: (Long) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
@@ -70,7 +71,7 @@ fun HomeRoute(
                 banners = data.photoUrls,
                 onSearchBoxClick = onSearchNavigate,
                 onAlertButtonClick = onAlertNavigate,
-                onCategoryClick = onTierNavigate,
+                onCategoryClick = { category -> onTierNavigate(category) },
                 onRestaurantClick = onRestaurantDetailNavigate,
             )
         }
@@ -87,7 +88,7 @@ private fun HomeSuccessScreen(
     banners: List<String>,
     onSearchBoxClick: () -> Unit,
     onAlertButtonClick: () -> Unit,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (Cuisine) -> Unit,
     onRestaurantClick: (Long) -> Unit,
 ) {
     val paddedModifier = Modifier.padding(horizontal = 20.dp)
@@ -142,7 +143,7 @@ private fun HomeSuccessScreen(
                             categoryName = category.title,
                             categoryImage = painterResource(category.image),
                             modifier = Modifier.weight(1f),
-                            onClick = { onCategoryClick(category.id) },
+                            onClick = { onCategoryClick(category.cuisine) },
                         )
                     }
                 }

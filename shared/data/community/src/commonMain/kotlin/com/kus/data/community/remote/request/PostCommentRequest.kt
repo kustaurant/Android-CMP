@@ -1,0 +1,13 @@
+package com.kus.data.community.remote.request
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class PostCommentRequest(
+    val content : String,
+    val parentCommentId : Long?,
+) {
+    init{
+        require(content.length in 1..1000) { "Content must be between 1 and 1000 characters." }
+    }
+}

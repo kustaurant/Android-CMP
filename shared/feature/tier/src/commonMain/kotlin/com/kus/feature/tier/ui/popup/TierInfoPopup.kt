@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.kus.designsystem.theme.KusTheme
-import kustaurant.shared.feature.tier.generated.resources.Res
-import kustaurant.shared.feature.tier.generated.resources.ic_crown
+import kustaurant.shared.core.designsystem.generated.resources.ic_crown
+import kustaurant.shared.core.designsystem.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

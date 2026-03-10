@@ -1,5 +1,6 @@
 package com.kus.kustaurant
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -13,13 +14,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(
             statusBarStyle =
                 SystemBarStyle.light(
-                    android.graphics.Color.WHITE,
-                    android.graphics.Color.WHITE,
+                    Color.WHITE,
+                    Color.WHITE,
                 ),
             navigationBarStyle =
                 SystemBarStyle.light(
-                    android.graphics.Color.WHITE,
-                    android.graphics.Color.WHITE,
+                    Color.WHITE,
+                    Color.WHITE,
                 ),
         )
         super.onCreate(savedInstanceState)

@@ -95,7 +95,6 @@ fun TierMapAndroidScreen(
                 mapInstance.isLoaded = true
             }
 
-            // ✅ 카메라 Idle일 때만 줌 기반 마커/오버레이 갱신
             map.addOnCameraIdleListener {
                 val pos = map.cameraPosition
                 currentZoom = pos.zoom.toInt()
@@ -152,9 +151,7 @@ fun TierMapAndroidScreen(
             outlineColor = outlineColorInt,
         )
 
-        // bounds 변경시에만 카메라 이동
         if (isBoundsChanged) {
-            // 2. 새로운 영역으로 이동하기 전에 holder 값 업데이트
             mapInstance.lastBounds = data.visibleBounds
             isMapReadyToShow = false
 
@@ -244,17 +241,13 @@ private fun moveCameraToBoundsAndClampZoomOnce(
         LatLng(visibleBounds[3], visibleBounds[1])
     )
 
-    // 1) bounds 맞추기
     map.moveCamera(CameraUpdate.fitBounds(bounds, paddingPx))
 
-    // 2) 결과 줌이 minZoom보다 작으면 즉시 보정 (Idle 기다리지 않고 바로)
     val z = map.cameraPosition.zoom
     if (z < minZoom) {
         map.moveCamera(CameraUpdate.scrollAndZoomTo(bounds.center, minZoom))
     }
 }
-
-
 
 private fun updateMap(
     map: NaverMap,
@@ -377,14 +370,17 @@ private fun createRestaurantMarker(
 private fun getMarkerIcon(restaurant: TierRestaurant): OverlayImage {
     return if (restaurant.isFavorite) {
         OverlayImage.fromResource(R.drawable.ic_saved)
-    } else {
+    } else if(restaurant.partnershipInfo.isNotEmpty()) {
+        OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_marker_partnership)
+    } else
+     {
         if(restaurant.isTempTier) {
             when (restaurant.mainTier) {
                 1 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_1)
                 2 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_2)
                 3 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_3)
                 4 -> OverlayImage.fromResource(R.drawable.ic_temp_tier_4)
-                else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_map_marker)
+                else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_marker_none)
             }
         } else {
             when (restaurant.mainTier) {
@@ -392,7 +388,7 @@ private fun getMarkerIcon(restaurant: TierRestaurant): OverlayImage {
                 2 -> OverlayImage.fromResource(R.drawable.ic_tier_2)
                 3 -> OverlayImage.fromResource(R.drawable.ic_tier_3)
                 4 -> OverlayImage.fromResource(R.drawable.ic_tier_4)
-                else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_map_marker)
+                else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_marker_none)
             }
         }
     }

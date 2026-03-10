@@ -47,7 +47,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
-
+                implementation(libs.multiplatform.settings)
                 implementation(libs.bundles.ktor)
 
                 implementation(project(":shared:domain:auth"))

@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -8,26 +9,9 @@ plugins {
 
 kotlin {
     androidTarget()
-
-    val xcfName = "shared:feature:communityKit"
-
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
-
-    iosArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
-
-    iosSimulatorArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     jvm("desktop")
 
@@ -50,9 +34,21 @@ kotlin {
                 implementation(libs.lifecycle.viewmodel)
 
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kamel.image.default)
+
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.compose.ui.backhandler)
+
 
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:core:presentation"))
+                implementation(project(":shared:core:logging"))
+                implementation(project(":shared:core:serialization"))
+
+                implementation(project(":shared:domain:model"))
+                implementation(project(":shared:domain:community"))
+                implementation(project(":shared:domain:auth"))
+
                 implementation(project(":shared:data:network"))
             }
         }
@@ -66,14 +62,15 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(compose.preview)
+                implementation(libs.naver.maps)
                 implementation(libs.androidx.activity.compose)
-
                 implementation(libs.koin.android)
             }
         }
 
         iosMain {
             dependencies {
+                implementation(project(":shared:core:designSystem"))
             }
         }
     }
