@@ -59,7 +59,8 @@ fun EvaluateRoute(
     when (val evaluationState = uiState.evaluation) {
         is UiState.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
+                    .background(color = KusTheme.colors.c_FFFFFF),
                 contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
