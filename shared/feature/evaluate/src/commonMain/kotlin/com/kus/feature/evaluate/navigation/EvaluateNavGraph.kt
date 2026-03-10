@@ -28,7 +28,7 @@ fun NavGraphBuilder.evaluateNavGraph(
         EvaluateRoute(
             restaurantId = evaluate.restaurantId,
             restaurant = EvaluateRestaurant(
-                restaurantId = evaluate.restaurantId.toInt(),
+                restaurantId = evaluate.restaurantId,
                 restaurantName = evaluate.restaurantName,
                 mainTier = evaluate.mainTier,
                 restaurantCuisine = evaluate.restaurantCuisine,

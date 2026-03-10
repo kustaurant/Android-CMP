@@ -1,7 +1,7 @@
 package com.kus.feature.evaluate.model
 
 data class EvaluateRestaurant(
-    val restaurantId: Int,
+    val restaurantId: Long,
     val restaurantName: String,
     val mainTier: Int,
     val restaurantCuisine: String,
