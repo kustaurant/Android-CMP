@@ -21,6 +21,7 @@ import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.CommunityWriteModify
 import com.kus.feature.community.navigation.communityNavGraph
 import com.kus.feature.detail.navigation.Detail
+import com.kus.feature.detail.config.DetailKeys.DETAIL_EVALUATE_REFRESH
 import com.kus.feature.detail.navigation.detailNavGraph
 import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.evaluate.navigation.Evaluate
@@ -246,7 +247,14 @@ fun KusNavHost(
         )
 
         evaluateNavGraph(
-            onBackClick = { navController.popBackStack() }
+            onBackClick = { navController.popBackStack() },
+            onSubmitSuccess = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(DETAIL_EVALUATE_REFRESH, true)
+
+                navController.popBackStack()
+            }
         )
 
         searchNavGraph(

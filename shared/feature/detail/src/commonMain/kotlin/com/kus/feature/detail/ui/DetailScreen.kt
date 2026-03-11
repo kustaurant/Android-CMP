@@ -67,12 +67,20 @@ fun DetailRoute(
     restaurantId: Long = 510L,
     navigateToEvaluate: (RestaurantDetail) -> Unit,
     navigateToUp: () -> Unit,
+    shouldRefreshFromEvaluate: Boolean = false,
+    clearEvaluateRefreshFlag: () -> Unit = {},
     viewModel: DetailViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(restaurantId) {
         viewModel.getRestaurantDetail(restaurantId)
+    }
+
+    LaunchedEffect(shouldRefreshFromEvaluate) {
+        if (!shouldRefreshFromEvaluate) return@LaunchedEffect
+        viewModel.refreshAfterEvaluation()
+        clearEvaluateRefreshFlag()
     }
 
     when (val restaurantState = uiState.restaurant) {

@@ -41,6 +41,7 @@ fun EvaluateRoute(
     restaurantId: Long,
     restaurant: EvaluateRestaurant,
     onBackClick: () -> Unit,
+    onSubmitSuccess: () -> Unit,
     viewModel: EvaluateViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -52,7 +53,7 @@ fun EvaluateRoute(
 
     LaunchedEffect(uiState.submitState) {
         if (uiState.submitState is UiState.Success) {
-            onBackClick()
+            onSubmitSuccess()
         }
     }
 

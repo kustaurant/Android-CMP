@@ -22,6 +22,7 @@ data class Evaluate(
 
 fun NavGraphBuilder.evaluateNavGraph(
     onBackClick: () -> Unit,
+    onSubmitSuccess: () -> Unit,
 ) {
     composable<Evaluate> { backStackEntry ->
         val evaluate = backStackEntry.toRoute<Evaluate>()
@@ -39,6 +40,7 @@ fun NavGraphBuilder.evaluateNavGraph(
                 partnershipInfo = evaluate.partnershipInfo,
             ),
             onBackClick = onBackClick,
+            onSubmitSuccess = onSubmitSuccess,
         )
     }
 }
