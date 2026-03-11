@@ -1,6 +1,5 @@
 package com.kus.kustaurant
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -118,7 +117,7 @@ fun SetNavigation() {
     val showBottomBar = shouldShowBottomBar(destination)
     val currentRoute = destination?.route
     val selectedKey = BottomTab.fromRoute(currentRoute).key
-  
+
     val applySystemBarsPadding = !isEdgeToEdgeScreen(currentRoute)
     val isWriter =
         navBackStackEntry?.destination?.hasRoute<CommunityWrite>() == true ||
@@ -136,7 +135,7 @@ fun SetNavigation() {
                     navController = navController,
                 )
             },
-            modifier = if (applySystemBarsPadding) Modifier.systemBarsPadding() else Modifier, 
+            modifier = if (applySystemBarsPadding) Modifier.systemBarsPadding() else Modifier,
             contentWindowInsets = WindowInsets.systemBars,
         ) { padding ->
             Box(
@@ -170,6 +169,7 @@ fun SetNavigation() {
                 }
             }
         }
+    }
 }
 
 

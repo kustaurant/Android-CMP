@@ -86,6 +86,15 @@ class DetailViewModel(
         }
     }
 
+    fun refreshAfterEvaluation() {
+        if (currentRestaurantId == 0L) return
+        getRestaurantDetail(currentRestaurantId)
+
+        if (_uiState.value.reviews !is UiState.Idle) {
+            getRestaurantReviews(_uiState.value.reviewSort)
+        }
+    }
+
     fun onReviewLikeClick(evalId: Int) {
         onReviewReactionClick(evalId, targetReaction = "LIKE")
     }
