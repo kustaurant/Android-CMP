@@ -1,6 +1,7 @@
 package com.kus.feature.my.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,7 +62,8 @@ internal fun MyProfileScreen(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(80.dp)
-                        .clip(RoundedCornerShape(50.dp)),
+                        .clip(RoundedCornerShape(50.dp))
+                        .border(1.dp, KusTheme.colors.c_AAAAAA, RoundedCornerShape(50.dp)),
                     onFailure = {
                         Box(
                             modifier = Modifier

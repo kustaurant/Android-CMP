@@ -4,17 +4,25 @@ import UiState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kus.designsystem.component.KusBasicDialog
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.my.component.MyActivityScreen
@@ -71,6 +79,12 @@ fun MyScreen(
                 onMyArticleNavigate = onMyArticleNavigate,
                 onMyCommentNavigate = onMyCommentNavigate,
                 onScrapNavigate = onScrapNavigate,
+                onLogoutClick = {
+                    viewModel.logout()
+                },
+                onDeleteAccountClick = {
+                  viewModel.deleteAccount()
+                },
             )
         }
 
@@ -98,10 +112,14 @@ private fun MySuccessScreen(
     onMyArticleNavigate: () -> Unit,
     onMyCommentNavigate: () -> Unit,
     onScrapNavigate: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
 ) {
     val tabs = remember { MyTab.entries }
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
+    var isLogoutPopup by remember { mutableStateOf(false) }
+    var isDeleteAccountPopup by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier.fillMaxSize().background(Color.White),
@@ -135,8 +153,8 @@ private fun MySuccessScreen(
                             onTermsClick = onTermsNavigate,
                             onPrivacyPolicyClick = onPrivacyPolicyNavigate,
                             onFeedbackClick = onFeedbackNavigate,
-                            onLogoutClick = {},
-                            onDeleteAccountClick = {},
+                            onLogoutClick = { isLogoutPopup = true },
+                            onDeleteAccountClick = { isDeleteAccountPopup = true },
                         )
                     }
 
@@ -153,6 +171,45 @@ private fun MySuccessScreen(
                 }
             }
         }
+    }
+
+    if (isLogoutPopup) {
+        KusBasicDialog(
+            content = {
+                Text(
+                    text = "정말 로그아웃하시겠습니까?",
+                    style = KusTheme.typography.type16m,
+                    textAlign = TextAlign.Center,
+                )
+            },
+            confirmText = "로그아웃하기",
+            onConfirmButtonClick = onLogoutClick,
+            onDismissRequest = { isLogoutPopup = false},
+        )
+    }
+
+    if (isDeleteAccountPopup) {
+        KusBasicDialog(
+            content = {
+                Text(
+                    text = "정말 탈퇴하시겠습니까?",
+                    style = KusTheme.typography.type16m,
+                    textAlign = TextAlign.Center,
+                )
+
+                Spacer(Modifier.height(10.dp))
+
+                Text(
+                    text = "회원탈퇴 시 계정과 관련된 정보는 복구되지 않습니다.",
+                    style = KusTheme.typography.type13m,
+                    color = KusTheme.colors.c_9BA5B0,
+                    textAlign = TextAlign.Center,
+                )
+            },
+            confirmText = "회원 탈퇴하기",
+            onConfirmButtonClick = onDeleteAccountClick,
+            onDismissRequest = { isDeleteAccountPopup = false},
+        )
     }
 }
 

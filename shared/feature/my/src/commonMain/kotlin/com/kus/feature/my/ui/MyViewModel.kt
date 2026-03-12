@@ -43,6 +43,14 @@ class MyViewModel(
             }
     }
 
+    fun logout() = viewModelScope.launch {
+
+    }
+
+    fun deleteAccount() = viewModelScope.launch {
+
+    }
+
     fun onTabSelected(tabIndex: Int) {
         _uiState.update { it.copy(selectedTab = tabIndex) }
     }
