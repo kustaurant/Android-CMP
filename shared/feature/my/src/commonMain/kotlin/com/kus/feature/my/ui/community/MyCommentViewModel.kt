@@ -18,6 +18,10 @@ class MyCommentViewModel(
     private val _uiState = MutableStateFlow(MyCommentUiState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        getMyComments()
+    }
+
     fun getMyComments() = viewModelScope.launch {
         runCatching { getMyCommentsUseCase() }
             .onSuccess { result ->
