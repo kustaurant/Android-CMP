@@ -12,6 +12,8 @@ class MapHolder(val mapView: NMFNaverMapView) {
     var lastCameraState: MapCameraState? = null
     var didApplyInitialBounds: Boolean = false
 
+    var lastVisibleBounds: List<Double> = emptyList()
+
     val polygonOverlays = mutableListOf<NMFPolygonOverlay>()
     val polylineOverlays = mutableListOf<NMFPolylineOverlay>()
     val restaurantMarkers = mutableListOf<NMFMarker>()

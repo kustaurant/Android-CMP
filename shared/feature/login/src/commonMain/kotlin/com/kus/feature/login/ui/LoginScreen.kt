@@ -38,6 +38,7 @@ import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onNaverClick: () -> Unit,
+    onSkipLogin: () -> Unit,
     onNavigateToHome: () -> Unit,
 ) {
     Box(
@@ -117,7 +118,10 @@ fun LoginScreen(
                 style = KusTheme.typography.type12m,
                 color = KusTheme.colors.c_AAAAAA,
                 modifier = Modifier
-                    .noRippleClickable{ onNavigateToHome() }
+                    .noRippleClickable{
+                        onSkipLogin()
+                        onNavigateToHome()
+                    }
                     .padding(vertical = 8.dp)
             )
 

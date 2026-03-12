@@ -65,14 +65,22 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailRoute(
     restaurantId: Long = 510L,
-    navigateToEvaluate: () -> Unit,
+    navigateToEvaluate: (RestaurantDetail) -> Unit,
     navigateToUp: () -> Unit,
+    shouldRefreshFromEvaluate: Boolean = false,
+    clearEvaluateRefreshFlag: () -> Unit = {},
     viewModel: DetailViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(restaurantId) {
         viewModel.getRestaurantDetail(restaurantId)
+    }
+
+    LaunchedEffect(shouldRefreshFromEvaluate) {
+        if (!shouldRefreshFromEvaluate) return@LaunchedEffect
+        viewModel.refreshAfterEvaluation()
+        clearEvaluateRefreshFlag()
     }
 
     when (val restaurantState = uiState.restaurant) {
@@ -90,7 +98,7 @@ fun DetailRoute(
                 restaurant = restaurantState.data,
                 reviewsState = uiState.reviews,
                 reviewSort = uiState.reviewSort,
-                navigateToEvaluate = navigateToEvaluate,
+                navigateToEvaluate = { navigateToEvaluate(restaurantState.data) },
                 onBackClick = navigateToUp,
                 onFavoriteClick = { viewModel.onFavoriteClick() },
                 onSortSelected = { sort -> viewModel.getRestaurantReviews(sort) },

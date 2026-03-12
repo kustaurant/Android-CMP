@@ -39,10 +39,12 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-                implementation(compose.ui)
+                implementation(compose.ui) 
 
                 api(project(":shared:feature:login"))
                 api(project(":shared:feature:tier"))
+                api(project(":shared:feature:community"))
+                api(project(":shared:data:community"))
             }
         }
     }

@@ -17,9 +17,10 @@ data object Tier
 data object TierCategorySelect
 
 fun NavGraphBuilder.tierNavGraph(
+    onShowMessage: (String) -> Unit,
     initialProvider: () -> TierFilterState,
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
-    navigateToDetail: () -> Unit,
+    navigateToDetail: (Long) -> Unit,
     popBackStackWithResult: (TierFilterState) -> Unit,
     onBackButtonClick: () -> Unit = {},
 ) {
@@ -33,10 +34,12 @@ fun NavGraphBuilder.tierNavGraph(
         }
 
         TierRoute(
+            initialFilter = initialProvider,
             navigateToTierCategorySelect = navigateToTierCategorySelect,
             navigateToDetail = navigateToDetail,
             resultFilter = result,
             consumeResult = { entry.savedStateHandle[TierKeys.RESULT_FILTER] = null },
+            onShowMessage = onShowMessage
         )
     }
 
