@@ -45,8 +45,8 @@ internal fun MyArticleScreen(
         }
 
         is UiState.Success<*> -> {
-            val restaurants = (uiState.value.articles as UiState.Success).data
-            if (restaurants.isEmpty()) {
+            val articles = (uiState.value.articles as UiState.Success).data
+            if (articles.isEmpty()) {
                 EmptyPage(
                     title = "내 게시글",
                     comment = "작성한 글이 없습니다.",
@@ -71,7 +71,7 @@ internal fun MyArticleScreen(
                     }
 
                     itemsIndexed(
-                        items = restaurants,
+                        items = articles,
                         key = { _, item -> item.postId }
                     ) { index, item ->
                         PostItem(
