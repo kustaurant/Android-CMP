@@ -40,6 +40,9 @@ kotlin {
             baseName = xcfName
         }
     }
+
+    jvm("desktop")
+
     sourceSets {
         commonMain {
             dependencies {

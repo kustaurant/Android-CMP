@@ -15,7 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kus.designsystem.component.LoginRequiredDialog
+import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.my.component.MyActivityScreen
 import com.kus.feature.my.component.MyProfileScreen
 import com.kus.feature.my.component.MyTabRow
@@ -44,10 +45,13 @@ fun MyScreen(
 
     when (uiState.userProfileState) {
         is UiState.Idle -> {
-            NoAccountScreen(
-                modifier = modifier,
-                onLoginButtonClick = {},
-                onDismissRequest = onBackClick,
+            NoAccountScreen(modifier = modifier)
+
+            Box(
+                modifier = Modifier
+                    .noRippleClickable {/* 클릭 방지용 */ }
+                    .fillMaxSize()
+                    .background(KusTheme.colors.c_000000.copy(alpha = 0.5f))
             )
         }
 
@@ -155,8 +159,6 @@ private fun MySuccessScreen(
 @Composable
 private fun NoAccountScreen(
     modifier: Modifier = Modifier,
-    onLoginButtonClick: () -> Unit,
-    onDismissRequest: () -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -193,12 +195,5 @@ private fun NoAccountScreen(
                 }
             }
         }
-
-        LoginRequiredDialog(
-            targetFeature = "마이페이지",
-            onLoginButtonClick = onLoginButtonClick,
-            onDismissRequest = onDismissRequest,
-            modifier = modifier,
-        )
     }
 }
