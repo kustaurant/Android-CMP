@@ -36,10 +36,12 @@ fun NavController.navigateToMyComment(navOptions: NavOptions? = null) =
     navigate(MyComment, navOptions)
 
 fun NavController.navigateToScrap(navOptions: NavOptions? = null) =
-    navigate(Scrap, navOptions)
+    navigate(MyScrap, navOptions)
 
 fun NavGraphBuilder.myNavGraph(
     navigateToUp: () -> Unit,
+    onRestItemClick: (Long) -> Unit,
+    onArticleClick: (Long) -> Unit,
     onShowMessage: (String) -> Unit,
     navController: NavController,
 ) {
@@ -93,35 +95,35 @@ fun NavGraphBuilder.myNavGraph(
     composable<FavoriteRest> {
         FavoriteRestaurantScreen(
             onBackClick = navigateToUp,
-            onItemClick = { }
+            onItemClick = onRestItemClick,
         )
     }
 
     composable<CheckedRest> {
         CheckedRestaurantScreen(
             onBackClick = navigateToUp,
-            onItemClick = {}
+            onItemClick = onRestItemClick,
         )
     }
 
     composable<MyArticle> {
         MyArticleScreen(
             onBackClick = navigateToUp,
-            onItemClick = {},
+            onItemClick = onArticleClick,
         )
     }
 
     composable<MyComment> {
         MyCommentScreen(
             onBackClick = navigateToUp,
-            onItemClick = {},
+            onItemClick = onArticleClick,
         )
     }
 
-    composable<Scrap> {
+    composable<MyScrap> {
         MyScrapScreen(
             onBackClick = navigateToUp,
-            onItemClick = {},
+            onItemClick = onArticleClick,
         )
     }
 }
@@ -151,4 +153,4 @@ data object MyArticle
 data object MyComment
 
 @Serializable
-data object Scrap
+data object MyScrap

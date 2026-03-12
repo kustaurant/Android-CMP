@@ -24,7 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun MyCommentScreen(
     onBackClick: () -> Unit,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
     viewModel: MyCommentViewModel = koinViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()

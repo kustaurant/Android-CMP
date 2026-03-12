@@ -25,7 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun MyScrapScreen(
     onBackClick: () -> Unit,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
     viewModel: MyScrapViewModel = koinViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -76,7 +76,7 @@ internal fun MyScrapScreen(
                     ) { index, item ->
                         PostItem(
                             item = item,
-                            modifier = Modifier.noRippleClickable { onItemClick(item.postId) }
+                            modifier = Modifier.noRippleClickable { onItemClick(item.postId.toLong()) }
                         )
                     }
 

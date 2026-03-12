@@ -26,7 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun CheckedRestaurantScreen(
     onBackClick: () -> Unit,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
     viewModel: CheckedResViewModel = koinViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -80,7 +80,7 @@ internal fun CheckedRestaurantScreen(
                                 evaluationScore = item.evaluationScore.toFloat(),
                                 evaluationBody = item.evaluationBody,
                                 evaluationItemScores = item.evaluationItemScores,
-                                onItemClick = { onItemClick(item.restaurantId) },
+                                onItemClick = { onItemClick(item.restaurantId.toLong()) },
                             )
                         }
 

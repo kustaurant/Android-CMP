@@ -3,7 +3,9 @@ package com.kus.feature.community.navigation
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.kus.core.serialization.KusJson
@@ -37,6 +39,11 @@ data object CommunityWrite
 data class CommunityWriteModify(
     val encoded: String,
 )
+
+fun NavController.navigateToCommunityDetail(
+    postId: Long,
+    navOptions: NavOptions?=null,
+) = navigate(CommunityDetail(postId), navOptions)
 
 fun NavGraphBuilder.communityNavGraph(
     onShowMessage: (String) -> Unit,

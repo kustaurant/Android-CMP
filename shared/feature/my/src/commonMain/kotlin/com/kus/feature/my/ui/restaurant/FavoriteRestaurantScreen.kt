@@ -25,7 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun FavoriteRestaurantScreen(
     onBackClick: () -> Unit,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
     viewModel: FavoriteResViewModel = koinViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -80,7 +80,7 @@ internal fun FavoriteRestaurantScreen(
                                 restThumbnail = item.restaurantImgURL,
                                 location = item.restaurantPosition,
                                 isSaved = true,
-                                onClick = { onItemClick(item.restaurantId) },
+                                onClick = { onItemClick(item.restaurantId.toLong()) },
                             )
                         }
                     }
