@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.theme.KusTheme
+import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.my.component.EmptyPage
 import com.kus.feature.my.component.MyPageTopBar
+import com.kus.feature.my.component.PostItem
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -56,7 +57,7 @@ internal fun MyArticleScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(KusTheme.colors.c_F3F3F3),
+                        .background(KusTheme.colors.c_FFFFFF),
                 ) {
                     stickyHeader {
                         MyPageTopBar(
@@ -66,14 +67,21 @@ internal fun MyArticleScreen(
                     }
 
                     item {
-                        Spacer(Modifier.height(30.dp))
+                        Spacer(Modifier.height(10.dp))
                     }
 
-                    itemsIndexed(restaurants) { index, item ->
-                        Box(
-                            modifier = Modifier.padding(horizontal = 20.dp),
-                        ) {
-                        }
+                    itemsIndexed(
+                        items = restaurants,
+                        key = { _, item -> item.postId }
+                    ) { index, item ->
+                        PostItem(
+                            item = item,
+                            modifier = Modifier.noRippleClickable { onItemClick(item.postId) }
+                        )
+                    }
+
+                    item {
+                        Spacer(Modifier.height(10.dp))
                     }
                 }
             }

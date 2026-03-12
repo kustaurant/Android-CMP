@@ -1,5 +1,6 @@
 package com.kus.feature.my.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,12 +23,14 @@ import org.jetbrains.compose.resources.painterResource
 internal fun MyPageTopBar(
     title: String,
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column {
         Box(
-            modifier = Modifier
-                .padding(vertical = 14.dp, horizontal = 16.dp)
-                .fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .background(KusTheme.colors.c_FFFFFF)
+                .padding(vertical = 14.dp, horizontal = 16.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
             Text(
