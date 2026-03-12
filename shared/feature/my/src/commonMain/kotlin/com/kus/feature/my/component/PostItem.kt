@@ -125,7 +125,7 @@ internal fun PostItem(
             Spacer(Modifier.width(12.dp))
 
             val thumbUrl = item.postImgUrl
-            if (thumbUrl.isNotBlank()) {
+            if (!thumbUrl.isNullOrBlank()) {
                 KamelImage(
                     resource = asyncPainterResource(thumbUrl),
                     contentDescription = "게시글 썸네일",

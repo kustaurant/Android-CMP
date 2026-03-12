@@ -1,5 +1,6 @@
 package com.kus.feature.my.ui.community
 
+import UiError
 import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,16 +13,22 @@ import kotlinx.coroutines.launch
 
 class MyScrapViewModel(
     private val getMyScrapsUseCase: GetMyScrapsUseCase,
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyScrapUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        getScraps()
+    }
 
     fun getScraps() = viewModelScope.launch {
         runCatching { getMyScrapsUseCase() }
             .onSuccess { result ->
                 _uiState.update { it.copy(articles = UiState.Success(result)) }
             }
-            .onFailure {  }
+            .onFailure {
+                _uiState.update { it.copy(articles = UiState.Failure(UiError.Network)) }
+            }
     }
 }
