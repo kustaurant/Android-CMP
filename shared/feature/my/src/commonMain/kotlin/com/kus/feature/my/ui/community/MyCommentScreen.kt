@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.my.component.EmptyPage
+import com.kus.feature.my.component.MyCommentItem
 import com.kus.feature.my.component.MyPageTopBar
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -56,7 +56,7 @@ internal fun MyCommentScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(KusTheme.colors.c_F3F3F3),
+                        .background(KusTheme.colors.c_FFFFFF),
                 ) {
                     stickyHeader {
                         MyPageTopBar(
@@ -66,21 +66,26 @@ internal fun MyCommentScreen(
                     }
 
                     item {
-                        Spacer(Modifier.height(30.dp))
+                        Spacer(Modifier.height(10.dp))
                     }
 
                     itemsIndexed(restaurants) { index, item ->
-                        Box(
-                            modifier = Modifier.padding(horizontal = 20.dp)
-                        ) {
+                        MyCommentItem(
+                            comment = item,
+                            onItemClick = { onItemClick(item.postId.toLong()) },
+                        )
+                    }
 
-                        }
+                    item {
+                        Spacer(Modifier.height(10.dp))
                     }
                 }
             }
         }
 
-        is UiState.Failure -> { /* 서버 연결 실패 시 화면 */ }
+        is UiState.Failure -> { /* 서버 연결 실패 시 화면 */
+        }
+
         is UiState.Idle -> {}
     }
 }
