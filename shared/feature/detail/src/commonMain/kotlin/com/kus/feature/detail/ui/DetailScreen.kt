@@ -14,13 +14,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -158,9 +154,7 @@ private fun DetailSuccessScreen(
     var selectedEvalId by remember { mutableStateOf<Int?>(null) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val bottomBarHeight = 76.dp
-    val lazyColumnBottomPadding = bottomBarHeight + navigationBarPadding
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -168,10 +162,10 @@ private fun DetailSuccessScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = lazyColumnBottomPadding)
+            contentPadding = PaddingValues(bottom = bottomBarHeight)
         ) {
             item {
-                val imageHeight = 269.dp
+                val imageHeight = 329.dp
                 val overlap = 100.dp
                 Box(
                     modifier = Modifier.fillMaxWidth()
@@ -239,8 +233,8 @@ private fun DetailSuccessScreen(
         ) {
             KusTopBar(
                 leftIcon = painterResource(Res.drawable.ic_arrow_back),
-                leftIconModifier = Modifier.noRippleClickable { onBackClick() }
-                    .padding(all = 5.dp),
+                onLeftClicked = onBackClick,
+                leftIconModifier = Modifier.padding(all = 5.dp),
                 iconTint = topBarIconTint,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -251,7 +245,6 @@ private fun DetailSuccessScreen(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .background(color = KusTheme.colors.c_FFFFFF)
-                .navigationBarsPadding()
                 .border(
                     width = 1.dp,
                     color = KusTheme.colors.c_E0E0E0
@@ -317,7 +310,6 @@ private fun DetailSuccessScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = KusTheme.colors.c_FFFFFF)
-                    .navigationBarsPadding()
                     .imePadding(),
                 hasFocus = true,
                 onDismiss = {

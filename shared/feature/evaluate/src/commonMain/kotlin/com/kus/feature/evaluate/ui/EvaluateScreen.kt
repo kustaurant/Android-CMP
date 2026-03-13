@@ -2,13 +2,14 @@ package com.kus.feature.evaluate.ui
 
 import UiState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,8 +30,8 @@ import com.kus.feature.evaluate.component.EvaluationKeyword
 import com.kus.feature.evaluate.component.EvaluationRestInfoCard
 import com.kus.feature.evaluate.component.EvaluationReview
 import com.kus.feature.evaluate.component.EvaluationStar
-import com.kus.feature.evaluate.model.Evaluation
 import com.kus.feature.evaluate.model.EvaluateRestaurant
+import com.kus.feature.evaluate.model.Evaluation
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import org.jetbrains.compose.resources.painterResource
@@ -107,6 +108,7 @@ private fun EvaluateTopBar(onBackClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .statusBarsPadding()
     ) {
         KusTopBar(
             leftIcon = painterResource(Res.drawable.ic_arrow_back),
@@ -173,7 +175,8 @@ private fun EvaluateSuccessScreen(
 ) {
     val isRatingSelected = evaluation.evaluationScore != 0.0
     val isSubmitting = submitState is UiState.Loading
-    val submitButtonColor = if (isRatingSelected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_E0E0E0
+    val submitButtonColor =
+        if (isRatingSelected) KusTheme.colors.c_43AB38 else KusTheme.colors.c_E0E0E0
 
     Box(
         modifier = Modifier
@@ -219,7 +222,7 @@ private fun EvaluateSuccessScreen(
             item {
                 Box(
                     modifier = Modifier
-                    .fillMaxWidth()
+                        .fillMaxWidth()
                         .height(72.dp)
                 )
             }
