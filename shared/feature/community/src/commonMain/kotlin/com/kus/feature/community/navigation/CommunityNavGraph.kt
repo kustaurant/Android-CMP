@@ -38,18 +38,12 @@ data class CommunityWriteModify(
     val encoded: String,
 )
 
-fun NavGraphBuilder.communityNavGraph(
+fun NavGraphBuilder.communityMainNavGraph(
     onShowMessage: (String) -> Unit,
     onBackButtonClick: () -> Unit,
     onPostClick: (Long) -> Unit,
-    onPostCreated: (Long) -> Unit,
-    onPostModified: (CommunityPostModifyPayload) -> Unit,
     onPostWriteClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onPostModifyClick: (String) -> Unit,
-    onPostModifiedInDetail: (CommunityPostModifyPayload) -> Unit,
-    onDetailBackClick: (CommunityPostModifyPayload?) -> Unit,
-    onPostDeletedInDetail: (Long) -> Unit,
 ) {
     composable<Community> { backStackEntry ->
         val viewModel: CommunityViewModel = koinViewModel()
@@ -96,7 +90,18 @@ fun NavGraphBuilder.communityNavGraph(
             onShowMessage = onShowMessage,
         )
     }
+}
 
+fun NavGraphBuilder.communityFullscreenNavGraph(
+    onShowMessage: (String) -> Unit,
+    onPostCreated: (Long) -> Unit,
+    onPostModified: (CommunityPostModifyPayload) -> Unit,
+    onBackButtonClick: () -> Unit,
+    onPostModifyClick: (String) -> Unit,
+    onPostModifiedInDetail: (CommunityPostModifyPayload) -> Unit,
+    onDetailBackClick: (CommunityPostModifyPayload?) -> Unit,
+    onPostDeletedInDetail: (Long) -> Unit,
+) {
     composable<CommunityWrite> {
         val editorRenderer: CommunityEditorRenderer = koinInject()
         val imagePickerFactory: PlatformImagePickerFactory = koinInject()

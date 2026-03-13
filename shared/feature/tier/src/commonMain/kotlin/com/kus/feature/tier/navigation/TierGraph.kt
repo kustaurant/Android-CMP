@@ -16,13 +16,11 @@ data object Tier
 @Serializable
 data object TierCategorySelect
 
-fun NavGraphBuilder.tierNavGraph(
+fun NavGraphBuilder.tierMainNavGraph(
     onShowMessage: (String) -> Unit,
     initialProvider: () -> TierFilterState,
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
     navigateToDetail: (Long) -> Unit,
-    popBackStackWithResult: (TierFilterState) -> Unit,
-    onBackButtonClick: () -> Unit = {},
 ) {
     composable<Tier> { entry ->
         val resultJson by entry.savedStateHandle
@@ -42,7 +40,13 @@ fun NavGraphBuilder.tierNavGraph(
             onShowMessage = onShowMessage
         )
     }
+}
 
+fun NavGraphBuilder.tierFullscreenNavGraph(
+    initialProvider: () -> TierFilterState,
+    popBackStackWithResult: (TierFilterState) -> Unit,
+    onBackButtonClick: () -> Unit = {},
+) {
     composable<TierCategorySelect> {
         TierCategorySelectScreen(
             initial = initialProvider(),
