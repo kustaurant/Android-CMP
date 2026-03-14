@@ -14,6 +14,7 @@ import com.kus.feature.evaluate.di.evaluateFeatureModule
 import com.kus.feature.home.di.homeFeatureModule
 import com.kus.feature.login.di.featureLoginModule
 import com.kus.feature.onboarding.di.onboardingFeatureModule
+import com.kus.feature.search.di.searchFeatureModule
 import com.kus.feature.tier.di.tierFeatureModule
 import com.kus.shared.data.tier.di.tierDataModule
 import com.kus.shared.domain.tier.di.tierDomainModule
@@ -25,6 +26,8 @@ import com.kus.kustaurant.home.di.homeDataModule
 import com.kus.shared.domain.detail.di.detailDomainModule
 import com.kus.shared.domain.evaluate.di.evaluateDomainModule
 import com.kus.shared.domain.home.di.homeDomainModule
+import com.kus.shared.data.search.di.searchDataModule
+import com.kus.shared.domain.search.di.searchDomainModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -45,6 +48,7 @@ fun initKoin(
             authDomainModule,
             tierDomainModule,
             homeDomainModule,
+            searchDomainModule,
             communityDomainModule,
             detailDomainModule,
             evaluateDomainModule,
@@ -55,6 +59,7 @@ fun initKoin(
             authDataModule,
             tierDataModule,
             homeDataModule,
+            searchDataModule,
             communityDataModule,
             detailDataModule,
             evaluateDataModule,
@@ -65,6 +70,7 @@ fun initKoin(
             featureLoginModule,
             tierFeatureModule,
             homeFeatureModule,
+            searchFeatureModule,
             communityFeatureModule,
             detailFeatureModule,
             evaluateFeatureModule
