@@ -11,6 +11,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,7 @@ import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.my.component.MyActivityScreen
 import com.kus.feature.my.component.MyProfileScreen
 import com.kus.feature.my.component.MyTabRow
+import com.kus.feature.my.ui.event.MyNavigationEvent
 import com.kus.feature.my.ui.type.MyTab
 import com.kus.shared.domain.model.my.MyInfo
 import kotlinx.coroutines.launch
@@ -36,7 +38,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MyScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
+    onShowMessage: (String) -> Unit,
     onProfileEditNavigate: () -> Unit,
     onNoticeNavigate: () -> Unit,
     onTermsNavigate: () -> Unit,
@@ -47,9 +49,25 @@ fun MyScreen(
     onMyArticleNavigate: () -> Unit,
     onMyCommentNavigate: () -> Unit,
     onScrapNavigate: () -> Unit,
+    onLoginNavigate: () -> Unit,
     viewModel: MyViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is MyNavigationEvent.NavigateToLogin -> onLoginNavigate()
+            }
+        }
+    }
+
+    LaunchedEffect(uiState.toastMessage) {
+        uiState.toastMessage?.let {
+            onShowMessage(it)
+            viewModel.clearToastMessage()
+        }
+    }
 
     when (uiState.userProfileState) {
         is UiState.Idle -> {

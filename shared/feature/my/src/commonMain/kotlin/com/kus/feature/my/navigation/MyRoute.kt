@@ -7,7 +7,7 @@ import com.kus.feature.my.ui.MyScreen
 @Composable
 fun MyRoute(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
+    onShowMessage: (String) -> Unit,
     navigateToProfileEdit: () -> Unit,
     navigateToNotice: () -> Unit,
     navigateToTerms: () -> Unit,
@@ -18,10 +18,11 @@ fun MyRoute(
     navigateToMyArticle: () -> Unit,
     navigateToMyComment: () -> Unit,
     navigateToScrap: () -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
     MyScreen(
         modifier = modifier,
-        onBackClick = onBackClick,
+        onShowMessage = onShowMessage,
         onProfileEditNavigate = navigateToProfileEdit,
         onNoticeNavigate = navigateToNotice,
         onTermsNavigate = navigateToTerms,
@@ -32,5 +33,6 @@ fun MyRoute(
         onMyArticleNavigate = navigateToMyArticle,
         onMyCommentNavigate = navigateToMyComment,
         onScrapNavigate = navigateToScrap,
+        onLoginNavigate = navigateToLogin,
     )
 }

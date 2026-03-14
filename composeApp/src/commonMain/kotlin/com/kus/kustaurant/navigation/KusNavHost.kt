@@ -233,6 +233,12 @@ fun KusNavHost(
             navigateToUp = navController::popBackStack,
             onRestItemClick = navController::navigateToDetail,
             onArticleClick = navController::navigateToCommunityDetail,
+            navigateToLogin = {
+                navController.navigate(Login) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
         )
 
         detailNavGraph(

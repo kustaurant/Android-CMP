@@ -43,11 +43,12 @@ fun NavGraphBuilder.myNavGraph(
     onRestItemClick: (Long) -> Unit,
     onArticleClick: (Long) -> Unit,
     onShowMessage: (String) -> Unit,
+    navigateToLogin: () -> Unit,
     navController: NavController,
 ) {
     composable<My> {
         MyRoute(
-            onBackClick = navigateToUp,
+            onShowMessage = onShowMessage,
             navigateToProfileEdit = { },
             navigateToNotice = {
                 navController.navigateToMyWebView(
@@ -73,6 +74,7 @@ fun NavGraphBuilder.myNavGraph(
             navigateToMyArticle = navController::navigateToMyArticle,
             navigateToMyComment = navController::navigateToMyComment,
             navigateToScrap = navController::navigateToScrap,
+            navigateToLogin = navigateToLogin,
         )
     }
 
