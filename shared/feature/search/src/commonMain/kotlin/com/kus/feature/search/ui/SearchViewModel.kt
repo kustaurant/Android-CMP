@@ -34,13 +34,14 @@ class SearchViewModel(
                 .debounce(DEBOUNCE_DELAY)
                 .distinctUntilChanged()
                 .collectLatest { term ->
+                    val query = term.trim()
 
-                    if (term.isBlank()) {
+                    if (query.isBlank()) {
                         _uiState.value = SearchUiState()
                         return@collectLatest
                     }
 
-                    search(term)
+                    search(query)
                 }
         }
     }
