@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -23,6 +22,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -240,44 +240,50 @@ private fun DetailSuccessScreen(
             )
         }
 
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .background(color = KusTheme.colors.c_FFFFFF)
-                .border(
-                    width = 1.dp,
-                    color = KusTheme.colors.c_E0E0E0
-                )
-                .padding(horizontal = 20.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
         ) {
-            KusButton(
-                enabled = true,
-                buttonName = evaluateButtonText,
-                modifier = Modifier.weight(1f),
-                roundedCornerShape = RoundedCornerShape(50.dp),
-                onClick = navigateToEvaluate
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = KusTheme.colors.c_E0E0E0
             )
 
-            Column(
+            Row(
                 modifier = Modifier
-                    .padding(start = 18.dp, end = 12.dp)
-                    .noRippleClickable { onFavoriteClick() },
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(favoriteIcon),
-                    contentDescription = null,
-                    modifier = Modifier.size(28.dp)
+                KusButton(
+                    enabled = true,
+                    buttonName = evaluateButtonText,
+                    modifier = Modifier.weight(1f),
+                    roundedCornerShape = RoundedCornerShape(50.dp),
+                    onClick = navigateToEvaluate
                 )
 
-                Text(
-                    text = favoriteCountText,
-                    style = KusTheme.typography.type14r.copy(
-                        color = KusTheme.colors.c_AAAAAA
+                Column(
+                    modifier = Modifier
+                        .padding(start = 18.dp, end = 12.dp)
+                        .noRippleClickable { onFavoriteClick() },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(favoriteIcon),
+                        contentDescription = null,
+                        modifier = Modifier.size(28.dp)
                     )
-                )
+
+                    Text(
+                        text = favoriteCountText,
+                        style = KusTheme.typography.type14r.copy(
+                            color = KusTheme.colors.c_AAAAAA
+                        )
+                    )
+                }
             }
         }
 
