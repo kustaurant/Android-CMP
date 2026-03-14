@@ -146,7 +146,7 @@ private fun DetailSuccessScreen(
         derivedStateOf { restInfoTopInWindow <= topBarBottomInWindow }
     }
     val topBarBackground = if (useWhiteTopBar) KusTheme.colors.c_FFFFFF else Color.Transparent
-    val topBarIconTint = if (useWhiteTopBar) KusTheme.colors.c_000000 else null
+    val topBarIconTint = if (useWhiteTopBar) KusTheme.colors.c_000000 else KusTheme.colors.c_FFFFFF
     val evaluateButtonText = if (restaurant.isEvaluated) "다시 평가하기" else "맛집 평가하기"
     val favoriteIcon = if (restaurant.isFavorite) Res.drawable.ic_saved else Res.drawable.ic_unsaved
     val favoriteCountText = restaurant.favoriteCount.toString()
