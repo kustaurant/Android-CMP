@@ -8,8 +8,8 @@ import com.kus.shared.domain.search.repository.SearchRepository
 class SearchRepositoryImpl(
     private val api: SearchApi,
 ): SearchRepository {
-    override suspend fun getSearchResult(searchTerm: String): SearchResult {
-        return api.getSearchResult(searchTerm).toDomain()
+    override suspend fun getSearchResult(searchTerm: String, page: Int): SearchResult {
+        return api.getSearchResult(searchTerm, page).toDomain()
     }
 
 }

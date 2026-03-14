@@ -11,9 +11,11 @@ class SearchApi(
 ) {
     suspend fun getSearchResult(
         searchTerm: String,
+        page: Int,
     ): SearchResultResponse {
         return client.get("/api/v3/search") {
             parameter("kw", searchTerm)
+            parameter("page", page)
         }.body()
     }
 }

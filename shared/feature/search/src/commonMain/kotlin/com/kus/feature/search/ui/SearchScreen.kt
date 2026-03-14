@@ -12,11 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -41,10 +45,21 @@ fun SearchRoute(
 ) {
     val searchTerm by viewModel.searchTerm.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastIndex ->
+                if (lastIndex != null && lastIndex >= uiState.items.lastIndex - 3) {
+                    viewModel.loadNextPage()
+                }
+            }
+    }
 
     SearchScreen(
         searchTerm = searchTerm,
         uiState = uiState,
+        listState = listState,
         onBackClick = onBackClick,
         onSearchTermChange = viewModel::updateSearchTerm,
         onRestaurantItemClick = onRestDetailNavigate,
@@ -55,6 +70,7 @@ fun SearchRoute(
 fun SearchScreen(
     searchTerm: String,
     uiState: SearchUiState,
+    listState: LazyListState,
     onBackClick: () -> Unit,
     onSearchTermChange: (String) -> Unit,
     onRestaurantItemClick: (Long) -> Unit,
@@ -62,6 +78,7 @@ fun SearchScreen(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
             .background(KusTheme.colors.c_F3F3F3),
+        state = listState,
     ) {
         stickyHeader {
             Row(
@@ -89,14 +106,14 @@ fun SearchScreen(
         item {
             Spacer(Modifier.background(KusTheme.colors.c_F3F3F3).height(15.dp))
         }
-        when (val result = uiState.results) {
 
+        when (uiState.uiState) {
             is UiState.Loading -> {
                 item { }
             }
 
             is UiState.Success -> {
-                val resultItems = result.data.items
+                val resultItems = uiState.items
 
                 if (resultItems.isEmpty() && searchTerm.isNotEmpty()) {
                     item {

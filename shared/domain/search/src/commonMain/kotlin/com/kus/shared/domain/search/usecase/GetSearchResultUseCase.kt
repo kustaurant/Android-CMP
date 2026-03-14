@@ -6,6 +6,6 @@ import com.kus.shared.domain.search.repository.SearchRepository
 class GetSearchResultUseCase(
     private val searchRepository: SearchRepository,
 ) {
-    suspend operator fun invoke(searchTerm: String): SearchResult =
-        searchRepository.getSearchResult(searchTerm)
+    suspend operator fun invoke(searchTerm: String, page: Int): SearchResult =
+        searchRepository.getSearchResult(searchTerm, page)
 }
