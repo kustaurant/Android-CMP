@@ -89,6 +89,7 @@ kotlin {
             implementation(project(":shared:domain:community"))
             implementation(project(":shared:domain:home"))
             implementation(project(":shared:domain:search"))
+            implementation(project(":shared:domain:search"))
             implementation(project(":shared:domain:model"))
             implementation(project(":shared:domain:detail"))
             implementation(project(":shared:domain:evaluate"))

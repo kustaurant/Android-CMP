@@ -20,11 +20,19 @@ class SearchViewModel(
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        observeSearchTerm()
+    }
+
     @OptIn(FlowPreview::class)
-    private fun getResult() = viewModelScope.launch {
+    private fun observeSearchTerm() = viewModelScope.launch {
         _searchTerm
             .debounce(DEBOUNCE_DELAY)
             .collectLatest { searchTerm ->
+                if (searchTerm.isEmpty()) {
+                    _uiState.update { it.copy(results = UiState.Idle) }
+                    return@collectLatest
+                }
                 runCatching {
                     getSearchResultUseCase(searchTerm)
                 }.onSuccess { results ->
@@ -37,9 +45,6 @@ class SearchViewModel(
 
     fun updateSearchTerm(new: String) {
         _searchTerm.value = new
-
-        if (searchTerm.value.isEmpty()) _uiState.update { it.copy(results = UiState.Idle) }
-        else getResult()
     }
 
     companion object {
