@@ -4,7 +4,6 @@ import com.kus.core.config.di.configModule
 import com.kus.data.auth.di.authDataModule
 import com.kus.data.community.di.communityDataModule
 import com.kus.data.firstLaunch.di.firstLaunchDataModule
-import com.kus.data.my.di.myDataModule
 import com.kus.data.network.di.networkModule
 import com.kus.domain.auth.di.authDomainModule
 import com.kus.domain.community.di.communityDomainModule
@@ -14,7 +13,6 @@ import com.kus.feature.detail.di.detailFeatureModule
 import com.kus.feature.evaluate.di.evaluateFeatureModule
 import com.kus.feature.home.di.homeFeatureModule
 import com.kus.feature.login.di.featureLoginModule
-import com.kus.feature.my.di.myFeatureModule
 import com.kus.feature.onboarding.di.onboardingFeatureModule
 import com.kus.feature.splash.di.splashFeatureModule
 import com.kus.feature.tier.di.tierFeatureModule
@@ -25,7 +23,6 @@ import com.kus.shared.data.tier.di.tierDataModule
 import com.kus.shared.domain.detail.di.detailDomainModule
 import com.kus.shared.domain.evaluate.di.evaluateDomainModule
 import com.kus.shared.domain.home.di.homeDomainModule
-import com.kus.shared.domain.my.di.myDomainModule
 import com.kus.shared.domain.tier.di.tierDomainModule
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -48,6 +45,7 @@ fun initKoin(
             authDomainModule,
             tierDomainModule,
             homeDomainModule,
+            searchDomainModule,
             communityDomainModule,
             detailDomainModule,
             evaluateDomainModule,
@@ -59,6 +57,7 @@ fun initKoin(
             authDataModule,
             tierDataModule,
             homeDataModule,
+            searchDataModule,
             communityDataModule,
             detailDataModule,
             evaluateDataModule,
@@ -70,6 +69,7 @@ fun initKoin(
             featureLoginModule,
             tierFeatureModule,
             homeFeatureModule,
+            searchFeatureModule,
             communityFeatureModule,
             detailFeatureModule,
             evaluateFeatureModule,
