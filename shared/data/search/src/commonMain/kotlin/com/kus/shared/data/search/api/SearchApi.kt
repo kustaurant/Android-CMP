@@ -1,6 +1,6 @@
 package com.kus.shared.data.search.api
 
-import com.kus.shared.data.search.remote.response.RestaurantResponse
+import com.kus.shared.data.search.remote.response.SearchResultResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -11,8 +11,8 @@ class SearchApi(
 ) {
     suspend fun getSearchResult(
         searchTerm: String,
-    ): List<RestaurantResponse> {
-        return client.get("/api/v2/search") {
+    ): SearchResultResponse {
+        return client.get("/api/v3/search") {
             parameter("kw", searchTerm)
         }.body()
     }

@@ -1,24 +1,38 @@
 package com.kus.shared.data.search.mapper
 
-import com.kus.shared.data.search.remote.response.RestaurantResponse
-import com.kus.shared.domain.model.restaurant.RestaurantItem
+import com.kus.shared.data.search.remote.response.Highlights
+import com.kus.shared.data.search.remote.response.ResultItemResponse
+import com.kus.shared.data.search.remote.response.SearchResultResponse
+import com.kus.shared.domain.model.search.HighlightsItem
+import com.kus.shared.domain.model.search.ResultItem
+import com.kus.shared.domain.model.search.SearchResult
 
-fun RestaurantResponse.toDomain(): RestaurantItem =
-    RestaurantItem(
-        restaurantId = restaurantId,
-        restaurantRanking = restaurantRanking ?: 0,
-        restaurantName = restaurantName,
-        restaurantCuisine = restaurantCuisine,
-        restaurantPosition = restaurantPosition,
-        restaurantImgUrl = restaurantImgUrl,
-        mainTier = mainTier,
+fun SearchResultResponse.toDomain(): SearchResult {
+    return SearchResult(
+        items = items.map { it.toDomain() },
+        hasNext = hasNext,
+    )
+}
+
+fun ResultItemResponse.toDomain(): ResultItem {
+    return ResultItem(
+        id = id,
+        name = name,
+        cuisine = cuisine,
+        position = position,
+        imgUrl = imgUrl,
+        tier = tier,
+        partnershipInfo = partnershipInfo,
         isEvaluated = isEvaluated,
         isFavorite = isFavorite,
-        longitude = longitude,
-        latitude = latitude,
-        partnershipInfo = partnershipInfo ?: "",
-        restaurantScore = restaurantScore?.takeIf { s -> !s.isNaN() } ?: 0.0,
-        tierImgUrl = tierImgUrl,
-        cuisineImgUrl = cuisineImgUrl,
         isTempTier = isTempTier,
+        matchedMenus = matchedMenus,
+        titleHighlights = titleHighlights.map { it.toDomain() },
+        categoryHighlights = categoryHighlights.map { it.toDomain() },
+        matchedFields = matchedFields,
     )
+}
+
+fun Highlights.toDomain(): HighlightsItem {
+    return HighlightsItem(start = this.start, end = this.end,)
+}
