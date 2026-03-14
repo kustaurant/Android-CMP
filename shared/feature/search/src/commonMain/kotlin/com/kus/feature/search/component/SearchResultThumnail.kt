@@ -1,8 +1,7 @@
-package com.kus.designsystem.component
+package com.kus.feature.search.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,10 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
+import com.kus.feature.search.util.applyHighlight
+import com.kus.shared.domain.model.search.HighlightsItem
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.core.designsystem.generated.resources.Res
@@ -44,21 +44,22 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun KusRestThumbnail(
+fun SearchResultThumbnail(
     modifier: Modifier = Modifier,
     tier: Int? = null,
     restName: String,
     restThumbnail: String? = null,
-    restAlliance: String? = null,
-    categories: ArrayList<String>? = null,
+    cuisine: String? = null,
     location: String? = null,
     isTempTier: Boolean = false,
     isSaved: Boolean,
     isEvaluated: Boolean,
+    matchedMenus: List<String>,
+    titleHighlights: List<HighlightsItem>,
+    categoryHighlights: List<HighlightsItem>,
     onClick: () -> Unit = {},
 ) {
     val locationText = location ?: "위치정보 없음"
-    val allianceText = restAlliance ?: "해당사항 없음"
     val savedModel = if (isSaved) Res.drawable.ic_saved else Res.drawable.ic_unsaved
 
     Row(
@@ -113,13 +114,16 @@ fun KusRestThumbnail(
         Column(
             modifier = Modifier
                 .padding(start = 17.dp, end = 8.dp)
-                .weight(1f)
+                .weight(1f),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = restName,
+                    text = restName.applyHighlight(
+                        highlights = titleHighlights,
+                        highlightColor = KusTheme.colors.c_43AB38,
+                    ),
                     style = KusTheme.typography.type16b.copy(
                         color = KusTheme.colors.c_000000
                     )
@@ -137,7 +141,7 @@ fun KusRestThumbnail(
 
             Row(
                 modifier = Modifier.padding(top = 5.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     painterResource(Res.drawable.ic_location),
@@ -156,57 +160,33 @@ fun KusRestThumbnail(
             }
 
 
-            if (categories != null) {
-                val categoryItems = categories.filter { it.isNotBlank() }
+            if (cuisine != null) {
+                Text(
+                    text = "#" + cuisine.applyHighlight(
+                        highlights = categoryHighlights,
+                        highlightColor = KusTheme.colors.c_43AB38,
+                    ),
+                    style = KusTheme.typography.type12r,
+                    color = KusTheme.colors.c_AAAAAA,
+                    modifier = Modifier.padding(top = 4.dp),
+                )
+            }
+
+            if (matchedMenus.isNotEmpty()) {
                 LazyRow(
                     modifier = Modifier
-                        .padding(top = 4.dp),
+                        .padding(top = 6.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(categoryItems) { tag ->
+                    itemsIndexed(matchedMenus) { index, menu ->
                         Text(
-                            text = "#$tag",
-                            style = KusTheme.typography.type12r.copy(
-                                color = KusTheme.colors.c_AAAAAA
-                            )
+                            text = if (index != matchedMenus.lastIndex) "$menu," else menu,
+                            style = KusTheme.typography.type12r,
+                            color = KusTheme.colors.c_353535,
                         )
                     }
                 }
             }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                Text(
-                    text = "제휴",
-                    modifier = Modifier
-                        .border(
-                            width = 1.dp,
-                            color = KusTheme.colors.c_AAAAAA,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .background(
-                            color = KusTheme.colors.c_FFFFFF
-                        )
-                        .padding(horizontal = 4.dp, vertical = 1.dp),
-                    style = KusTheme.typography.type10r.copy(
-                        color = KusTheme.colors.c_AAAAAA
-                    )
-                )
-
-                Text(
-                    text = allianceText,
-                    modifier = Modifier.padding(start = 4.dp),
-                    style = KusTheme.typography.type10r.copy(
-                        color = KusTheme.colors.c_AAAAAA
-                    ),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-
-            }
-
         }
 
         val tierIconRes = if (isTempTier) {
@@ -236,28 +216,8 @@ fun KusRestThumbnail(
                 painter = painterResource(tierIconRes),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier
-                    .size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun KusRestThumbnailPreview() {
-//    KusTheme {
-//        KusRestThumbnail(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp),
-//            tier = 3,
-//            restName = "꾸아 건대점",
-//            restAlliance = "어디대 학생증 제시하면 10% 할인이 된다네요 대박 개쩔어",
-//            categories = arrayListOf("한식", "분식", "가성비"),
-//            location = "서울 성동구",
-//            isSaved = true,
-//            isEvaluated = true,
-//        )
-//    }
-//}

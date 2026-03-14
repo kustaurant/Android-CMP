@@ -22,10 +22,10 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.search.component.KusSearchBox
+import com.kus.feature.search.component.SearchResultThumbnail
 import com.kus.feature.search.state.SearchUiState
 import kustaurant.shared.feature.search.generated.resources.Res
 import kustaurant.shared.feature.search.generated.resources.ic_left_chevron
@@ -89,11 +89,14 @@ fun SearchScreen(
         item {
             Spacer(Modifier.background(KusTheme.colors.c_F3F3F3).height(15.dp))
         }
+        when (val result = uiState.results) {
 
-        when (uiState.results) {
-            is UiState.Loading -> {}
+            is UiState.Loading -> {
+                item { }
+            }
+
             is UiState.Success -> {
-                val resultItems = uiState.results.data
+                val resultItems = result.data.items
 
                 if (resultItems.isEmpty() && searchTerm.isNotEmpty()) {
                     item {
@@ -117,23 +120,27 @@ fun SearchScreen(
                         }
                     }
                 } else {
-                    itemsIndexed(resultItems) { index, item ->
+                    itemsIndexed(
+                        items = resultItems,
+                        key = { _, item -> item.id }
+                    ) { index, item ->
                         Column(
                             modifier = Modifier.fillMaxWidth()
                                 .background(KusTheme.colors.c_F3F3F3)
                                 .padding(start = 20.dp, bottom = 8.dp, end = 20.dp),
                         ) {
-                            KusRestThumbnail(
-                                restName = item.restaurantName,
-                                tier = item.mainTier,
-                                restThumbnail = item.restaurantImgUrl,
-                                restAlliance = item.partnershipInfo,
-                                categories = arrayListOf(item.restaurantCuisine),
-                                location = item.restaurantPosition,
-                                isTempTier = item.isTempTier,
+                            SearchResultThumbnail(
+                                tier = item.tier,
+                                restName = item.name,
+                                restThumbnail = item.imgUrl,
+                                cuisine = item.cuisine,
+                                location = item.position,
                                 isSaved = item.isFavorite,
                                 isEvaluated = item.isEvaluated,
-                                onClick = { onRestaurantItemClick(item.restaurantId) },
+                                matchedMenus = item.matchedMenus,
+                                titleHighlights = item.titleHighlights,
+                                categoryHighlights = item.categoryHighlights,
+                                onClick = { onRestaurantItemClick(item.id) },
                             )
 
                             if (resultItems.lastIndex == index) {
@@ -144,7 +151,10 @@ fun SearchScreen(
                 }
             }
 
-            is UiState.Failure -> {}
+            is UiState.Failure -> {
+                item { }
+            }
+
             is UiState.Idle -> {
                 item {
                     Spacer(Modifier.background(KusTheme.colors.c_F3F3F3).fillMaxSize())
