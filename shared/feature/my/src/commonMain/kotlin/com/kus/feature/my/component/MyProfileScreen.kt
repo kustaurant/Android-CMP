@@ -2,7 +2,6 @@ package com.kus.feature.my.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -55,6 +55,7 @@ internal fun MyProfileScreen(
                 modifier = Modifier.fillMaxWidth()
                     .background(KusTheme.colors.c_FFFFFF)
                     .padding(horizontal = 30.dp, vertical = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 KamelImage(
                     resource = { asyncPainterResource(userImgUrl) },
@@ -93,10 +94,9 @@ internal fun MyProfileScreen(
                 } else {
                     Column(
                         modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center,
                     ) {
                         Text(
-                            text = "안녕하세요,\n",
+                            text = "안녕하세요,",
                             style = KusTheme.typography.type14r,
                             color = KusTheme.colors.c_666666,
                         )
@@ -107,12 +107,12 @@ internal fun MyProfileScreen(
                             color = KusTheme.colors.c_046B40,
                         )
 
+                        Spacer(Modifier.height(6.dp))
                         Text(
                             text = "프로필 편집",
                             textDecoration = TextDecoration.Underline,
                             style = KusTheme.typography.type12r,
                             color = KusTheme.colors.c_AAAAAA,
-                            textAlign = TextAlign.Center,
                             modifier = Modifier.noRippleClickable(onEditProfileClick),
                         )
                     }
