@@ -13,6 +13,8 @@ kotlin {
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:feature:splash"))
                 implementation(project(":shared:feature:search"))
+                implementation(project(":shared:feature:detail"))
+                implementation(project(":shared:feature:evaluate"))
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)

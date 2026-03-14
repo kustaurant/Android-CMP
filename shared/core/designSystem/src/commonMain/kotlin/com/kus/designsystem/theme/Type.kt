@@ -55,20 +55,26 @@ private fun KusTextStyle(
 @Immutable
 class KusTypography(
     val type20b: TextStyle,
+    val type18b: TextStyle,
     val type20m: TextStyle,
     val type16b: TextStyle,
+    val type14b: TextStyle,
     val type13b: TextStyle,
+    val type26sb: TextStyle,
     val type18sb: TextStyle,
     val type17sb: TextStyle,
     val type16sb: TextStyle,
     val type15sb: TextStyle,
     val type18m: TextStyle,
     val type16m: TextStyle,
+    val type14m: TextStyle,
+    val type16r: TextStyle,
     val type15m: TextStyle,
     val type12m: TextStyle,
     val type11m: TextStyle,
     val type14r: TextStyle,
     val type13r: TextStyle,
+    val type13m: TextStyle,
     val type12r: TextStyle,
     val type11r: TextStyle,
     val type10r: TextStyle,
@@ -84,13 +90,25 @@ fun createKusTypography() = KusTypography(
         fontFamily = PretendardMedium,
         fontSize = 20.sp,
     ),
+    type18b = KusTextStyle(
+        fontFamily = PretendardBold,
+        fontSize = 18.sp,
+    ),
     type16b = KusTextStyle(
         fontFamily = PretendardBold,
         fontSize = 16.sp,
     ),
+    type14b = KusTextStyle(
+        fontFamily = PretendardBold,
+        fontSize = 14.sp
+    ),
     type13b = KusTextStyle(
         fontFamily = PretendardBold,
         fontSize = 13.sp,
+    ),
+    type26sb = KusTextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 26.sp
     ),
     type18sb = KusTextStyle(
         fontFamily = PretendardSemiBold,
@@ -116,9 +134,17 @@ fun createKusTypography() = KusTypography(
         fontFamily = PretendardMedium,
         fontSize = 16.sp,
     ),
+    type16r = KusTextStyle(
+        fontFamily = PretendardRegular,
+        fontSize = 16.sp,
+    ),
     type15m = KusTextStyle(
         fontFamily = PretendardMedium,
         fontSize = 15.sp,
+    ),
+    type14m = KusTextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 14.sp
     ),
     type12m = KusTextStyle(
         fontFamily = PretendardMedium,
@@ -134,6 +160,10 @@ fun createKusTypography() = KusTypography(
     ),
     type13r = KusTextStyle(
         fontFamily = PretendardRegular,
+        fontSize = 13.sp,
+    ),
+    type13m = KusTextStyle(
+        fontFamily = PretendardMedium,
         fontSize = 13.sp,
     ),
     type12r = KusTextStyle(

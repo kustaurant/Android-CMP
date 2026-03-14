@@ -26,7 +26,7 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_half_star
 //import kustaurant.core.designsystem.generated.resources.ic_empty_star
 //import kustaurant.core.designsystem.generated.resources.ic_filled_star
 //import kustaurant.core.designsystem.generated.resources.ic_half_star
-import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.round
 
@@ -62,14 +62,14 @@ fun KusRatingBar(
             }
             .then(
                 if (isEnabled) {
-                    Modifier.pointerInput(Unit) {
+                    Modifier.pointerInput(isEnabled) {
                         detectDragGestures(
                             onDrag = { change, _ ->
                                 val x = change.position.x
                                 if (containerWidth > 0) {
-                                    val newRating = (x / containerWidth * 5).coerceIn(0f, 5f)
+                                    val newRating = (x / containerWidth * 5).coerceIn(0.5f, 5f)
                                     // 0.5 단위 반올림
-                                    val roundedRating = (round(newRating * 2) / 2).coerceIn(0f, 5f)
+                                    val roundedRating = (round(newRating * 2) / 2).coerceIn(0.5f, 5f)
                                     if (roundedRating != currentRating) {
                                         currentRating = roundedRating
                                         onRatingChange(roundedRating)
@@ -93,7 +93,7 @@ fun KusRatingBar(
                 starRating >= 1f -> {
                     // 완전히 채워진 별
                     Icon(
-                        imageVector = vectorResource(Res.drawable.ic_filled_star),
+                        painter = painterResource(Res.drawable.ic_filled_star),
                         contentDescription = "별점 $starIndex",
                         modifier = starModifier,
                         tint = Color.Unspecified
@@ -102,7 +102,7 @@ fun KusRatingBar(
                 starRating >= 0.5f -> {
                     // 반채워진 별
                     Icon(
-                        imageVector = vectorResource(Res.drawable.ic_half_star),
+                        painter = painterResource(Res.drawable.ic_half_star),
                         contentDescription = "별점 $starIndex",
                         modifier = starModifier,
                         tint = Color.Unspecified
@@ -111,7 +111,7 @@ fun KusRatingBar(
                 else -> {
                     // 빈 별
                     Icon(
-                        imageVector = vectorResource(Res.drawable.ic_empty_star),
+                        painter = painterResource(Res.drawable.ic_empty_star),
                         contentDescription = "별점 $starIndex",
                         modifier = starModifier,
                         tint = Color.Unspecified

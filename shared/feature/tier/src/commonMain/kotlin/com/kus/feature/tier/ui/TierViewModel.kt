@@ -15,16 +15,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
 class TierViewModel(
    private val getTierRestaurantListUseCase: GetTierRestaurantListUseCase,
     private val getTierRestaurantMapUseCase: GetTierRestaurantMapUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TierUiState())
     val uiState: StateFlow<TierUiState> = _uiState.asStateFlow()
-
-    init {
-        loadRestaurant()
-    }
 
     fun setShowBottomSheet(show: Boolean) {
         _uiState.update { it.copy(mapUiState = it.mapUiState.copy(isShowBottomSheet = show)) }
@@ -56,14 +53,6 @@ class TierViewModel(
             )
         }
         ensureDataForCurrentTab(force = true)
-    }
-
-    fun loadRestaurant() {
-        _uiState.update { it.copy(selectedCategories = it.filterState.selectedCategoriesForDisplay()) }
-        when (_uiState.value.selectedTab) {
-            TierTab.LIST -> fetchFirstRestaurants()
-            TierTab.MAP -> fetchMap()
-        }
     }
 
     fun fetchFirstRestaurants() {
@@ -108,6 +97,10 @@ class TierViewModel(
         }
     }
 
+    fun clearToast() {
+        _uiState.update { it.copy(toastMessage = null) }
+    }
+
     fun onTabSelected(tab: TierTab) {
         _uiState.update { it.copy(selectedTab = tab) }
         ensureDataForCurrentTab()
@@ -138,8 +131,6 @@ class TierViewModel(
             }
         }
     }
-
-
 
     fun onRestaurantMarkerClicked(id: Long) {
         _uiState.update { cur ->
@@ -225,8 +216,9 @@ class TierViewModel(
             }.onFailure { e ->
                 _uiState.update {
                     it.copy(
-                        listState = UiState.Failure(UiError.Message(e.message ?: "loadRestaurantList error")),
-                        pageState = it.pageState.copy(phase = TierPhase.Idle)
+                        listState = UiState.Failure(UiError.Message(e.message ?: "음식점 리스트를 불러오는데 오류가 발생했습니다.")),
+                        pageState = it.pageState.copy(phase = TierPhase.Idle),
+                        toastMessage = "음식점 리스트를 불러오는데 오류가 발생했습니다."
                     )
                 }
             }

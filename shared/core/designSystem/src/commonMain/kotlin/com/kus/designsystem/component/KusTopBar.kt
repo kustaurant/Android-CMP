@@ -15,9 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import com.kus.designsystem.util.noRippleClickable
 
 /**
  * 쿠스토랑 top bar
@@ -40,35 +45,38 @@ fun KusTopBar(
     rightFirstIcon: Painter? = null,
     rightSecondIcon: Painter? = null,
     onLeftClicked: () -> Unit = {},
+    iconTint: Color? = null,
     onRightFirstClicked: () -> Unit = {},
     onRightSecondClicked: () -> Unit = {},
     leftIconModifier: Modifier = Modifier,
     rightFirstIconModifier: Modifier = Modifier,
+    onRightFirstIconBoundsChanged: ((Rect) -> Unit)? = null,
     rightSecondIconModifier: Modifier = Modifier,
     content: @Composable (() -> Unit) = {},
 ) {
     var leftWidthPx by remember { mutableIntStateOf(0) }
     var rightWidthPx by remember { mutableIntStateOf(0) }
+    val iconTintColor: Color = iconTint ?: Color.Unspecified
 
     val density = LocalDensity.current
-    val leftPadding = with(density) { leftWidthPx.toDp() }
-    val rightPadding = with(density) { rightWidthPx.toDp() }
+    val leftWidth = with(density) { leftWidthPx.toDp() }
+    val rightWidth = with(density) { rightWidthPx.toDp() }
+
+    val safeSidePadding = maxOf(leftWidth, rightWidth)
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        // 중앙 컨텐츠: 좌/우 실제 너비만큼 패딩을 줘서 절대 침범하지 않음
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = leftPadding, end = rightPadding),
+                .padding(horizontal = safeSidePadding),
             contentAlignment = Alignment.Center
         ) {
             content()
         }
 
-        // 왼쪽 아이콘 영역 (실제 너비 측정)
         if (leftIcon != null) {
             Box(
                 modifier = Modifier
@@ -79,15 +87,17 @@ fun KusTopBar(
                     onClick = onLeftClicked,
                     modifier = leftIconModifier
                 ) {
-                    Icon(painter = leftIcon, contentDescription = null)
+                    Icon(
+                        painter = leftIcon,
+                        contentDescription = null,
+                        tint = iconTintColor
+                    )
                 }
             }
         } else {
-            // 아이콘이 없으면 0으로
-            LaunchedEffect(Unit) { leftWidthPx = 0 }
+            LaunchedEffect(leftIcon) { leftWidthPx = 0 }
         }
 
-        // 오른쪽 아이콘들 영역 (실제 너비 측정)
         Row(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -96,31 +106,35 @@ fun KusTopBar(
             horizontalArrangement = Arrangement.End
         ) {
             if (rightFirstIcon != null) {
-                IconButton(
-                    onClick = onRightFirstClicked,
+                Icon(
+                    painter = rightFirstIcon,
+                    contentDescription = null,
+                    tint = iconTintColor,
                     modifier = rightFirstIconModifier
-                ) {
-                    Icon(painter = rightFirstIcon, contentDescription = null)
-                }
+                        .onGloballyPositioned { coords ->
+                            onRightFirstIconBoundsChanged?.invoke(coords.boundsInWindow())
+                        }
+                        .noRippleClickable { onRightFirstClicked() }
+                )
             }
             if (rightSecondIcon != null) {
                 IconButton(
                     onClick = onRightSecondClicked,
                     modifier = rightSecondIconModifier
                 ) {
-                    Icon(painter = rightSecondIcon, contentDescription = null)
+                    Icon(
+                        painter = rightSecondIcon,
+                        contentDescription = null,
+                        tint = iconTintColor
+                    )
                 }
             }
         }
-
-        // 오른쪽 아이콘이 둘 다 없으면 Row 너비가 0이 되지만,
-        // 혹시 레이아웃 캐시 때문에 남아있을 수 있으니 안전 처리
         LaunchedEffect(rightFirstIcon, rightSecondIcon) {
             if (rightFirstIcon == null && rightSecondIcon == null) rightWidthPx = 0
         }
     }
 }
-
 
 //@Composable
 //fun KusTopBarPreviewOneRightIcon(){

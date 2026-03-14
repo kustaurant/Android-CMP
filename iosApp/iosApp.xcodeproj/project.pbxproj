@@ -7,23 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A9B0559C853C142D3A6C6B71 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0034160D93F9F955A298DD7 /* Pods_iosApp.framework */; };
+		3FA2BE7BDEC2E97E18051110 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7EEC8DED3EE682436CF041 /* Pods_iosApp.framework */; };
+		BF20D3822F4B3806009E8A2B /* purify.min.js in Resources */ = {isa = PBXBuildFile; fileRef = BF20D37E2F4B26BB009E8A2B /* purify.min.js */; };
+		BF20D3832F4B3806009E8A2B /* quill.html in Resources */ = {isa = PBXBuildFile; fileRef = BF20D37F2F4B26BB009E8A2B /* quill.html */; };
+		BF20D3842F4B3806009E8A2B /* quill.min.js in Resources */ = {isa = PBXBuildFile; fileRef = BF20D3802F4B26BB009E8A2B /* quill.min.js */; };
+		BF20D3852F4B3806009E8A2B /* quill.snow.css in Resources */ = {isa = PBXBuildFile; fileRef = BF20D3812F4B26BB009E8A2B /* quill.snow.css */; };
+		BFBA73432F34D8C500C94D68 /* NaverLoginBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */; };
 		BFBA73452F34D8C500C94D68 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA733F2F34D8C500C94D68 /* ContentView.swift */; };
 		BFBA73462F34D8C500C94D68 /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA73412F34D8C500C94D68 /* iOSApp.swift */; };
 		BFBA73472F34D8C500C94D68 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733C2F34D8C500C94D68 /* Preview Assets.xcassets */; };
 		BFBA73482F34D8C500C94D68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733E2F34D8C500C94D68 /* Assets.xcassets */; };
+		BFBA734A2F34D8C500C94D68 /* NaverLoginBridgeError.swift in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2FA65A5A9C5AD2181DB1E845 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
-		49798E78D608B8DBF563C324 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
+		527122E9A83C1DBF04F6DA92 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
+		574F7EE4318346BBBDFB6B2F /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
+		AF7EEC8DED3EE682436CF041 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEDAF15A8875D515274269F3 /* Kustaurant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kustaurant.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF20D37E2F4B26BB009E8A2B /* purify.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = purify.min.js; sourceTree = "<group>"; };
+		BF20D37F2F4B26BB009E8A2B /* quill.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = quill.html; sourceTree = "<group>"; };
+		BF20D3802F4B26BB009E8A2B /* quill.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = quill.min.js; sourceTree = "<group>"; };
+		BF20D3812F4B26BB009E8A2B /* quill.snow.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = quill.snow.css; sourceTree = "<group>"; };
+		BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginBridge.swift; sourceTree = "<group>"; };
+		BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginBridgeError.swift; sourceTree = "<group>"; };
 		BFBA733C2F34D8C500C94D68 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BFBA733E2F34D8C500C94D68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BFBA733F2F34D8C500C94D68 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BFBA73402F34D8C500C94D68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFBA73412F34D8C500C94D68 /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
-		C0034160D93F9F955A298DD7 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,28 +51,48 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9B0559C853C142D3A6C6B71 /* Pods_iosApp.framework in Frameworks */,
+				3FA2BE7BDEC2E97E18051110 /* Pods_iosApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		05C7D4CAA8B1CF2FA799D601 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AF7EEC8DED3EE682436CF041 /* Pods_iosApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		36865C889E772A55E9A3D36B /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				49798E78D608B8DBF563C324 /* Pods-iosApp.debug.xcconfig */,
-				2FA65A5A9C5AD2181DB1E845 /* Pods-iosApp.release.xcconfig */,
+				574F7EE4318346BBBDFB6B2F /* Pods-iosApp.debug.xcconfig */,
+				527122E9A83C1DBF04F6DA92 /* Pods-iosApp.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		4DB1E34AC0D4DBB265A9E34E /* Frameworks */ = {
+		BF20D37D2F4B26AA009E8A2B /* editor */ = {
 			isa = PBXGroup;
 			children = (
-				C0034160D93F9F955A298DD7 /* Pods_iosApp.framework */,
+				BF20D37E2F4B26BB009E8A2B /* purify.min.js */,
+				BF20D37F2F4B26BB009E8A2B /* quill.html */,
+				BF20D3802F4B26BB009E8A2B /* quill.min.js */,
+				BF20D3812F4B26BB009E8A2B /* quill.snow.css */,
 			);
-			name = Frameworks;
+			path = editor;
+			sourceTree = "<group>";
+		};
+		BFBA733B2F34D8C500C94D68 /* login */ = {
+			isa = PBXGroup;
+			children = (
+				BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */,
+				BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */,
+			);
+			path = login;
 			sourceTree = "<group>";
 		};
 		BFBA733D2F34D8C500C94D68 /* Preview Content */ = {
@@ -74,6 +106,7 @@
 		BFBA73422F34D8C500C94D68 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				BFBA733B2F34D8C500C94D68 /* login */,
 				BFBA733D2F34D8C500C94D68 /* Preview Content */,
 				BFBA733E2F34D8C500C94D68 /* Assets.xcassets */,
 				BFBA733F2F34D8C500C94D68 /* ContentView.swift */,
@@ -86,11 +119,12 @@
 		D260EA6B21FA9F05B2DE7742 = {
 			isa = PBXGroup;
 			children = (
+				BF20D37D2F4B26AA009E8A2B /* editor */,
 				AAC7BD4E7A7D29C041541713 /* Configuration */,
 				F22060E8D33BC6684076B2B7 /* Products */,
 				36865C889E772A55E9A3D36B /* Pods */,
 				BFBA73422F34D8C500C94D68 /* iosApp */,
-				4DB1E34AC0D4DBB265A9E34E /* Frameworks */,
+				05C7D4CAA8B1CF2FA799D601 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,12 +143,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 67987FEB6AF96E61FAEBDC7C /* Build configuration list for PBXNativeTarget "iosApp" */;
 			buildPhases = (
-				B1AC470A60CF5D1DBA770D80 /* [CP] Check Pods Manifest.lock */,
+				D239A9CC79226A8B1C69781F /* [CP] Check Pods Manifest.lock */,
 				6501E404554D0E1B8F93565C /* Compile Kotlin Framework */,
 				E7CF5854243AD0599C609050 /* Sources */,
 				EA20CAE0BC9F822664055313 /* Frameworks */,
 				8706D40C56EACBB05AC2EF21 /* Resources */,
-				E0324CF71BF00F819E9F3BB9 /* [CP] Embed Pods Frameworks */,
+				CDFD185654583732267C0B70 /* [CP] Embed Pods Frameworks */,
+				26981FD3302D5CCB547031CE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -164,7 +199,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF20D3822F4B3806009E8A2B /* purify.min.js in Resources */,
+				BF20D3832F4B3806009E8A2B /* quill.html in Resources */,
+				BF20D3842F4B3806009E8A2B /* quill.min.js in Resources */,
+				BF20D3852F4B3806009E8A2B /* quill.snow.css in Resources */,
 				BFBA73472F34D8C500C94D68 /* Preview Assets.xcassets in Resources */,
+				BFBA734A2F34D8C500C94D68 /* NaverLoginBridgeError.swift in Resources */,
 				BFBA73482F34D8C500C94D68 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,6 +212,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		26981FD3302D5CCB547031CE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6501E404554D0E1B8F93565C /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -191,7 +252,28 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\n";
 		};
-		B1AC470A60CF5D1DBA770D80 /* [CP] Check Pods Manifest.lock */ = {
+		CDFD185654583732267C0B70 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D239A9CC79226A8B1C69781F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -213,27 +295,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E0324CF71BF00F819E9F3BB9 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -241,6 +302,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFBA73432F34D8C500C94D68 /* NaverLoginBridge.swift in Sources */,
 				BFBA73452F34D8C500C94D68 /* ContentView.swift in Sources */,
 				BFBA73462F34D8C500C94D68 /* iOSApp.swift in Sources */,
 			);
@@ -374,7 +436,7 @@
 		};
 		7ED49136567999D3B97F8EE8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2FA65A5A9C5AD2181DB1E845 /* Pods-iosApp.release.xcconfig */;
+			baseConfigurationReference = 527122E9A83C1DBF04F6DA92 /* Pods-iosApp.release.xcconfig */;
 			buildSettings = {
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -404,7 +466,7 @@
 		};
 		C4D1690A066E062430391C63 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49798E78D608B8DBF563C324 /* Pods-iosApp.debug.xcconfig */;
+			baseConfigurationReference = 574F7EE4318346BBBDFB6B2F /* Pods-iosApp.debug.xcconfig */;
 			buildSettings = {
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -426,7 +488,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kus.kustaurant;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kust.kustaurant;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

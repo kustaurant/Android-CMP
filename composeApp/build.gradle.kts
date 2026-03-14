@@ -51,6 +51,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
+            implementation(libs.compose.ui.graphics)
             implementation(libs.koin.compose)
             implementation(libs.kotlinx.serialization.json)
 
@@ -66,6 +67,9 @@ kotlin {
             implementation(project(":shared:data:auth"))
             implementation(project(":shared:data:home"))
             implementation(project(":shared:data:search"))
+            implementation(project(":shared:data:community"))
+            implementation(project(":shared:data:detail"))
+            implementation(project(":shared:data:evaluate"))
 
             implementation(project(":shared:feature:community"))
             implementation(project(":shared:feature:draw"))
@@ -76,12 +80,19 @@ kotlin {
             implementation(project(":shared:feature:tier"))
             implementation(project(":shared:feature:my"))
             implementation(project(":shared:feature:search"))
+            implementation(project(":shared:feature:detail"))
+            implementation(project(":shared:feature:evaluate"))
 
             implementation(project(":shared:domain:firstLaunch"))
             implementation(project(":shared:domain:tier"))
             implementation(project(":shared:domain:auth"))
+            implementation(project(":shared:domain:community"))
             implementation(project(":shared:domain:home"))
             implementation(project(":shared:domain:search"))
+            implementation(project(":shared:domain:model"))
+            implementation(project(":shared:domain:detail"))
+            implementation(project(":shared:domain:evaluate"))
+            implementation(project(":shared:domain:model"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -154,11 +165,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.kus.kustaurant.MainKt"
+        mainClass = "com.kust.kustaurant.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.kus.kustaurant"
+            packageName = "com.kust.kustaurant"
             packageVersion = "1.0.0"
         }
     }

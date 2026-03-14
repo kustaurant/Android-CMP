@@ -34,10 +34,14 @@ uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.4.1"
 napier = "2.7.1"
 kamel = "1.0.8"
+peekaboo = "0.5.2"
 naverMaps = "3.23.0"
 buildkonfig = "0.15.1"
 naverOauth = "5.11.0"
 kotlinx-serialization = "1.7.3"
+okio = "3.9.0"
+multiplatform-settings = "1.1.1"
+kotlinx-io = "0.8.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -88,15 +92,21 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
-
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 napier-log = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 
 kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
+
+peekaboo-ui = { module = "io.github.onseok:peekaboo-ui", version.ref = "peekaboo" }
+peekaboo-image-picker = { module = "io.github.onseok:peekaboo-image-picker", version.ref = "peekaboo" }
 
 naver-maps = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMaps" }
 naver-oauth = { group = "com.navercorp.nid", name = "oauth", version.ref = "naverOauth" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+compose-ui-graphics = { module = "org.jetbrains.compose.ui:ui-graphics", version.ref = "composeMultiplatform" }
+multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatform-settings" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
