@@ -2,6 +2,7 @@ package com.kus.feature.detail.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -113,7 +114,8 @@ fun DetailRestInfo(
 
                 Row(
                     modifier = Modifier.padding(top = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     if (restaurantCuisineImgUrl.startsWith("http")) {
                         KamelImage(
