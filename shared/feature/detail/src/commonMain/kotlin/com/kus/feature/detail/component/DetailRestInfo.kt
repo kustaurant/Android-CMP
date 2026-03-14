@@ -32,6 +32,7 @@ fun DetailRestInfo(
     modifier: Modifier = Modifier,
     situationList: List<String> = listOf(),
     mainTier: Int = 1,
+    isTempTier: Boolean = false,
     restaurantCuisine: String = "",
     restaurantCuisineImgUrl: String = "",
     restaurantPosition: String = "",
@@ -55,7 +56,8 @@ fun DetailRestInfo(
                     topEnd = 16.dp
                 )
             )
-            .padding(20.dp)
+            .padding(horizontal = 20.dp)
+            .padding(top = 6.dp, bottom = 20.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -108,8 +110,18 @@ fun DetailRestInfo(
             Column(
                 horizontalAlignment = Alignment.End
             ) {
+                if (isTempTier) {
+                    Text(
+                        text = "AI 임시 티어",
+                        style = KusTheme.typography.type10sb.copy(
+                            color = KusTheme.colors.c_AAAAAA
+                        )
+                    )
+                }
+
                 DetailRestInfoRank(
-                    mainTier = mainTier
+                    mainTier = mainTier,
+                    isTempTier = isTempTier
                 )
 
                 Row(

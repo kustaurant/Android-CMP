@@ -178,6 +178,7 @@ private fun DetailSuccessScreen(
                     DetailRestInfo(
                         situationList = restaurant.situationList,
                         mainTier = restaurant.mainTier,
+                        isTempTier = restaurant.isTempTier,
                         restaurantCuisine = restaurant.restaurantCuisine,
                         restaurantCuisineImgUrl = restaurant.restaurantCuisineImgUrl,
                         restaurantPosition = restaurant.restaurantPosition,
