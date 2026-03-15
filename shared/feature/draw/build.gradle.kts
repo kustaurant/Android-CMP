@@ -48,12 +48,17 @@ kotlin {
                 implementation(libs.navigation.compose)
 
                 implementation(libs.lifecycle.viewmodel)
+                implementation(libs.kamel.image.default)
 
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.compose.ui.backhandler)
 
+                implementation(project(":shared:core:serialization"))
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:core:presentation"))
-                implementation(project(":shared:data:network"))
+                implementation(project(":shared:domain:model"))
+                implementation(project(":shared:data:draw"))
+                implementation(project(":shared:domain:draw"))
             }
         }
 

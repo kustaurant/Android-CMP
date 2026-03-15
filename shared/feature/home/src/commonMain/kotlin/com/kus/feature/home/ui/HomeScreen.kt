@@ -32,9 +32,9 @@ import com.kus.feature.home.component.KusSearchBoxWithNoAction
 import com.kus.feature.home.model.Category
 import com.kus.shared.domain.model.restaurant.RestaurantItem
 import com.kus.shared.domain.model.tier.filter.Cuisine
-import kustaurant.shared.feature.home.generated.resources.Res
-import kustaurant.shared.feature.home.generated.resources.ic_alarm
-import kustaurant.shared.feature.home.generated.resources.img_home_logo
+import kustaurant.shared.core.designsystem.generated.resources.ic_alarm
+import kustaurant.shared.core.designsystem.generated.resources.img_home_logo
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -193,14 +193,14 @@ fun HomeTitleSection(
             horizontalArrangement = Arrangement.Center,
         ) {
             Image(
-                painter = painterResource(Res.drawable.img_home_logo),
+                painter = painterResource(CoreRes.drawable.img_home_logo),
                 contentDescription = "앱 로고",
                 modifier = Modifier.height(30.dp).noRippleClickable(onLogoClick),
             )
         }
 
         Icon(
-            painter = painterResource(Res.drawable.ic_alarm),
+            painter = painterResource(CoreRes.drawable.ic_alarm),
             contentDescription = "알림 버튼",
             modifier = Modifier.size(20.dp).noRippleClickable(onAlertButtonClick)
         )

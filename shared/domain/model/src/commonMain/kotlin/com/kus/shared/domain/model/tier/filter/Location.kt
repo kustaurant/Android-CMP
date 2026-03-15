@@ -26,5 +26,30 @@ enum class Location {
                 else -> values
             }
         }
+
+        fun toggle(
+            current: Set<Location>,
+            clicked: Location,
+        ): Set<Location> {
+            val normalized = normalize(current)
+
+            return when (clicked) {
+                ALL -> {
+                    setOf(ALL)
+                }
+
+                else -> {
+                    val withoutAll = normalized - ALL
+
+                    val next = if (clicked in withoutAll) {
+                        withoutAll - clicked
+                    } else {
+                        withoutAll + clicked
+                    }
+
+                    normalize(next)
+                }
+            }
+        }
     }
 }
