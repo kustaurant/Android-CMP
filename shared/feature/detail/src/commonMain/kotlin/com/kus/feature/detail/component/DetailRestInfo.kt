@@ -9,29 +9,40 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import kustaurant.shared.feature.detail.generated.resources.Res as DetailRes
+import kustaurant.shared.core.designsystem.generated.resources.ic_check
 import kustaurant.shared.feature.detail.generated.resources.Res
 import kustaurant.shared.feature.detail.generated.resources.ic_review_star
 import kustaurant.shared.feature.detail.generated.resources.img_rest_example
-import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.painterResource
+import kotlin.math.roundToInt
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
+import kustaurant.shared.feature.detail.generated.resources.Res as DetailRes
 
 @Composable
 fun DetailRestInfo(
     modifier: Modifier = Modifier,
     situationList: List<String> = listOf(),
     mainTier: Int = 1,
+    isEvaluated: Boolean = false,
     isTempTier: Boolean = false,
     restaurantCuisine: String = "",
     restaurantCuisineImgUrl: String = "",
@@ -70,12 +81,10 @@ fun DetailRestInfo(
                     situationList = situationList
                 )
 
-                Text(
-                    text = restaurantName,
+                DetailRestInfoName(
+                    restaurantName = restaurantName,
+                    isEvaluated = isEvaluated,
                     modifier = Modifier.padding(top = 7.dp),
-                    style = KusTheme.typography.type18sb.copy(
-                        color = KusTheme.colors.c_000000
-                    )
                 )
 
                 Row(
@@ -176,11 +185,65 @@ fun DetailRestInfo(
             textDecoration = TextDecoration.Underline,
             modifier = Modifier.padding(top = 17.dp, bottom = 16.dp)
                 .noRippleClickable {
-                    val isValidUrl = naverMapUrl.startsWith("https://") || naverMapUrl.startsWith("http://")
+                    val isValidUrl =
+                        naverMapUrl.startsWith("https://") || naverMapUrl.startsWith("http://")
                     if (hasNaverMapUrl && isValidUrl) {
                         runCatching { uriHandler.openUri(naverMapUrl) }
                     }
                 }
         )
     }
+}
+
+@Composable
+private fun DetailRestInfoName(
+    restaurantName: String,
+    isEvaluated: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val textStyle = KusTheme.typography.type18sb.copy(
+        color = KusTheme.colors.c_000000
+    )
+
+    if (!isEvaluated) {
+        Text(
+            text = restaurantName,
+            modifier = modifier,
+            style = textStyle
+        )
+        return
+    }
+
+    val displayText = buildAnnotatedString {
+        append(restaurantName.trimEnd())
+        append('\u00A0')
+        appendInlineContent(
+            id = "evaluated_icon",
+            alternateText = "평가완료"
+        )
+    }
+
+    val inlineContent = mapOf(
+        "evaluated_icon" to InlineTextContent(
+            placeholder = Placeholder(
+                width = 14.sp,
+                height = 14.sp,
+                placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+            )
+        ) {
+            Icon(
+                painter = painterResource(CoreRes.drawable.ic_check),
+                contentDescription = null,
+                modifier = Modifier.size(14.dp),
+                tint = Color.Unspecified
+            )
+        }
+    )
+
+    Text(
+        text = displayText,
+        modifier = modifier,
+        style = textStyle,
+        inlineContent = inlineContent
+    )
 }
