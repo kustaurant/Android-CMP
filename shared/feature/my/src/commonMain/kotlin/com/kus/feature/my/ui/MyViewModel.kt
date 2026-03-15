@@ -39,8 +39,9 @@ class MyViewModel(
         if (!getSessionAvailabilityUseCase()) {
             sessionEvents.emit(SessionEvent.LoginRequired)
             _uiState.update { it.copy(userProfileState = UiState.Idle) }
+        } else {
+            loadMyInfo()
         }
-        loadMyInfo()
     }
 
     fun loadMyInfo() = viewModelScope.launch {
@@ -56,7 +57,9 @@ class MyViewModel(
     fun logout() = viewModelScope.launch {
         runCatching { logoutUseCase() }
             .onSuccess {
-                _uiState.update { it.copy(toastMessage = "로그아웃 되었습니다.") }
+                _uiState.update {
+                    it.copy(userProfileState = UiState.Idle, toastMessage = "로그아웃 되었습니다.")
+                }
                 _navigationEvent.emit(MyNavigationEvent.NavigateToLogin)
             }
             .onFailure {
@@ -67,7 +70,9 @@ class MyViewModel(
     fun deleteAccount() = viewModelScope.launch {
         runCatching { deleteUserInfoUseCase() }
             .onSuccess {
-                _uiState.update { it.copy(toastMessage = "계정이 삭제되었습니다.") }
+                _uiState.update {
+                    it.copy(userProfileState = UiState.Idle, toastMessage = "계정이 삭제되었습니다.")
+                }
                 _navigationEvent.emit(MyNavigationEvent.NavigateToLogin)
             }
             .onFailure {
