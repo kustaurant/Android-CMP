@@ -1,16 +1,119 @@
 package com.kus.feature.search.ui
 
+import UiError
+import UiState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.kus.feature.search.state.SearchUiState
+import com.kus.shared.domain.search.usecase.GetSearchResultUseCase
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class SearchViewModel: ViewModel() {
+class SearchViewModel(
+    private val getSearchResultUseCase: GetSearchResultUseCase,
+) : ViewModel() {
     private val _searchTerm = MutableStateFlow("")
     val searchTerm = _searchTerm.asStateFlow()
-    private val _resultItems = MutableStateFlow<List<Int>>(listOf(1,2,3,4,5,6,7,8,9, 10, 11, 12, 13)) // TODO : 도메인 모델 변경
-    val resultItems = _resultItems.asStateFlow()
+    private val _uiState = MutableStateFlow(SearchUiState())
+    val uiState = _uiState.asStateFlow()
+
+    init {
+        observeSearchTerm()
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun observeSearchTerm() {
+        viewModelScope.launch {
+            _searchTerm
+                .debounce(DEBOUNCE_DELAY)
+                .distinctUntilChanged()
+                .collectLatest { term ->
+                    val query = term.trim()
+
+                    if (query.isBlank()) {
+                        _uiState.value = SearchUiState()
+                        return@collectLatest
+                    }
+
+                    search(query)
+                }
+        }
+    }
+
+    private fun search(term: String) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    uiState = UiState.Loading,
+                    items = emptyList(),
+                    page = 1,
+                    isLastPage = false,
+                )
+            }
+
+            runCatching {
+                getSearchResultUseCase(term, 1)
+            }.onSuccess { result ->
+                _uiState.update {
+                    it.copy(
+                        uiState = UiState.Success(Unit),
+                        items = result.items,
+                        page = 1,
+                        isLastPage = !result.hasNext,
+                    )
+                }
+            }.onFailure { e ->
+                _uiState.update {
+                    it.copy(
+                        uiState = UiState.Failure(UiError.Message(e.message ?: "검색 실패"))
+                    )
+                }
+            }
+        }
+    }
+
+    fun loadNextPage() {
+        val state = _uiState.value
+        val term = _searchTerm.value
+
+        if (state.isPaging || state.isLastPage || term.isBlank()) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isPaging = true) }
+
+            val nextPage = state.page + 1
+
+            runCatching {
+                getSearchResultUseCase(term, nextPage)
+            }.onSuccess { result ->
+                val merged = (state.items + result.items).distinctBy { it.id }
+
+                _uiState.update {
+                    it.copy(
+                        items = merged,
+                        page = nextPage,
+                        isLastPage = !result.hasNext,
+                        isPaging = false,
+                    )
+                }
+
+            }.onFailure {
+                _uiState.update { it.copy(isPaging = false) }
+            }
+        }
+    }
 
     fun updateSearchTerm(new: String) {
         _searchTerm.value = new
+    }
+
+    companion object {
+        private const val DEBOUNCE_DELAY = 500L
     }
 }

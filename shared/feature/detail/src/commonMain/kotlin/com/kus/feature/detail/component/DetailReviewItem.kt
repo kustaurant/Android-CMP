@@ -50,7 +50,6 @@ import kustaurant.shared.feature.detail.generated.resources.Res
 import kustaurant.shared.feature.detail.generated.resources.ic_comment_arrow
 import kustaurant.shared.feature.detail.generated.resources.ic_delete
 import kustaurant.shared.feature.detail.generated.resources.ic_more
-import kustaurant.shared.feature.detail.generated.resources.ic_report
 import kustaurant.shared.feature.detail.generated.resources.img_rest_example
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource

@@ -31,13 +31,16 @@ import com.kus.feature.community.navigation.Community
 import com.kus.feature.community.navigation.CommunityDetail
 import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.communityMainNavGraph
+import com.kus.feature.community.navigation.navigateToCommunityDetail
 import com.kus.feature.detail.navigation.Detail
+import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.feature.draw.navigation.Draw
 import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.home.navigation.Home
 import com.kus.feature.home.navigation.homeNavGraph
 import com.kus.feature.my.navigation.My
 import com.kus.feature.my.navigation.myNavGraph
+import com.kus.feature.login.navigation.Login
 import com.kus.feature.search.navigation.Search
 import com.kus.feature.tier.TierKeys as TierResultKeys
 import com.kus.feature.tier.config.TierKeys.TIER_INITIAL_JSON
@@ -185,7 +188,13 @@ fun MainScreen(
                 },
             )
 
-            drawNavGraph(onShowMessage = onShowMessage)
+            drawNavGraph(
+                onSearchClick = { rootNavController.navigate(Search) },
+                onAlarmClick = {},
+                onShowMessage = onShowMessage,
+                navigateToDrawResult = { route -> mainNavController.navigate(route) },
+                onBackClick = { mainNavController.popBackStack() },
+            )
 
             tierMainNavGraph(
                 onShowMessage = onShowMessage,
@@ -220,7 +229,19 @@ fun MainScreen(
                 onSearchClick = { },
             )
 
-            myNavGraph(onShowMessage = onShowMessage)
+            myNavGraph(
+                navigateToUp = mainNavController::popBackStack,
+                onRestItemClick = rootNavController::navigateToDetail,
+                onArticleClick = rootNavController::navigateToCommunityDetail,
+                onShowMessage = onShowMessage,
+                navigateToLogin = {
+                    rootNavController.navigate(Login) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                navController = mainNavController,
+            )
         }
     }
 }
