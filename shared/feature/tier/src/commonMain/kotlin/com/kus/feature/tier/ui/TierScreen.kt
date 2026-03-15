@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -28,7 +27,6 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,19 +36,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusChip
+import com.kus.designsystem.component.KusFadingEdgeLazyRow
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
@@ -231,7 +223,7 @@ fun TierSelectedCategoryRow(
             contentDescription = null,
         )
 
-        FadingEdgeLazyRow(
+        KusFadingEdgeLazyRow(
             state = listState,
             fadeWidth = fadeWidth,
             modifier = Modifier
@@ -251,76 +243,6 @@ fun TierSelectedCategoryRow(
         }
     }
 }
-
-@Composable
-private fun FadingEdgeLazyRow(
-    state: LazyListState,
-    modifier: Modifier = Modifier,
-    fadeWidth: Dp = 16.dp,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    content: androidx.compose.foundation.lazy.LazyListScope.() -> Unit,
-) {
-    val showLeftFade by remember {
-        derivedStateOf {
-            state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0
-        }
-    }
-    val showRightFade by remember {
-        derivedStateOf {
-            val info = state.layoutInfo
-            val lastVisible = info.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf false
-            val totalCount = info.totalItemsCount
-            if (totalCount == 0) return@derivedStateOf false
-
-            val isLastItemVisible = lastVisible.index == totalCount - 1
-            if (!isLastItemVisible) return@derivedStateOf true
-
-            val viewportEnd = info.viewportEndOffset
-            val lastItemEnd = lastVisible.offset + lastVisible.size
-            lastItemEnd > viewportEnd
-        }
-    }
-
-    val fadePx = with(LocalDensity.current) { fadeWidth.toPx() }
-
-    LazyRow(
-        state = state,
-        modifier = modifier
-            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
-            .drawWithContent {
-                drawContent()
-                val w = size.width
-
-                val left = if (showLeftFade) fadePx else 0f
-                val right = if (showRightFade) fadePx else 0f
-
-                if (left == 0f && right == 0f) return@drawWithContent
-
-                val brush = Brush.horizontalGradient(
-                    colorStops = arrayOf(
-                        0.0f to Color.Transparent,
-                        (left / w).coerceIn(0f, 1f) to Color.Black,
-                        ((w - right) / w).coerceIn(0f, 1f) to Color.Black,
-                        1.0f to Color.Transparent
-                    ),
-                    startX = 0f,
-                    endX = w
-                )
-
-                drawRect(
-                    brush = brush,
-                    topLeft = Offset.Zero,
-                    size = size,
-                    blendMode = BlendMode.DstIn
-                )
-            },
-        horizontalArrangement = horizontalArrangement,
-        contentPadding = contentPadding,
-        content = content
-    )
-}
-
 
 @Composable
 private fun TierAiToggleRow(

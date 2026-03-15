@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,13 +25,20 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 
+
 /**
  * 쿠스토랑 버튼
+ *
+ * Material Button을 기반으로 한 커스텀 버튼 컴포넌트입니다.
+ * 텍스트를 중앙 기준으로 정렬하고 좌/우 아이콘을 선택적으로 표시할 수 있습니다.
+ *
+ * 기본적으로 아이콘이 없을 경우 텍스트만 중앙에 표시되며,
+ * 아이콘이 있을 경우 텍스트와 자연스럽게 나란히 배치됩니다.
  *
  * @param enabled 버튼 활성화 여부
  * @param buttonName 버튼에 표시될 텍스트
  * @param roundedCornerShape 버튼 모서리 형태
- * @param modifier 버튼 자체에 적용되는 Modifier
+ * @param modifier 버튼 전체에 적용되는 Modifier
  * @param textStyle 버튼 텍스트 스타일(default: type18sb)
  * @param contentColor 버튼 내용(텍스트/아이콘) 색상(default: White)
  * @param containerColor 버튼 배경 색상(default: c_43AB38)
@@ -37,11 +46,13 @@ import com.kus.designsystem.theme.KusTheme
  * @param contentPadding 버튼 내부 패딩(default: PaddingValues(vertical = 13.dp))
  * @param leftIcon 버튼 좌측 아이콘 Painter(default: null)
  * @param rightIcon 버튼 우측 아이콘 Painter(default: null)
+ * @param leftIconModifier 좌측 아이콘 Modifier (padding/offset 등 커스터마이징 가능)
+ * @param rightIconModifier 우측 아이콘 Modifier (padding/offset 등 커스터마이징 가능)
  * @param iconSize 아이콘 크기(default: 20.dp)
  * @param isShadowVisible 버튼 그림자 표시 여부(default: false)
  * @param onClick 버튼 클릭 시 호출되는 콜백 함수
  */
- @Composable
+@Composable
 fun KusButton(
     enabled: Boolean,
     buttonName: String,
@@ -54,6 +65,8 @@ fun KusButton(
     contentPadding: PaddingValues = PaddingValues(vertical = 13.dp),
     leftIcon: Painter? = null,
     rightIcon: Painter? = null,
+    leftIconModifier: Modifier = Modifier,
+    rightIconModifier: Modifier = Modifier,
     iconSize: Dp = 20.dp,
     isShadowVisible: Boolean = false,
     onClick: () -> Unit,
@@ -88,34 +101,32 @@ fun KusButton(
             contentPadding = contentPadding,
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
             ) {
-
-                if (leftIcon != null) {
+                leftIcon?.let {
                     Icon(
-                        painter = leftIcon,
+                        painter = it,
                         contentDescription = null,
-                        modifier = Modifier.size(iconSize)
+                        modifier = leftIconModifier.size(iconSize)
                     )
+
+                    Spacer(Modifier.width(6.dp))
                 }
 
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = buttonName,
-                        style = textStyle
-                    )
-                }
+                Text(
+                    text = buttonName,
+                    style = textStyle
+                )
 
-                if (rightIcon != null) {
+                rightIcon?.let {
+
+                    Spacer(Modifier.width(6.dp))
+
                     Icon(
-                        painter = rightIcon,
+                        painter = it,
                         contentDescription = null,
-                        modifier = Modifier.size(iconSize)
+                        modifier = rightIconModifier.size(iconSize)
                     )
                 }
             }

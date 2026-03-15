@@ -2,10 +2,10 @@ package com.kus.feature.tier.ui.category
 
 import androidx.lifecycle.ViewModel
 import com.kus.feature.tier.ui.TierFilterState
+import com.kus.shared.domain.model.rule.FilterRule
 import com.kus.shared.domain.model.tier.filter.Cuisine
 import com.kus.shared.domain.model.tier.filter.Location
 import com.kus.shared.domain.model.tier.filter.Situation
-import com.kus.shared.domain.tier.rule.TierFilterRule
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +47,7 @@ class TierCategorySelectViewModel : ViewModel() {
         val exclusive = setOf(Cuisine.PARTNERSHIP)
 
         _uiState.update { s ->
-            val next = TierFilterRule.toggleWithAllAndExclusive(
+            val next = FilterRule.toggleWithAllAndExclusive(
                 current = s.selectedCuisines,
                 clicked = item,
                 all = all,
@@ -59,7 +59,7 @@ class TierCategorySelectViewModel : ViewModel() {
 
     fun toggleSituation(item: Situation) {
         _uiState.update { s ->
-            val next = TierFilterRule.toggleWithAll(
+            val next = FilterRule.toggleWithAll(
                 current = s.selectedSituations,
                 clicked = item,
                 all = Situation.ALL
@@ -70,7 +70,7 @@ class TierCategorySelectViewModel : ViewModel() {
 
     fun toggleLocation(item: Location) {
         _uiState.update { s ->
-            val next = TierFilterRule.toggleWithAll(
+            val next = FilterRule.toggleWithAll(
                 current = s.selectedLocations,
                 clicked = item,
                 all = Location.ALL

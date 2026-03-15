@@ -135,7 +135,14 @@ fun KusNavHost(
             navigateToDetail = { },
         )
 
-        drawNavGraph(onShowMessage = onShowMessage)
+        drawNavGraph(
+            onSearchClick = {},
+            onAlarmClick = {},
+            onBackClick = { navController.popBackStack() },
+            navigateToDrawResult = { route -> navController.navigate(route) },
+            onShowMessage = onShowMessage
+        )
+
         tierNavGraph(
             onShowMessage = onShowMessage,
             initialProvider = {

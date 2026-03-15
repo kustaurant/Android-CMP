@@ -4,11 +4,14 @@ import com.kus.core.config.di.configModule
 import com.kus.data.firstLaunch.di.firstLaunchDataModule
 import com.kus.data.auth.di.authDataModule
 import com.kus.data.community.di.communityDataModule
+import com.kus.data.draw.di.DrawDataModule
 import com.kus.data.network.di.networkModule
 import com.kus.domain.firstLaunch.di.firstLaunchDomainModule
 import com.kus.domain.auth.di.authDomainModule
 import com.kus.domain.community.di.communityDomainModule
+import com.kus.domain.draw.di.drawDomainModule
 import com.kus.feature.community.di.communityFeatureModule
+import com.kus.feature.draw.di.drawFeatureModule
 import com.kus.feature.home.di.homeFeatureModule
 import com.kus.feature.login.di.featureLoginModule
 import com.kus.feature.onboarding.di.onboardingFeatureModule
@@ -40,6 +43,7 @@ fun initKoin(
             tierDomainModule,
             homeDomainModule,
             communityDomainModule,
+            drawDomainModule,
 
             // data (repository 등 공통)
             networkModule,
@@ -48,6 +52,7 @@ fun initKoin(
             tierDataModule,
             homeDataModule,
             communityDataModule,
+            DrawDataModule,
 
             // feature
             splashFeatureModule,
@@ -55,7 +60,8 @@ fun initKoin(
             featureLoginModule,
             tierFeatureModule,
             homeFeatureModule,
-            communityFeatureModule
+            communityFeatureModule,
+            drawFeatureModule
         )
 
         modules(additionalModules)
