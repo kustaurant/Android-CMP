@@ -20,13 +20,15 @@ import com.kus.feature.community.model.CommunityPostModifyPayload
 import com.kus.feature.community.navigation.CommunityDetail
 import com.kus.feature.community.navigation.CommunityWriteModify
 import com.kus.feature.community.navigation.communityFullscreenNavGraph
+import com.kus.feature.community.navigation.navigateToCommunityDetail
 import com.kus.feature.detail.config.DetailKeys.DETAIL_EVALUATE_REFRESH
-import com.kus.feature.detail.navigation.Detail
 import com.kus.feature.detail.navigation.detailNavGraph
+import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.feature.evaluate.navigation.Evaluate
 import com.kus.feature.evaluate.navigation.evaluateNavGraph
 import com.kus.feature.login.navigation.Login
 import com.kus.feature.login.navigation.loginNavGraph
+import com.kus.feature.my.navigation.myFullscreenNavGraph
 import com.kus.feature.onboarding.navigatioin.Onboarding
 import com.kus.feature.onboarding.navigatioin.onboardingNavGraph
 import com.kus.feature.search.navigation.searchNavGraph
@@ -186,6 +188,13 @@ fun KusNavHost(
             },
         )
 
+        myFullscreenNavGraph(
+            navigateToUp = navController::popBackStack,
+            onRestItemClick = navController::navigateToDetail,
+            onArticleClick = navController::navigateToCommunityDetail,
+            onShowMessage = onShowMessage,
+        )
+
         detailNavGraph(
             navigateToUp = navController::popBackStack,
             navigateToEvaluate = { restaurant ->
@@ -217,10 +226,8 @@ fun KusNavHost(
         )
 
         searchNavGraph(
-            navigateToUp = { navController.popBackStack() },
-            navigateToRestDetail = { restaurantId ->
-                navController.navigate(Detail(restaurantId))
-            }
+            navigateToUp = navController::popBackStack,
+            navigateToRestDetail = navController::navigateToDetail,
         )
     }
 }

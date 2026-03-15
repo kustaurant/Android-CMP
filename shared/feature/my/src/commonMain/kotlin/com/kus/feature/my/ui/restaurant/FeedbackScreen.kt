@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
@@ -50,7 +52,9 @@ internal fun FeedbackScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(KusTheme.colors.c_FFFFFF),
+            .background(KusTheme.colors.c_FFFFFF)
+            .navigationBarsPadding()
+            .imePadding(),
     ) {
         MyPageTopBar(
             title = "의견 보내기",
@@ -58,7 +62,9 @@ internal fun FeedbackScreen(
         )
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
         ) {
             Box(
                 modifier = Modifier.weight(1f)

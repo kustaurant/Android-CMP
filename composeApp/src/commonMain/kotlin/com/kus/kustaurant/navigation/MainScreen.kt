@@ -31,16 +31,21 @@ import com.kus.feature.community.navigation.Community
 import com.kus.feature.community.navigation.CommunityDetail
 import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.communityMainNavGraph
-import com.kus.feature.community.navigation.navigateToCommunityDetail
 import com.kus.feature.detail.navigation.Detail
-import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.feature.draw.navigation.Draw
 import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.home.navigation.Home
 import com.kus.feature.home.navigation.homeNavGraph
-import com.kus.feature.my.navigation.My
-import com.kus.feature.my.navigation.myNavGraph
 import com.kus.feature.login.navigation.Login
+import com.kus.feature.my.navigation.My
+import com.kus.feature.my.navigation.myMainNavGraph
+import com.kus.feature.my.navigation.navigateToCheckedRest
+import com.kus.feature.my.navigation.navigateToFeedback
+import com.kus.feature.my.navigation.navigateToFavoriteRest
+import com.kus.feature.my.navigation.navigateToMyArticle
+import com.kus.feature.my.navigation.navigateToMyComment
+import com.kus.feature.my.navigation.navigateToMyWebView
+import com.kus.feature.my.navigation.navigateToScrap
 import com.kus.feature.search.navigation.Search
 import com.kus.feature.tier.TierKeys as TierResultKeys
 import com.kus.feature.tier.config.TierKeys.TIER_INITIAL_JSON
@@ -229,18 +234,38 @@ fun MainScreen(
                 onSearchClick = { },
             )
 
-            myNavGraph(
-                navigateToUp = mainNavController::popBackStack,
-                onRestItemClick = rootNavController::navigateToDetail,
-                onArticleClick = rootNavController::navigateToCommunityDetail,
+            myMainNavGraph(
                 onShowMessage = onShowMessage,
+                navigateToNotice = {
+                    rootNavController.navigateToMyWebView(
+                        title = "공지사항",
+                        url = "https://kustaurant.com/notice",
+                    )
+                },
+                navigateToTerms = {
+                    rootNavController.navigateToMyWebView(
+                        title = "이용약관",
+                        url = "https://kustaurant.com/terms_of_use",
+                    )
+                },
+                navigateToPrivacyPolicy = {
+                    rootNavController.navigateToMyWebView(
+                        title = "개인정보처리방침",
+                        url = "https://kustaurant.com/privacy-policy",
+                    )
+                },
+                navigateToFeedback = rootNavController::navigateToFeedback,
+                navigateToSavedRest = rootNavController::navigateToFavoriteRest,
+                navigateToCheckedRest = rootNavController::navigateToCheckedRest,
+                navigateToMyArticle = rootNavController::navigateToMyArticle,
+                navigateToMyComment = rootNavController::navigateToMyComment,
+                navigateToScrap = rootNavController::navigateToScrap,
                 navigateToLogin = {
                     rootNavController.navigate(Login) {
                         popUpTo(0) { inclusive = true }
                         launchSingleTop = true
                     }
                 },
-                navController = mainNavController,
             )
         }
     }

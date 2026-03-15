@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
@@ -57,7 +58,8 @@ internal fun MyArticleScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(KusTheme.colors.c_FFFFFF),
+                        .background(KusTheme.colors.c_FFFFFF)
+                        .navigationBarsPadding(),
                 ) {
                     stickyHeader {
                         MyPageTopBar(
