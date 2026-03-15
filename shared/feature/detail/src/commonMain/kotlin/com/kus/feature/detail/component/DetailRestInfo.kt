@@ -23,12 +23,13 @@ import kustaurant.shared.feature.detail.generated.resources.Res as DetailRes
 import kustaurant.shared.feature.detail.generated.resources.Res
 import kustaurant.shared.feature.detail.generated.resources.ic_review_star
 import kustaurant.shared.feature.detail.generated.resources.img_rest_example
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun DetailRestInfo(
     modifier: Modifier = Modifier,
-    situationList: ArrayList<String> = arrayListOf(),
+    situationList: List<String> = listOf(),
     mainTier: Int = 1,
     restaurantCuisine: String = "",
     restaurantCuisineImgUrl: String = "",
@@ -37,11 +38,12 @@ fun DetailRestInfo(
     restaurantAddress: String = "",
     naverMapUrl: String = "",
     partnershipInfo: String = "",
-    rating: Double = 0.0,
+    rating: Double? = 0.0,
     evaluationCount: Int = 0,
 ) {
     val uriHandler = LocalUriHandler.current
     val hasNaverMapUrl = naverMapUrl.isNotBlank()
+    val roundedRating = rating?.let { (it * 1000).roundToInt() / 1000.0 } ?: 0.0
 
     Column(
         modifier = modifier.fillMaxWidth()
@@ -84,7 +86,7 @@ fun DetailRestInfo(
                     )
 
                     Text(
-                        text = rating.toString(),
+                        text = roundedRating.toString(),
                         modifier = Modifier.padding(start = 4.dp),
                         style = KusTheme.typography.type14b.copy(
                             color = KusTheme.colors.c_000000

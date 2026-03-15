@@ -12,16 +12,25 @@ import com.kus.domain.community.di.communityDomainModule
 import com.kus.domain.draw.di.drawDomainModule
 import com.kus.feature.community.di.communityFeatureModule
 import com.kus.feature.draw.di.drawFeatureModule
+import com.kus.feature.detail.di.detailFeatureModule
+import com.kus.feature.evaluate.di.evaluateFeatureModule
 import com.kus.feature.home.di.homeFeatureModule
 import com.kus.feature.login.di.featureLoginModule
 import com.kus.feature.onboarding.di.onboardingFeatureModule
+import com.kus.feature.search.di.searchFeatureModule
 import com.kus.feature.tier.di.tierFeatureModule
 import com.kus.shared.data.tier.di.tierDataModule
 import com.kus.shared.domain.tier.di.tierDomainModule
 import org.koin.core.KoinApplication
 import com.kus.feature.splash.di.splashFeatureModule
+import com.kus.kustaurant.detail.di.detailDataModule
+import com.kus.kustaurant.evaluate.di.evaluateDataModule
 import com.kus.kustaurant.home.di.homeDataModule
+import com.kus.shared.domain.detail.di.detailDomainModule
+import com.kus.shared.domain.evaluate.di.evaluateDomainModule
 import com.kus.shared.domain.home.di.homeDomainModule
+import com.kus.shared.data.search.di.searchDataModule
+import com.kus.shared.domain.search.di.searchDomainModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -42,7 +51,10 @@ fun initKoin(
             authDomainModule,
             tierDomainModule,
             homeDomainModule,
+            searchDomainModule,
             communityDomainModule,
+            detailDomainModule,
+            evaluateDomainModule,
             drawDomainModule,
 
             // data (repository 등 공통)
@@ -51,7 +63,10 @@ fun initKoin(
             authDataModule,
             tierDataModule,
             homeDataModule,
+            searchDataModule,
             communityDataModule,
+            detailDataModule,
+            evaluateDataModule,
             DrawDataModule,
 
             // feature
@@ -61,7 +76,11 @@ fun initKoin(
             tierFeatureModule,
             homeFeatureModule,
             communityFeatureModule,
-            drawFeatureModule
+            drawFeatureModule,
+            searchFeatureModule,
+            communityFeatureModule,
+            detailFeatureModule,
+            evaluateFeatureModule
         )
 
         modules(additionalModules)

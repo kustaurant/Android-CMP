@@ -50,9 +50,16 @@ kotlin {
                 implementation(libs.lifecycle.viewmodel)
 
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kamel.image.default)
 
                 implementation(project(":shared:core:designSystem"))
+                implementation(project(":shared:core:presentation"))
+                implementation(project(":shared:core:logging"))
+                implementation(project(":shared:core:serialization"))
+
                 implementation(project(":shared:data:network"))
+                implementation(project(":shared:domain:model"))
+                implementation(project(":shared:domain:search"))
                 resources.srcDirs("src/commonMain/composeResources")
             }
         }

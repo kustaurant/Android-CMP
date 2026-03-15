@@ -24,19 +24,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
-import kustaurant.shared.core.designsystem.generated.resources.Res
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_check
 import kustaurant.shared.core.designsystem.generated.resources.ic_kus_blank
 import kustaurant.shared.core.designsystem.generated.resources.ic_location
 import kustaurant.shared.core.designsystem.generated.resources.ic_rank_none
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
-import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_1
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_2
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_3
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_4
-import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
 import kustaurant.shared.core.designsystem.generated.resources.ic_tier_2
 import kustaurant.shared.core.designsystem.generated.resources.ic_tier_3
 import kustaurant.shared.core.designsystem.generated.resources.ic_tier_4
@@ -52,7 +52,7 @@ fun KusRestThumbnail(
     restAlliance: String? = null,
     categories: ArrayList<String>? = null,
     location: String? = null,
-    isTempTier : Boolean = false,
+    isTempTier: Boolean = false,
     isSaved: Boolean,
     isEvaluated: Boolean,
     onClick: () -> Unit = {},
@@ -68,7 +68,8 @@ fun KusRestThumbnail(
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(8.dp)
-            .noRippleClickable { onClick() }
+            .noRippleClickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier

@@ -1,6 +1,5 @@
 package com.kus.kustaurant
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -119,6 +118,7 @@ fun SetNavigation() {
     val currentRoute = destination?.route
     val selectedKey = BottomTab.fromRoute(currentRoute).key
 
+    val applySystemBarsPadding = !isEdgeToEdgeScreen(currentRoute)
     val isWriter =
         navBackStackEntry?.destination?.hasRoute<CommunityWrite>() == true ||
                 navBackStackEntry?.destination?.hasRoute<CommunityDetail>() == true ||
@@ -135,10 +135,7 @@ fun SetNavigation() {
                     navController = navController,
                 )
             },
-            modifier =
-                Modifier
-                    .background(KusTheme.colors.c_FFFFFF)
-                    .systemBarsPadding(),
+            modifier = if (applySystemBarsPadding) Modifier.systemBarsPadding() else Modifier,
             contentWindowInsets = WindowInsets.systemBars,
         ) { padding ->
             Box(
@@ -200,6 +197,20 @@ private fun NavHostController.navigateToTab(key: String) {
         BottomTab.COMMUNITY.key -> navigate(Community) { tabOptions(this@navigateToTab) }
         BottomTab.MY.key -> navigate(My) { tabOptions(this@navigateToTab) }
     }
+}
+
+private fun shouldShowBottomBar(currentRoute: String?): Boolean {
+    val route = currentRoute ?: return true
+    val hiddenRoutes = listOf("Splash", "Onboarding", "Login", "Detail", "Evaluate")
+
+    return hiddenRoutes.none { route.contains(it) }
+}
+
+private fun isEdgeToEdgeScreen(currentRoute: String?): Boolean {
+    val route = currentRoute ?: return false
+    val edgeToEdgeRoutes = listOf("Detail")
+
+    return edgeToEdgeRoutes.any { route.contains(it) }
 }
 
 private fun NavOptionsBuilder.tabOptions(navController: NavHostController) {

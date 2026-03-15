@@ -54,9 +54,11 @@ kotlin {
 
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:data:network"))
-
-                resources.srcDir("src/commonMain/composeResources")
+                implementation(project(":shared:core:presentation"))
+                implementation(project(":shared:domain:detail"))
+                implementation(project(":shared:domain:model"))
             }
+            resources.srcDirs("src/commonMain/composeResources")
         }
 
         commonTest {
