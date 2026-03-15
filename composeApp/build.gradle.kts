@@ -70,6 +70,7 @@ kotlin {
             implementation(project(":shared:data:community"))
             implementation(project(":shared:data:draw"))
             implementation(project(":shared:data:detail"))
+            implementation(project(":shared:data:my"))
             implementation(project(":shared:data:evaluate"))
 
             implementation(project(":shared:feature:community"))
@@ -96,6 +97,7 @@ kotlin {
             implementation(project(":shared:domain:evaluate"))
             implementation(project(":shared:domain:draw"))
             implementation(project(":shared:domain:model"))
+            implementation(project(":shared:domain:my"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

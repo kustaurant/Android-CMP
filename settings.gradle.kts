@@ -60,6 +60,7 @@ include(
     ":shared:data:community",
     ":shared:data:detail",
     ":shared:data:evaluate",
+    ":shared:data:my",
 )
 
 include(
@@ -73,6 +74,7 @@ include(
     ":shared:domain:draw",
     ":shared:domain:detail",
     ":shared:domain:evaluate",
+    ":shared:domain:my",
 )
 
 include(

@@ -20,9 +20,11 @@ import com.kus.feature.community.navigation.CommunityDetail
 import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.CommunityWriteModify
 import com.kus.feature.community.navigation.communityNavGraph
-import com.kus.feature.detail.navigation.Detail
+import com.kus.feature.community.navigation.navigateToCommunityDetail
 import com.kus.feature.detail.config.DetailKeys.DETAIL_EVALUATE_REFRESH
+import com.kus.feature.detail.navigation.Detail
 import com.kus.feature.detail.navigation.detailNavGraph
+import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.evaluate.navigation.Evaluate
 import com.kus.feature.evaluate.navigation.evaluateNavGraph
@@ -133,7 +135,7 @@ fun KusNavHost(
 
                 navController.navigate(Tier)
             },
-            navigateToDetail = { },
+            navigateToDetail = navController::navigateToDetail,
         )
 
         drawNavGraph(
@@ -232,7 +234,19 @@ fun KusNavHost(
                 navController.popBackStack()
             },
         )
-        myNavGraph(onShowMessage = onShowMessage)
+        myNavGraph(
+            onShowMessage = onShowMessage,
+            navController = navController,
+            navigateToUp = navController::popBackStack,
+            onRestItemClick = navController::navigateToDetail,
+            onArticleClick = navController::navigateToCommunityDetail,
+            navigateToLogin = {
+                navController.navigate(Login) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        )
 
         detailNavGraph(
             navigateToUp = navController::popBackStack,
@@ -266,7 +280,7 @@ fun KusNavHost(
 
         searchNavGraph(
             navigateToUp = navController::popBackStack,
-            navigateToRestDetail = { /* Todo: 상세화면 연결 */ },
+            navigateToRestDetail = navController::navigateToDetail,
         )
     }
 }
