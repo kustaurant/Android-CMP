@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusButton
+import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.evaluate.component.EvaluationImage
@@ -76,7 +77,9 @@ fun EvaluateRoute(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center,
                     ) {
-                        CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                        KusLoadingAnimation(
+                            modifier = Modifier.size(120.dp)
+                        )
                     }
                 }
 

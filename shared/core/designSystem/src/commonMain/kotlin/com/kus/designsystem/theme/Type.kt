@@ -77,6 +77,7 @@ class KusTypography(
     val type13m: TextStyle,
     val type12r: TextStyle,
     val type11r: TextStyle,
+    val type10sb: TextStyle,
     val type10r: TextStyle,
 )
 
@@ -173,6 +174,10 @@ fun createKusTypography() = KusTypography(
     type11r = KusTextStyle(
         fontFamily = PretendardRegular,
         fontSize = 11.sp,
+    ),
+    type10sb = KusTextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 10.sp,
     ),
     type10r = KusTextStyle(
         fontFamily = PretendardRegular,

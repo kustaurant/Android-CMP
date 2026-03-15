@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +40,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusButton
+import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
@@ -85,7 +85,9 @@ fun DetailRoute(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                KusLoadingAnimation(
+                    modifier = Modifier.size(120.dp)
+                )
             }
         }
 
@@ -146,7 +148,7 @@ private fun DetailSuccessScreen(
         derivedStateOf { restInfoTopInWindow <= topBarBottomInWindow }
     }
     val topBarBackground = if (useWhiteTopBar) KusTheme.colors.c_FFFFFF else Color.Transparent
-    val topBarIconTint = if (useWhiteTopBar) KusTheme.colors.c_000000 else null
+    val topBarIconTint = if (useWhiteTopBar) KusTheme.colors.c_000000 else KusTheme.colors.c_FFFFFF
     val evaluateButtonText = if (restaurant.isEvaluated) "다시 평가하기" else "맛집 평가하기"
     val favoriteIcon = if (restaurant.isFavorite) Res.drawable.ic_saved else Res.drawable.ic_unsaved
     val favoriteCountText = restaurant.favoriteCount.toString()
@@ -178,6 +180,8 @@ private fun DetailSuccessScreen(
                     DetailRestInfo(
                         situationList = restaurant.situationList,
                         mainTier = restaurant.mainTier,
+                        isEvaluated = restaurant.isEvaluated,
+                        isTempTier = restaurant.isTempTier,
                         restaurantCuisine = restaurant.restaurantCuisine,
                         restaurantCuisineImgUrl = restaurant.restaurantCuisineImgUrl,
                         restaurantPosition = restaurant.restaurantPosition,
@@ -240,44 +244,50 @@ private fun DetailSuccessScreen(
             )
         }
 
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .background(color = KusTheme.colors.c_FFFFFF)
-                .border(
-                    width = 1.dp,
-                    color = KusTheme.colors.c_E0E0E0
-                )
-                .padding(horizontal = 20.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
         ) {
-            KusButton(
-                enabled = true,
-                buttonName = evaluateButtonText,
-                modifier = Modifier.weight(1f),
-                roundedCornerShape = RoundedCornerShape(50.dp),
-                onClick = navigateToEvaluate
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = KusTheme.colors.c_E0E0E0
             )
 
-            Column(
+            Row(
                 modifier = Modifier
-                    .padding(start = 18.dp, end = 12.dp)
-                    .noRippleClickable { onFavoriteClick() },
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(favoriteIcon),
-                    contentDescription = null,
-                    modifier = Modifier.size(28.dp)
+                KusButton(
+                    enabled = true,
+                    buttonName = evaluateButtonText,
+                    modifier = Modifier.weight(1f),
+                    roundedCornerShape = RoundedCornerShape(50.dp),
+                    onClick = navigateToEvaluate
                 )
 
-                Text(
-                    text = favoriteCountText,
-                    style = KusTheme.typography.type14r.copy(
-                        color = KusTheme.colors.c_AAAAAA
+                Column(
+                    modifier = Modifier
+                        .padding(start = 18.dp, end = 12.dp)
+                        .noRippleClickable { onFavoriteClick() },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(favoriteIcon),
+                        contentDescription = null,
+                        modifier = Modifier.size(28.dp)
                     )
-                )
+
+                    Text(
+                        text = favoriteCountText,
+                        style = KusTheme.typography.type14r.copy(
+                            color = KusTheme.colors.c_AAAAAA
+                        )
+                    )
+                }
             }
         }
 
