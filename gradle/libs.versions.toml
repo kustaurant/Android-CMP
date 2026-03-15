@@ -42,6 +42,7 @@ kotlinx-serialization = "1.7.3"
 okio = "3.9.0"
 multiplatform-settings = "1.1.1"
 kotlinx-io = "0.8.2"
+compottie = "2.0.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -107,6 +108,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 
 compose-ui-graphics = { module = "org.jetbrains.compose.ui:ui-graphics", version.ref = "composeMultiplatform" }
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatform-settings" }
+compottie-core = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -38,46 +38,43 @@ fun NavController.navigateToMyComment(navOptions: NavOptions? = null) =
 fun NavController.navigateToScrap(navOptions: NavOptions? = null) =
     navigate(MyScrap, navOptions)
 
-fun NavGraphBuilder.myNavGraph(
-    navigateToUp: () -> Unit,
-    onRestItemClick: (Long) -> Unit,
-    onArticleClick: (Long) -> Unit,
+fun NavGraphBuilder.myMainNavGraph(
     onShowMessage: (String) -> Unit,
+    navigateToNotice: () -> Unit,
+    navigateToTerms: () -> Unit,
+    navigateToPrivacyPolicy: () -> Unit,
+    navigateToFeedback: () -> Unit,
+    navigateToSavedRest: () -> Unit,
+    navigateToCheckedRest: () -> Unit,
+    navigateToMyArticle: () -> Unit,
+    navigateToMyComment: () -> Unit,
+    navigateToScrap: () -> Unit,
     navigateToLogin: () -> Unit,
-    navController: NavController,
 ) {
     composable<My> {
         MyRoute(
             onShowMessage = onShowMessage,
             navigateToProfileEdit = { },
-            navigateToNotice = {
-                navController.navigateToMyWebView(
-                    title = "공지사항",
-                    url = "https://kustaurant.com/notice",
-                )
-            },
-            navigateToTerms = {
-                navController.navigateToMyWebView(
-                    title = "이용약관",
-                    url = "https://kustaurant.com/terms_of_use",
-                )
-            },
-            navigateToPrivacyPolicy = {
-                navController.navigateToMyWebView(
-                    title = "개인정보처리방침",
-                    url = "https://kustaurant.com/privacy-policy",
-                )
-            },
-            navigateToFeedback = navController::navigateToFeedback,
-            navigateToSavedRest = navController::navigateToFavoriteRest,
-            navigateToCheckedRest = navController::navigateToCheckedRest,
-            navigateToMyArticle = navController::navigateToMyArticle,
-            navigateToMyComment = navController::navigateToMyComment,
-            navigateToScrap = navController::navigateToScrap,
+            navigateToNotice = navigateToNotice,
+            navigateToTerms = navigateToTerms,
+            navigateToPrivacyPolicy = navigateToPrivacyPolicy,
+            navigateToFeedback = navigateToFeedback,
+            navigateToSavedRest = navigateToSavedRest,
+            navigateToCheckedRest = navigateToCheckedRest,
+            navigateToMyArticle = navigateToMyArticle,
+            navigateToMyComment = navigateToMyComment,
+            navigateToScrap = navigateToScrap,
             navigateToLogin = navigateToLogin,
         )
     }
+}
 
+fun NavGraphBuilder.myFullscreenNavGraph(
+    navigateToUp: () -> Unit,
+    onRestItemClick: (Long) -> Unit,
+    onArticleClick: (Long) -> Unit,
+    onShowMessage: (String) -> Unit,
+) {
     composable<MyWebView> { backStackEntry ->
         val args = backStackEntry.toRoute<MyWebView>()
         MyPageWebViewScreen(

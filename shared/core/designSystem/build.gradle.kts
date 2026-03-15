@@ -43,6 +43,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
                 implementation(libs.kamel.image.default)
+                implementation(libs.compottie.core)
 
                 resources.srcDirs("src/commonMain/composeResources")
             }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.SnackbarHostState
@@ -22,6 +23,7 @@ fun KusSnackBarOverlay(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.navigationBars)
             .windowInsetsPadding(WindowInsets.ime)
             .padding(bottom = bottomOffset),
         contentAlignment = Alignment.BottomCenter

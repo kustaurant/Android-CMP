@@ -25,6 +25,10 @@ val C_0093FF = Color(0xFF0093FF)
 val C_01BAA6 = Color(0xFF01BAA6)
 val C_FFB900 = Color(0xFFFFB900)
 val C_9BA5B0 = Color(0xFF9BA5B0)
+val C_C24BFF = Color(0xFFC24BFF)
+val C_1C64CA = Color(0xFF1C64CA)
+val C_A31597 = Color(0xFFA31597)
+val C_41454A = Color(0xFF41454A)
 val C_FF0000 = Color(0xFFFF0000)
 
 
@@ -49,6 +53,10 @@ class KusColors(
     c_01BAA6: Color,
     c_FFB900: Color,
     c_9BA5B0: Color,
+    c_C24BFF: Color,
+    c_1C64CA: Color,
+    c_A31597: Color,
+    c_41454A: Color,
     c_FF0000: Color,
 ) {
     var c_43AB38 by mutableStateOf(c_43AB38)
@@ -89,6 +97,14 @@ class KusColors(
         private set
     var c_9BA5B0 by mutableStateOf(c_9BA5B0)
         private set
+    var c_C24BFF by mutableStateOf(c_C24BFF)
+        private set
+    var c_1C64CA by mutableStateOf(c_1C64CA)
+        private set
+    var c_A31597 by mutableStateOf(c_A31597)
+        private set
+    var c_41454A by mutableStateOf(c_41454A)
+        private set
     var c_FF0000 by mutableStateOf(c_FF0000)
         private set
 
@@ -112,6 +128,10 @@ class KusColors(
         c_01BAA6,
         c_FFB900,
         c_9BA5B0,
+        c_C24BFF,
+        c_1C64CA,
+        c_A31597,
+        c_41454A,
         c_FF0000,
     )
 
@@ -135,6 +155,10 @@ class KusColors(
         c_01BAA6 = other.c_01BAA6
         c_FFB900 = other.c_FFB900
         c_9BA5B0 = other.c_9BA5B0
+        c_C24BFF = other.c_C24BFF
+        c_1C64CA = other.c_1C64CA
+        c_A31597 = other.c_A31597
+        c_41454A = other.c_41454A
         c_FF0000 = other.c_FF0000
     }
 }
@@ -159,6 +183,10 @@ fun KusLightColors(
     c_01BAA6: Color = C_01BAA6,
     c_FFB900: Color = C_FFB900,
     c_9BA5B0: Color = C_9BA5B0,
+    c_C24BFF: Color = C_C24BFF,
+    c_1C64CA: Color = C_1C64CA,
+    c_A31597: Color = C_A31597,
+    c_41454A: Color = C_41454A,
     c_FF0000: Color = C_FF0000,
 ) = KusColors(
     c_43AB38,
@@ -180,5 +208,9 @@ fun KusLightColors(
     c_01BAA6,
     c_FFB900,
     c_9BA5B0,
+    c_C24BFF,
+    c_1C64CA,
+    c_A31597,
+    c_41454A,
     c_FF0000,
 )

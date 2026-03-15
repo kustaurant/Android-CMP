@@ -1,12 +1,8 @@
 package com.kus.kustaurant
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -21,9 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kus.designsystem.component.LoginRequiredOverlay
@@ -32,19 +25,12 @@ import com.kus.designsystem.component.snackbar.LocalSnackBarBottomPadding
 import com.kus.designsystem.theme.KusTheme
 import com.kus.domain.auth.session.SessionEvent
 import com.kus.domain.auth.session.SessionEventBus
-import com.kus.feature.community.navigation.Community
 import com.kus.feature.community.navigation.CommunityDetail
 import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.CommunityWriteModify
-import com.kus.feature.draw.navigation.Draw
-import com.kus.feature.home.navigation.Home
 import com.kus.feature.login.navigation.Login
-import com.kus.feature.my.navigation.My
-import com.kus.feature.tier.navigation.Tier
-import com.kus.kustaurant.navigation.BottomTab
-import com.kus.kustaurant.navigation.KusBottomBar
 import com.kus.kustaurant.navigation.KusNavHost
-import com.kus.kustaurant.navigation.util.shouldShowBottomBar
+import com.kus.kustaurant.navigation.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -54,7 +40,10 @@ import org.koin.compose.koinInject
 @Preview
 fun App() {
     KusTheme {
-        Surface {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = KusTheme.colors.c_FFFFFF,
+        ) {
             SetNavigation()
         }
     }
@@ -114,109 +103,51 @@ fun SetNavigation() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val destination = navBackStackEntry?.destination
-    val showBottomBar = shouldShowBottomBar(destination)
-    val currentRoute = destination?.route
-    val selectedKey = BottomTab.fromRoute(currentRoute).key
-
-    val applySystemBarsPadding = !isEdgeToEdgeScreen(currentRoute)
+    val isMain = destination?.hasRoute<Main>() == true
     val isWriter =
-        navBackStackEntry?.destination?.hasRoute<CommunityWrite>() == true ||
-                navBackStackEntry?.destination?.hasRoute<CommunityDetail>() == true ||
-                navBackStackEntry?.destination?.hasRoute<CommunityWriteModify>() == true
+        destination?.hasRoute<CommunityWrite>() == true ||
+            destination?.hasRoute<CommunityDetail>() == true ||
+            destination?.hasRoute<CommunityWriteModify>() == true
+
+    val snackBarBottomPadding = when {
+        isMain -> 72.dp
+        isWriter -> 52.dp
+        else -> 16.dp
+    }
 
     CompositionLocalProvider(
-        LocalSnackBarBottomPadding provides if (isWriter) 52.dp else 16.dp
+        LocalSnackBarBottomPadding provides snackBarBottomPadding
     ) {
-        Scaffold(
-            bottomBar = {
-                SetBottomBar(
-                    showBottomBar = showBottomBar,
-                    selectedKey = selectedKey,
-                    navController = navController,
-                )
-            },
-            modifier = if (applySystemBarsPadding) Modifier.systemBarsPadding() else Modifier,
-            contentWindowInsets = WindowInsets.systemBars,
-        ) { padding ->
-            Box(
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            KusNavHost(
+                navController = navController,
+                durationMillis = durationMillis,
+                onShowMessage = onShowMessage,
                 modifier = Modifier
-                    .padding(padding)
                     .fillMaxSize()
-            ) {
-                KusNavHost(
-                    navController = navController,
-                    durationMillis = durationMillis,
-                    onShowMessage = onShowMessage,
-                    modifier = Modifier
-                        .fillMaxSize(),
-                )
+                    .navigationBarsPadding(),
+            )
 
-                KusSnackBarOverlay(
-                    hostState = snackBarHostState
-                )
+            KusSnackBarOverlay(
+                hostState = snackBarHostState
+            )
 
-                if (showRequireLoginPopup) {
-                    LoginRequiredOverlay(
-                        onLoginButtonClick = {
-                            showRequireLoginPopup = false
-                            navController.navigate(Login) {
-                                popUpTo(0) { inclusive = true }
-                                launchSingleTop = true
-                            }
-                        },
-                        onDismissRequest = { showRequireLoginPopup = false },
-                    )
-                }
+            if (showRequireLoginPopup) {
+                LoginRequiredOverlay(
+                    onLoginButtonClick = {
+                        showRequireLoginPopup = false
+                        navController.navigate(Login) {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onDismissRequest = { showRequireLoginPopup = false },
+                )
             }
         }
     }
-}
-
-
-@Composable
-private fun SetBottomBar(
-    showBottomBar: Boolean,
-    selectedKey: String,
-    navController: NavHostController,
-) {
-    if (!showBottomBar) return
-
-    KusBottomBar(
-        selectedKey = selectedKey,
-        onNavigateToTab = { key ->
-            navController.navigateToTab(key)
-        },
-    )
-}
-
-private fun NavHostController.navigateToTab(key: String) {
-    when (key) {
-        BottomTab.HOME.key -> navigate(Home) { tabOptions(this@navigateToTab) }
-        BottomTab.DRAW.key -> navigate(Draw) { tabOptions(this@navigateToTab) }
-        BottomTab.TIER.key -> navigate(Tier) { tabOptions(this@navigateToTab) }
-        BottomTab.COMMUNITY.key -> navigate(Community) { tabOptions(this@navigateToTab) }
-        BottomTab.MY.key -> navigate(My) { tabOptions(this@navigateToTab) }
-    }
-}
-
-private fun shouldShowBottomBar(currentRoute: String?): Boolean {
-    val route = currentRoute ?: return true
-    val hiddenRoutes = listOf("Splash", "Onboarding", "Login", "Detail", "Evaluate")
-
-    return hiddenRoutes.none { route.contains(it) }
-}
-
-private fun isEdgeToEdgeScreen(currentRoute: String?): Boolean {
-    val route = currentRoute ?: return false
-    val edgeToEdgeRoutes = listOf("Detail")
-
-    return edgeToEdgeRoutes.any { route.contains(it) }
-}
-
-private fun NavOptionsBuilder.tabOptions(navController: NavHostController) {
-    launchSingleTop = true
-    restoreState = true
-    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
 }
 
 @Preview

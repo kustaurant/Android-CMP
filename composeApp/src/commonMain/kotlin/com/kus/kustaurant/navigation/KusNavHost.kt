@@ -5,47 +5,39 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.kus.core.serialization.KusJson
 import com.kus.feature.community.config.CommunityKeys.COMMUNITY_LIST_REFRESH
 import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_DELETE_ID
 import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_EDIT_RESULT
 import com.kus.feature.community.config.CommunityKeys.COMMUNITY_POST_UPDATE_PAYLOAD
 import com.kus.feature.community.model.CommunityPostModifyPayload
-import com.kus.feature.community.navigation.Community
 import com.kus.feature.community.navigation.CommunityDetail
-import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.CommunityWriteModify
-import com.kus.feature.community.navigation.communityNavGraph
+import com.kus.feature.community.navigation.communityFullscreenNavGraph
 import com.kus.feature.community.navigation.navigateToCommunityDetail
 import com.kus.feature.detail.config.DetailKeys.DETAIL_EVALUATE_REFRESH
-import com.kus.feature.detail.navigation.Detail
 import com.kus.feature.detail.navigation.detailNavGraph
 import com.kus.feature.detail.navigation.navigateToDetail
-import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.evaluate.navigation.Evaluate
 import com.kus.feature.evaluate.navigation.evaluateNavGraph
-import com.kus.feature.home.navigation.Home
-import com.kus.feature.home.navigation.homeNavGraph
 import com.kus.feature.login.navigation.Login
 import com.kus.feature.login.navigation.loginNavGraph
-import com.kus.feature.my.navigation.myNavGraph
+import com.kus.feature.my.navigation.myFullscreenNavGraph
 import com.kus.feature.onboarding.navigatioin.Onboarding
 import com.kus.feature.onboarding.navigatioin.onboardingNavGraph
-import com.kus.feature.search.navigation.navigateToSearch
 import com.kus.feature.search.navigation.searchNavGraph
 import com.kus.feature.splash.navigation.Splash
 import com.kus.feature.splash.navigation.splashNavGraph
 import com.kus.feature.tier.config.TierKeys.TIER_INITIAL_JSON
 import com.kus.feature.tier.config.TierKeys.TIER_RESULT_JSON
-import com.kus.feature.tier.navigation.Tier
-import com.kus.feature.tier.navigation.TierCategorySelect
-import com.kus.feature.tier.navigation.tierNavGraph
+import com.kus.feature.tier.navigation.tierFullscreenNavGraph
 import com.kus.feature.tier.ui.TierFilterState
-import com.kus.shared.domain.model.tier.filter.Cuisine
 
 @Composable
 fun KusNavHost(
@@ -57,7 +49,6 @@ fun KusNavHost(
     NavHost(
         navController = navController,
         startDestination = Login,
-
         enterTransition = {
             fadeIn(animationSpec = tween(durationMillis)) +
                     scaleIn(
@@ -72,7 +63,6 @@ fun KusNavHost(
                         animationSpec = tween(durationMillis)
                     )
         },
-
         popEnterTransition = {
             fadeIn(animationSpec = tween(durationMillis)) +
                     scaleIn(
@@ -87,7 +77,6 @@ fun KusNavHost(
                         animationSpec = tween(durationMillis)
                     )
         },
-
         modifier = modifier
     ) {
         splashNavGraph(
@@ -113,7 +102,7 @@ fun KusNavHost(
 
         loginNavGraph(
             navigateToHome = {
-                navController.navigate(Home) {
+                navController.navigate(Main) {
                     popUpTo(Login) { inclusive = true }
                     launchSingleTop = true
                 }
@@ -121,33 +110,17 @@ fun KusNavHost(
             onShowMessage = onShowMessage
         )
 
-        homeNavGraph(
-            navigateToSearch = navController::navigateToSearch,
-            navigateToAlert = { },
-            navigateToTier = { cuisine: Cuisine ->
-                val cuisine = Cuisine.entries.find { it == cuisine } ?: Cuisine.ALL
-                val filter = TierFilterState(cuisines = setOf(cuisine)).normalized()
-                val json = KusJson.json.encodeToString(filter)
+        composable<Main> { backStackEntry ->
+            MainScreen(
+                rootNavController = navController,
+                mainBackStackEntry = backStackEntry,
+                durationMillis = durationMillis,
+                onShowMessage = onShowMessage,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
 
-                navController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(TIER_INITIAL_JSON, json)
-
-                navController.navigate(Tier)
-            },
-            navigateToDetail = navController::navigateToDetail,
-        )
-
-        drawNavGraph(
-            onSearchClick = {},
-            onAlarmClick = {},
-            onBackClick = { navController.popBackStack() },
-            navigateToDrawResult = { route -> navController.navigate(route) },
-            onShowMessage = onShowMessage
-        )
-
-        tierNavGraph(
-            onShowMessage = onShowMessage,
+        tierFullscreenNavGraph(
             initialProvider = {
                 val json = navController.previousBackStackEntry
                     ?.savedStateHandle
@@ -156,15 +129,6 @@ fun KusNavHost(
                 if (json == null) TierFilterState()
                 else KusJson.json.decodeFromString<TierFilterState>(json)
             },
-            navigateToTierCategorySelect = { initial ->
-                val json = KusJson.json.encodeToString(initial)
-                navController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(TIER_INITIAL_JSON, json)
-
-                navController.navigate(TierCategorySelect)
-            },
-            navigateToDetail = { restaurantId -> navController.navigate(Detail(restaurantId)) },
             popBackStackWithResult = { result ->
                 val json = KusJson.json.encodeToString(result)
                 navController.previousBackStackEntry
@@ -176,20 +140,14 @@ fun KusNavHost(
             onBackButtonClick = { navController.popBackStack() }
         )
 
-        communityNavGraph(
+        communityFullscreenNavGraph(
             onShowMessage = onShowMessage,
-            onPostClick = { postId ->
-                navController.navigate(CommunityDetail(postId)) {
-                    popUpTo<Community> { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
             onPostCreated = { postId ->
-                navController.getBackStackEntry<Community>()
+                navController.getBackStackEntry<Main>()
                     .savedStateHandle[COMMUNITY_LIST_REFRESH] = true
 
                 navController.navigate(CommunityDetail(postId)) {
-                    popUpTo<Community> { inclusive = false }
+                    popUpTo<Main> { inclusive = false }
                     launchSingleTop = true
                 }
             },
@@ -202,17 +160,13 @@ fun KusNavHost(
                 navController.popBackStack()
             },
             onBackButtonClick = { navController.popBackStack() },
-            onPostWriteClick = {
-                navController.navigate(CommunityWrite)
-            },
             onPostModifyClick = { encoded ->
                 navController.navigate(CommunityWriteModify(encoded))
             },
-            onSearchClick = {},
             onPostModifiedInDetail = { payload ->
                 val json =
                     KusJson.json.encodeToString(CommunityPostModifyPayload.serializer(), payload)
-                navController.getBackStackEntry<Community>()
+                navController.getBackStackEntry<Main>()
                     .savedStateHandle[COMMUNITY_POST_UPDATE_PAYLOAD] = json
             },
             onDetailBackClick = { payload ->
@@ -221,31 +175,24 @@ fun KusNavHost(
                         CommunityPostModifyPayload.serializer(),
                         payload
                     )
-                    navController.getBackStackEntry<Community>()
+                    navController.getBackStackEntry<Main>()
                         .savedStateHandle[COMMUNITY_POST_UPDATE_PAYLOAD] = json
                 }
                 navController.popBackStack()
             },
             onPostDeletedInDetail = { postId ->
-                navController.previousBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(COMMUNITY_POST_DELETE_ID, postId)
+                navController.getBackStackEntry<Main>()
+                    .savedStateHandle[COMMUNITY_POST_DELETE_ID] = postId
 
                 navController.popBackStack()
             },
         )
-        myNavGraph(
-            onShowMessage = onShowMessage,
-            navController = navController,
+
+        myFullscreenNavGraph(
             navigateToUp = navController::popBackStack,
             onRestItemClick = navController::navigateToDetail,
             onArticleClick = navController::navigateToCommunityDetail,
-            navigateToLogin = {
-                navController.navigate(Login) {
-                    popUpTo(0) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
+            onShowMessage = onShowMessage,
         )
 
         detailNavGraph(

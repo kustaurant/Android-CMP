@@ -2,10 +2,7 @@ package com.kus.kustaurant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.ComposeUIViewController
@@ -44,7 +41,6 @@ fun MainViewController() = ComposeUIViewController {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
         App()
     }
