@@ -1,7 +1,7 @@
 package com.kus.kustaurant
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.kus.designsystem.component.LoginRequiredOverlay
+import com.kus.designsystem.component.LoginRequiredDialog
 import com.kus.designsystem.component.snackbar.KusSnackBarOverlay
 import com.kus.designsystem.component.snackbar.LocalSnackBarBottomPadding
 import com.kus.designsystem.theme.KusTheme
@@ -135,7 +135,7 @@ fun SetNavigation() {
             )
 
             if (showRequireLoginPopup) {
-                LoginRequiredOverlay(
+                LoginRequiredDialog(
                     onLoginButtonClick = {
                         showRequireLoginPopup = false
                         navController.navigate(Login) {

@@ -43,6 +43,7 @@ okio = "3.9.0"
 multiplatform-settings = "1.1.1"
 kotlinx-io = "0.8.2"
 compottie = "2.0.2"
+cameraX = "1.5.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -101,6 +102,10 @@ kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref 
 peekaboo-ui = { module = "io.github.onseok:peekaboo-ui", version.ref = "peekaboo" }
 peekaboo-image-picker = { module = "io.github.onseok:peekaboo-image-picker", version.ref = "peekaboo" }
 
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraX" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraX" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraX" }
+
 naver-maps = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMaps" }
 naver-oauth = { group = "com.navercorp.nid", name = "oauth", version.ref = "naverOauth" }
 
@@ -132,4 +137,10 @@ ktor = [
     "ktor-client-auth",
     "ktor-client-logging",
     "ktor-serialization-kotlinx-json",
+]
+
+androidxCamera = [
+    "androidx-camera-core",
+    "androidx-camera-camera2",
+    "androidx-camera-lifecycle",
 ]
