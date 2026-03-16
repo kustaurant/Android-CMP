@@ -1,7 +1,6 @@
 package com.kus.feature.home.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,12 @@ import io.kamel.image.asyncPainterResource
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_check
 import kustaurant.shared.core.designsystem.generated.resources.ic_filled_star
+import kustaurant.shared.core.designsystem.generated.resources.ic_rank_none
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_2
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_3
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_4
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -102,7 +106,14 @@ private fun RestaurantItem(
     isChecked: Boolean,
     onItemClick: () -> Unit,
 ) {
-    val partnershipInfo = partnershipInfo.ifEmpty { "해당사항 없음" }
+//    val partnershipInfo = partnershipInfo.ifEmpty { "해당사항 없음" }
+    val tierIconRes = when (mainTier) {
+        1 -> Res.drawable.ic_tier_1
+        2 -> Res.drawable.ic_tier_2
+        3 -> Res.drawable.ic_tier_3
+        4 -> Res.drawable.ic_tier_4
+        else -> Res.drawable.ic_rank_none
+    }
 
     Column(
         modifier = Modifier
@@ -142,15 +153,14 @@ private fun RestaurantItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Box(
-                    modifier = Modifier.background(
-                        KusTheme.colors.c_AAAAAA,
-                        RoundedCornerShape(50.dp)
-                    ),
+                    modifier = Modifier.align(Alignment.Bottom),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        text = "$mainTier",
-                        style = KusTheme.typography.type14r,
+                    Icon(
+                        painter = painterResource(tierIconRes),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(20.dp),
                     )
                 }
 
@@ -166,7 +176,10 @@ private fun RestaurantItem(
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)
+                .padding(horizontal = 4.dp),
         ) {
 
             Text(
@@ -197,12 +210,12 @@ private fun RestaurantItem(
         }
 
         Row(
-            modifier = Modifier.padding(vertical = 4.dp),
+            modifier = Modifier.padding(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = restaurantName,
-                style = KusTheme.typography.type15m,
+                style = KusTheme.typography.type15sb,
                 color = KusTheme.colors.c_323232,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -220,6 +233,8 @@ private fun RestaurantItem(
             }
         }
 
+        /*
+        제휴 정보 임시 제거
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -244,5 +259,6 @@ private fun RestaurantItem(
                 maxLines = 1,
             )
         }
+         */
     }
 }

@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,12 +30,11 @@ import com.kus.feature.home.component.KusSearchBoxWithNoAction
 import com.kus.feature.home.model.Category
 import com.kus.shared.domain.model.restaurant.RestaurantItem
 import com.kus.shared.domain.model.tier.filter.Cuisine
-import kustaurant.shared.core.designsystem.generated.resources.ic_alarm
 import kustaurant.shared.core.designsystem.generated.resources.img_home_logo
-import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun HomeRoute(
@@ -104,7 +101,6 @@ private fun HomeSuccessScreen(
             ) {
                 HomeTitleSection(
                     onLogoClick = {},
-                    onAlertButtonClick = onAlertButtonClick,
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -181,7 +177,7 @@ private fun HomeSuccessScreen(
 fun HomeTitleSection(
     modifier: Modifier = Modifier,
     onLogoClick: () -> Unit,
-    onAlertButtonClick: () -> Unit,
+    onAlertButtonClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier.fillMaxWidth(),
@@ -199,11 +195,14 @@ fun HomeTitleSection(
             )
         }
 
+        /*
+        알림 기능은 추후 스프린트
         Icon(
             painter = painterResource(CoreRes.drawable.ic_alarm),
             contentDescription = "알림 버튼",
             modifier = Modifier.size(20.dp).noRippleClickable(onAlertButtonClick)
         )
+         */
     }
 }
 
