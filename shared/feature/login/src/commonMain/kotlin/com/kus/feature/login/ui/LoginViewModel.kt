@@ -3,7 +3,7 @@ package com.kus.feature.login.ui
 import UiError
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kus.domain.auth.usecase.DeleteUserInfoUseCase
+import com.kus.domain.auth.usecase.DeleteUserTokensUseCase
 import com.kus.domain.auth.usecase.PostNaverLoginUseCase
 import com.kus.feature.login.model.SocialAuthResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val postNaverLoginUseCase: PostNaverLoginUseCase,
-    private val deleteUserInfoUseCase : DeleteUserInfoUseCase
+    private val deleteUserTokensUseCase : DeleteUserTokensUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         LoginUiState(
@@ -51,9 +51,9 @@ class LoginViewModel(
         }
     }
 
-    fun deleteUserInfo() {
+    fun deleteUserTokens() {
         viewModelScope.launch {
-            deleteUserInfoUseCase()
+            deleteUserTokensUseCase()
         }
     }
 

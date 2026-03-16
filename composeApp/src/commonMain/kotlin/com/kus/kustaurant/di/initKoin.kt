@@ -3,7 +3,7 @@ package com.kus.kustaurant.di
 import com.kus.core.config.di.configModule
 import com.kus.data.auth.di.authDataModule
 import com.kus.data.community.di.communityDataModule
-import com.kus.data.draw.di.DrawDataModule
+import com.kus.data.draw.di.drawDataModule
 import com.kus.data.firstLaunch.di.firstLaunchDataModule
 import com.kus.data.my.di.myDataModule
 import com.kus.data.network.di.networkModule
@@ -72,7 +72,7 @@ fun initKoin(
             detailDataModule,
             evaluateDataModule,
             myDataModule,
-            DrawDataModule,
+            drawDataModule,
 
             // feature
             splashFeatureModule,
