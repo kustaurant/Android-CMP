@@ -55,6 +55,10 @@ fun MyScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        viewModel.requireLogin()
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.navigationEvent.collect { event ->
             when (event) {
                 is MyNavigationEvent.NavigateToLogin -> onLoginNavigate()
