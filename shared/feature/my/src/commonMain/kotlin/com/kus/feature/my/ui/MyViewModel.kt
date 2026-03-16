@@ -31,10 +31,6 @@ class MyViewModel(
     private val _navigationEvent = MutableSharedFlow<MyNavigationEvent>()
     val navigationEvent = _navigationEvent.asSharedFlow()
 
-    init {
-        requireLogin()
-    }
-
     fun requireLogin() = viewModelScope.launch {
         if (!getSessionAvailabilityUseCase()) {
             sessionEvents.emit(SessionEvent.LoginRequired)

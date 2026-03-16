@@ -7,7 +7,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val DrawDataModule = module {
+val drawDataModule = module {
     singleOf(::DrawApi)
     singleOf(::DrawRepositoryImpl) bind DrawRepository::class
 }
