@@ -1,12 +1,15 @@
 package com.kus.feature.login.ui
 
 import UiError
+import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.domain.auth.usecase.DeleteUserTokensUseCase
 import com.kus.domain.auth.usecase.PostNaverLoginUseCase
 import com.kus.feature.login.model.SocialAuthResult
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,8 +17,10 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val postNaverLoginUseCase: PostNaverLoginUseCase,
-    private val deleteUserTokensUseCase : DeleteUserTokensUseCase,
+    private val deleteUserTokensUseCase: DeleteUserTokensUseCase,
 ) : ViewModel() {
+    private val _event = MutableSharedFlow<LoginUiEvent>(extraBufferCapacity = 1)
+    val event: SharedFlow<LoginUiEvent> = _event
     private val _uiState = MutableStateFlow(
         LoginUiState(
             authState = UiState.Idle
@@ -38,7 +43,7 @@ class LoginViewModel(
     }
 
     fun onNaverAuthFail(auth: SocialAuthResult) {
-        if(auth !is SocialAuthResult.Failure) return
+        if (auth !is SocialAuthResult.Failure) return
 
         _uiState.update {
             it.copy(
@@ -51,9 +56,10 @@ class LoginViewModel(
         }
     }
 
-    fun deleteUserTokens() {
+    fun onSkipLoginClick() {
         viewModelScope.launch {
             deleteUserTokensUseCase()
+            _event.emit(LoginUiEvent.NavigateToHome)
         }
     }
 

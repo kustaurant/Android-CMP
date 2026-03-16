@@ -10,6 +10,7 @@ import com.kus.feature.login.model.NaverAuthResult
 import com.kus.feature.login.model.SocialAuthResult
 import com.kus.feature.login.ui.LoginPhase
 import com.kus.feature.login.ui.LoginScreen
+import com.kus.feature.login.ui.LoginUiEvent
 import com.kus.feature.login.ui.LoginViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -26,6 +27,14 @@ actual fun LoginRoute(
     LaunchedEffect(state.phase) {
         if (state.phase == LoginPhase.Success) {
             navigateToHome()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when(event) {
+                LoginUiEvent.NavigateToHome -> navigateToHome()
+            }
         }
     }
 
@@ -57,6 +66,6 @@ actual fun LoginRoute(
             }
         },
         onNavigateToHome = navigateToHome,
-        onSkipLogin = { viewModel.deleteUserTokens() }
+        onSkipLogin = { viewModel.onSkipLoginClick() }
     )
 }
