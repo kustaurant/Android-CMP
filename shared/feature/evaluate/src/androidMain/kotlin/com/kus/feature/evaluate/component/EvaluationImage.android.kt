@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
+import com.preat.peekaboo.image.picker.ResizeOptions
 import com.preat.peekaboo.image.picker.SelectionMode
 import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.preat.peekaboo.image.picker.toImageBitmap
@@ -44,6 +45,12 @@ actual fun EvaluationImage(
     val imagePicker = rememberImagePickerLauncher(
         selectionMode = SelectionMode.Single,
         scope = scope,
+        resizeOptions = ResizeOptions(
+            width = 1024,
+            height = 1024,
+            resizeThresholdBytes = 1 * 1024 * 1024L,
+            compressionQuality = 0.8
+        ),
         onResult = { byteArrays ->
             byteArrays.firstOrNull()?.let { onImageSelected(it) }
         }
