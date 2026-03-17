@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 data object Splash
 
 fun NavGraphBuilder.splashNavGraph(
-    navigateToOnboarding: () -> Unit,
+    navigateToHome: () -> Unit,
     navigateToLogin: () -> Unit,
 ) {
     composable<Splash>(
@@ -21,7 +21,7 @@ fun NavGraphBuilder.splashNavGraph(
         popExitTransition = { fadeOut(tween(200)) },
     ) {
         SplashRoute(
-            navigateToOnboarding = navigateToOnboarding,
+            navigateToHome = navigateToHome,
             navigateToLogin = navigateToLogin,
         )
     }

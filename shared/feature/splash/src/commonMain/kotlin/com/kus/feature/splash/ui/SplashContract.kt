@@ -2,10 +2,10 @@ package com.kus.feature.splash.ui
 
 data class SplashUiState(
     val isLoading : Boolean = true,
-    val isFirstLaunch : Boolean? = null
+    val hasSession: Boolean = false,
 )
 
 enum class SplashDestination {
-    ONBOARDING,
+    HOME,
     LOGIN,
 }

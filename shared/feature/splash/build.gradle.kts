@@ -54,7 +54,7 @@ kotlin {
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:data:network"))
 
-                implementation(project(":shared:domain:firstLaunch"))
+                implementation(project(":shared:domain:auth"))
             }
         }
 

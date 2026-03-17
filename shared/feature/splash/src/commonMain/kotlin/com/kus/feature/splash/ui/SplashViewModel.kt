@@ -2,18 +2,16 @@ package com.kus.feature.splash.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kus.domain.firstLaunch.usecase.GetFirstLaunchUseCase
-import kotlinx.coroutines.async
+import com.kus.domain.auth.usecase.GetSessionAvailabilityUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
-    private val getFirstLaunchUseCase: GetFirstLaunchUseCase,
+    private val getSessionAvailabilityUseCase: GetSessionAvailabilityUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SplashUiState())
@@ -24,27 +22,17 @@ class SplashViewModel(
 
     init {
         viewModelScope.launch {
-            val minDelay = async {
-                delay(650)
-            }
-
-            val firstLaunch = async {
-                getFirstLaunchUseCase().first()
-            }
-
-            minDelay.await()
-            val isFirst = firstLaunch.await()
+            delay(650)
+            val isLoggedIn = getSessionAvailabilityUseCase()
 
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    isFirstLaunch = isFirst
+                    hasSession = isLoggedIn,
                 )
             }
 
-            _destination.value =
-                if (isFirst) SplashDestination.ONBOARDING
-                else SplashDestination.LOGIN
+            _destination.value = if (isLoggedIn) SplashDestination.HOME else SplashDestination.LOGIN
         }
     }
 }

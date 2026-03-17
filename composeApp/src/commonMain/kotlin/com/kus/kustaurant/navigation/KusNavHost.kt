@@ -48,7 +48,7 @@ fun KusNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Login,
+        startDestination = Splash,
         enterTransition = {
             fadeIn(animationSpec = tween(durationMillis)) +
                     scaleIn(
@@ -80,9 +80,10 @@ fun KusNavHost(
         modifier = modifier
     ) {
         splashNavGraph(
-            navigateToOnboarding = {
-                navController.navigate(Onboarding) {
+            navigateToHome = {
+                navController.navigate(Main) {
                     popUpTo(Splash) { inclusive = true }
+                    launchSingleTop = true
                 }
             },
             navigateToLogin = {
