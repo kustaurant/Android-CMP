@@ -376,7 +376,10 @@ private fun createRestaurantMarkerIos(
         val isNoneMarker = !restaurant.isFavorite &&
                 restaurant.partnershipInfo.isNotEmpty() ||
                 restaurant.mainTier !in 1..4
-        val isTier = restaurant.mainTier in 1..4
+
+        val isTier = restaurant.mainTier in 1..4 &&
+                !restaurant.isFavorite
+
         if (isNoneMarker) {
             width = 15.0
             height = 20.0
