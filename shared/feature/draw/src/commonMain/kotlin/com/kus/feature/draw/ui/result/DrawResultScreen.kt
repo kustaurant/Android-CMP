@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusButton
+import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.component.KusRatingBar
 import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
@@ -202,7 +202,7 @@ fun DrawResultScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                    KusLoadingAnimation()
                 }
             }
 
@@ -334,7 +334,7 @@ private fun DrawRouletteSection(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                KusLoadingAnimation()
             }
             return@BoxWithConstraints
         }

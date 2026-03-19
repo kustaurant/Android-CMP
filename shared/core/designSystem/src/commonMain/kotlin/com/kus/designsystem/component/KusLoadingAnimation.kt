@@ -1,9 +1,11 @@
 package com.kus.designsystem.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
@@ -28,6 +30,6 @@ fun KusLoadingAnimation(
             iterations = Compottie.IterateForever
         ),
         contentDescription = "로딩 중",
-        modifier = modifier
+        modifier = modifier.size(120.dp)
     )
 }

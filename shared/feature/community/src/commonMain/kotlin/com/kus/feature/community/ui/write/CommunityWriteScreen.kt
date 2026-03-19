@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -44,6 +43,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.domain.community.model.PostCategory
@@ -263,7 +263,7 @@ fun CommunityWriteScreen(
                             color = KusTheme.colors.c_FFFFFF.copy(alpha = 0.3f)),
                             contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                        KusLoadingAnimation()
                     }
                 }
             }
