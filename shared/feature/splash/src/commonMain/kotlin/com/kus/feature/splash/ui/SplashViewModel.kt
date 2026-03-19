@@ -23,7 +23,8 @@ class SplashViewModel(
     init {
         viewModelScope.launch {
             delay(650)
-            val isLoggedIn = getSessionAvailabilityUseCase()
+            val isLoggedIn = runCatching { getSessionAvailabilityUseCase() }
+                .getOrElse { false }
 
             _uiState.update {
                 it.copy(
