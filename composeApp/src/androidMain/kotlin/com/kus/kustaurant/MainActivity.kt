@@ -12,7 +12,9 @@ import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        var keepSplashOnScreen = true
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { keepSplashOnScreen }
         enableEdgeToEdge(
             statusBarStyle =
                 SystemBarStyle.light(
@@ -28,7 +30,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+            App(
+                onSplashLoadingChanged = { isLoading ->
+                    keepSplashOnScreen = isLoading
+                }
+            )
         }
     }
 }

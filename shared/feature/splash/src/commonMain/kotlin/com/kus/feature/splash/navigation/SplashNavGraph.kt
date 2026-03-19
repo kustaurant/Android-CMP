@@ -13,6 +13,7 @@ data object Splash
 fun NavGraphBuilder.splashNavGraph(
     navigateToHome: () -> Unit,
     navigateToLogin: () -> Unit,
+    onLoadingChanged: (Boolean) -> Unit = {},
 ) {
     composable<Splash>(
         enterTransition = { fadeIn(animationSpec = tween(0)) },
@@ -23,6 +24,7 @@ fun NavGraphBuilder.splashNavGraph(
         SplashRoute(
             navigateToHome = navigateToHome,
             navigateToLogin = navigateToLogin,
+            onLoadingChanged = onLoadingChanged,
         )
     }
 }

@@ -38,19 +38,25 @@ import org.koin.compose.koinInject
 
 @Composable
 @Preview
-fun App() {
+fun App(
+    onSplashLoadingChanged: (Boolean) -> Unit = {},
+) {
     KusTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = KusTheme.colors.c_FFFFFF,
         ) {
-            SetNavigation()
+            SetNavigation(
+                onSplashLoadingChanged = onSplashLoadingChanged,
+            )
         }
     }
 }
 
 @Composable
-fun SetNavigation() {
+fun SetNavigation(
+    onSplashLoadingChanged: (Boolean) -> Unit = {},
+) {
     val navController = rememberNavController()
     val durationMillis = 400
     val snackDuration = 2800L
@@ -125,6 +131,7 @@ fun SetNavigation() {
                 navController = navController,
                 durationMillis = durationMillis,
                 onShowMessage = onShowMessage,
+                onSplashLoadingChanged = onSplashLoadingChanged,
                 modifier = Modifier
                     .fillMaxSize()
                     .navigationBarsPadding(),

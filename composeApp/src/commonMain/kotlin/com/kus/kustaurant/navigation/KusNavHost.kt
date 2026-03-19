@@ -44,6 +44,7 @@ fun KusNavHost(
     navController: NavHostController,
     durationMillis: Int,
     onShowMessage: (String) -> Unit,
+    onSplashLoadingChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -90,7 +91,8 @@ fun KusNavHost(
                 navController.navigate(Login) {
                     popUpTo(Splash) { inclusive = true }
                 }
-            }
+            },
+            onLoadingChanged = onSplashLoadingChanged,
         )
 
         onboardingNavGraph(
