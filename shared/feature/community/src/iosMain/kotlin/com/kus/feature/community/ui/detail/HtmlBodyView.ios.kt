@@ -9,14 +9,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import platform.UIKit.UIColor
-import platform.WebKit.WKWebView
 import androidx.compose.ui.viewinterop.UIKitView
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
+import platform.UIKit.UIColor
 import platform.UIKit.UIUserInterfaceStyle
 import platform.WebKit.WKNavigation
 import platform.WebKit.WKNavigationDelegateProtocol
+import platform.WebKit.WKWebView
 import platform.darwin.NSObject
 
 @OptIn(ExperimentalForeignApi::class)
@@ -25,7 +25,7 @@ actual fun HtmlBodyView(
     html: String,
     modifier: Modifier
 ) {
-    var webViewHeight by remember { mutableStateOf(300) }
+    var webViewHeight by remember { mutableStateOf(1) }
 
     val styledHtml = remember(html) {
         """
@@ -77,7 +77,6 @@ actual fun HtmlBodyView(
             webView.backgroundColor = UIColor.whiteColor
             webView.scrollView.backgroundColor = UIColor.whiteColor
             webView.scrollView.scrollEnabled = false
-
             webView.overrideUserInterfaceStyle = UIUserInterfaceStyle.UIUserInterfaceStyleLight
 
             webView
