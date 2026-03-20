@@ -50,7 +50,6 @@ fun NavGraphBuilder.communityMainNavGraph(
     onBackButtonClick: () -> Unit,
     onPostClick: (Long) -> Unit,
     onPostWriteClick: () -> Unit,
-    onSearchClick: () -> Unit,
 ) {
     composable<Community> { backStackEntry ->
         val viewModel: CommunityViewModel = koinViewModel()
@@ -93,7 +92,6 @@ fun NavGraphBuilder.communityMainNavGraph(
             onPostClick = onPostClick,
             onWriteClick = onPostWriteClick,
             onBackClick = onBackButtonClick,
-            onSearchClick = onSearchClick,
             onShowMessage = onShowMessage,
         )
     }
