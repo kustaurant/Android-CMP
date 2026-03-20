@@ -17,4 +17,6 @@ class MapHolder(val mapView: NMFNaverMapView) {
     val polygonOverlays = mutableListOf<NMFPolygonOverlay>()
     val polylineOverlays = mutableListOf<NMFPolylineOverlay>()
     val restaurantMarkers = mutableListOf<NMFMarker>()
+
+    var isCameraReady = false
 }
