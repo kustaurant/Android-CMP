@@ -40,8 +40,7 @@ actual fun HtmlBodyView(
 
     AndroidView(
         modifier = modifier
-            .padding(top = 0.dp)
-            .border(1.dp, KusTheme.colors.c_43AB38),
+            .padding(top = 0.dp),
         factory = {
             WebView(context).apply {
                 settings.javaScriptEnabled = true
