@@ -54,6 +54,7 @@ import com.kus.feature.tier.navigation.Tier
 import com.kus.feature.tier.navigation.TierCategorySelect
 import com.kus.feature.tier.navigation.tierMainNavGraph
 import com.kus.feature.tier.ui.TierFilterState
+import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.shared.domain.model.tier.filter.Cuisine
 
 @Composable
@@ -189,7 +190,7 @@ fun MainScreen(
                     mainNavController.navigateToTab(BottomTab.TIER.key)
                 },
                 navigateToDetail = { restaurantId ->
-                    rootNavController.navigate(Detail(restaurantId))
+                    rootNavController.navigateToDetail(restaurantId)
                 },
             )
 
@@ -217,8 +218,11 @@ fun MainScreen(
 
                     rootNavController.navigate(TierCategorySelect)
                 },
-                navigateToDetail = { restaurantId ->
-                    rootNavController.navigate(Detail(restaurantId))
+                navigateToDetail = { restaurantId, isTempTier ->
+                    rootNavController.navigateToDetail(
+                        restaurantId = restaurantId,
+                        isTempTier = isTempTier
+                    )
                 },
             )
 

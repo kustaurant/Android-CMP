@@ -55,6 +55,14 @@ class TierViewModel(
         ensureDataForCurrentTab(force = true)
     }
 
+    fun setAiTierViewEnabled(enabled: Boolean) {
+        _uiState.update {
+            it.copy(
+                filterState = it.filterState.copy(isAiTierViewEnabled = enabled)
+            )
+        }
+    }
+
     fun fetchFirstRestaurants() {
         _uiState.update {
             it.copy(

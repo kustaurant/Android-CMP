@@ -21,6 +21,7 @@ data class TierFilterState(
     val cuisines: Set<Cuisine> = setOf(Cuisine.ALL),
     val situations: Set<Situation> = setOf(Situation.ALL),
     val locations: Set<Location> = setOf(Location.ALL),
+    val isAiTierViewEnabled: Boolean = false,
 ) {
     fun normalized(): TierFilterState = copy(
         cuisines = Cuisine.normalize(cuisines),

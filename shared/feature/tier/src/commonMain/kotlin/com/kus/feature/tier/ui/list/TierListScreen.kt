@@ -72,6 +72,8 @@ fun TierListScreen(
             .background(Color.White)
     ) {
         TierAiToggleRow(
+            isAiOn = uiState.filterState.isAiTierViewEnabled,
+            onAiToggle = viewModel::setAiTierViewEnabled,
             onTierGuideClick = { showTierInfo = true }
         )
 

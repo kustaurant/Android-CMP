@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
@@ -27,10 +23,10 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun TierAiToggleRow(
     modifier: Modifier = Modifier,
+    isAiOn: Boolean = false,
+    onAiToggle: (Boolean) -> Unit = {},
     onTierGuideClick: () -> Unit = {},
 ) {
-    var isAiOn by rememberSaveable { mutableStateOf(false) }
-
     val iconRes = if (isAiOn) {
         Res.drawable.ic_ai_filter_on
     } else {
@@ -46,7 +42,7 @@ fun TierAiToggleRow(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable { isAiOn = !isAiOn }
+                .clickable { onAiToggle(!isAiOn) }
         ) {
             Image(
                 painter = painterResource(iconRes),

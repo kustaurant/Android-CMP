@@ -61,6 +61,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailRoute(
     restaurantId: Long = 510L,
+    isTempTier: Boolean = false,
     navigateToEvaluate: (RestaurantDetail) -> Unit,
     navigateToUp: () -> Unit,
     shouldRefreshFromEvaluate: Boolean = false,
@@ -92,6 +93,7 @@ fun DetailRoute(
         is UiState.Success -> {
             DetailSuccessScreen(
                 restaurant = restaurantState.data,
+                isTempTier = isTempTier,
                 reviewsState = uiState.reviews,
                 reviewSort = uiState.reviewSort,
                 navigateToEvaluate = { navigateToEvaluate(restaurantState.data) },
@@ -126,6 +128,7 @@ fun DetailRoute(
 @Composable
 private fun DetailSuccessScreen(
     restaurant: RestaurantDetail,
+    isTempTier: Boolean,
     reviewsState: UiState<List<RestaurantReview>>,
     reviewSort: ReviewSort,
     navigateToEvaluate: () -> Unit,
@@ -140,6 +143,7 @@ private fun DetailSuccessScreen(
     onCommentSubmit: (Int, String) -> Unit,
     onCommentDeleteClick: (Int, Int) -> Unit,
 ) {
+    val displayTempTier = isTempTier || restaurant.isTempTier
     var restInfoTopInWindow by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
     var topBarBottomInWindow by remember { mutableFloatStateOf(0f) }
     val useWhiteTopBar by remember {
@@ -179,7 +183,7 @@ private fun DetailSuccessScreen(
                         situationList = restaurant.situationList,
                         mainTier = restaurant.mainTier,
                         isEvaluated = restaurant.isEvaluated,
-                        isTempTier = restaurant.isTempTier,
+                        isTempTier = displayTempTier,
                         restaurantCuisine = restaurant.restaurantCuisine,
                         restaurantCuisineImgUrl = restaurant.restaurantCuisineImgUrl,
                         restaurantPosition = restaurant.restaurantPosition,
