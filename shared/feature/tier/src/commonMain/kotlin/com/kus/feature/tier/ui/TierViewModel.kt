@@ -1,5 +1,7 @@
 package com.kus.feature.tier.ui
 
+import UiError
+import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.feature.tier.ui.map.MapCameraState
@@ -153,6 +155,25 @@ class TierViewModel(
         }
     }
 
+    fun toggleAiTier() {
+        _uiState.update {
+            it.copy(
+                isAiTier = !it.isAiTier,
+                scrollToTopTrigger = it.scrollToTopTrigger + 1,
+                tierListLastPosition = 0,
+                categoryChangeList = false,
+                pageState = it.pageState.copy(
+                    phase = TierPhase.Refreshing,
+                    page = 1,
+                    isLastPage = false
+                ),
+                listState = UiState.Loading
+            )
+        }
+
+        loadRestaurantList(requestedPage = 1)
+    }
+
     fun fetchNextRestaurants() {
         val s = _uiState.value.pageState
         if (s.phase != TierPhase.Idle || s.isLastPage) return
@@ -168,6 +189,7 @@ class TierViewModel(
 
         val filter = snapshot.filterState.normalized()
         val isPartnership = filter.isPartnership
+        val isAiTier = snapshot.isAiTier
 
         viewModelScope.launch {
             runCatching {
@@ -175,7 +197,8 @@ class TierViewModel(
                     cuisines = filter.cuisines,
                     situations = filter.situations,
                     locations = filter.locations,
-                    page = requestedPage
+                    page = requestedPage,
+                    isAiTier = isAiTier,
                 )
             }.onSuccess { tierListData ->
                 val fetched = tierListData.map {
@@ -195,7 +218,7 @@ class TierViewModel(
                         restaurantScore = it.restaurantScore.takeIf { s -> !s.isNaN() } ?: 0.0,
                         isTempTier = it.isTempTier
                     )
-               }
+                }
 
                 val last = fetched.isEmpty()
 
@@ -216,7 +239,9 @@ class TierViewModel(
             }.onFailure { e ->
                 _uiState.update {
                     it.copy(
-                        listState = UiState.Failure(UiError.Message(e.message ?: "음식점 리스트를 불러오는데 오류가 발생했습니다.")),
+                        listState = UiState.Failure(
+                            UiError.Message(e.message ?: "음식점 리스트를 불러오는데 오류가 발생했습니다.")
+                        ),
                         pageState = it.pageState.copy(phase = TierPhase.Idle),
                         toastMessage = "음식점 리스트를 불러오는데 오류가 발생했습니다."
                     )

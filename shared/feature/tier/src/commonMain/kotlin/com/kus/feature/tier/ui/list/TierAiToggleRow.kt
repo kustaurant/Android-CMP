@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
@@ -23,15 +19,14 @@ import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_off
 import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_on
 import org.jetbrains.compose.resources.painterResource
 
-
 @Composable
 fun TierAiToggleRow(
     modifier: Modifier = Modifier,
+    isAiTier: Boolean,
+    onAiToggleClick: () -> Unit,
     onTierGuideClick: () -> Unit = {},
 ) {
-    var isAiOn by rememberSaveable { mutableStateOf(false) }
-
-    val iconRes = if (isAiOn) {
+    val iconRes = if (isAiTier) {
         Res.drawable.ic_ai_filter_on
     } else {
         Res.drawable.ic_ai_filter_off
@@ -45,8 +40,7 @@ fun TierAiToggleRow(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clickable { isAiOn = !isAiOn }
+            modifier = Modifier.clickable(onClick = onAiToggleClick)
         ) {
             Image(
                 painter = painterResource(iconRes),
