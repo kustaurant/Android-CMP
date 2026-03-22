@@ -32,11 +32,12 @@ import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.search.component.KusSearchBox
 import com.kus.feature.search.component.SearchResultThumbnail
 import com.kus.feature.search.state.SearchUiState
+import kustaurant.shared.core.designsystem.generated.resources.img_no_result
 import kustaurant.shared.feature.search.generated.resources.Res
 import kustaurant.shared.feature.search.generated.resources.ic_left_chevron
-import kustaurant.shared.feature.search.generated.resources.img_no_result
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun SearchRoute(
@@ -125,7 +126,7 @@ fun SearchScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Image(
-                                painter = painterResource(Res.drawable.img_no_result),
+                                painter = painterResource(CoreRes.drawable.img_no_result),
                                 contentDescription = null,
                             )
 

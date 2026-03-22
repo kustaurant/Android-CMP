@@ -37,69 +37,100 @@ class DrawResultViewModel(
     }
 
     private fun loadDrawRestaurants() {
-
         viewModelScope.launch {
-
             _uiState.update {
                 it.copy(
-                    isLoading = true,
-                    toastMessage = null
+                    restaurantState = UiState.Loading
                 )
             }
 
             runCatching {
-
                 getDrawRestaurantUseCase(
                     locations = _uiState.value.selectedLocations,
                     cuisines = _uiState.value.selectedCuisines,
                 )
-
             }.onSuccess { restaurants ->
-                val randomIndex = if (restaurants.isNotEmpty()) {
-                    restaurants.indices.random()
-                } else {
-                    0
+                if (restaurants.isEmpty()) {
+                    _uiState.update {
+                        it.copy(
+                            restaurantState = UiState.Failure(
+                                UiError.Message("해당 카테고리에 맞는 식당이 없습니다.")
+                            ),
+                            randomIndex = null,
+                            hasPlayedDrawAnimation = false,
+                        )
+                    }
+                    return@onSuccess
                 }
+
+                val randomIndex = restaurants.indices.random()
 
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
-                        restaurants = restaurants,
+                        restaurantState = UiState.Success(restaurants),
                         randomIndex = randomIndex,
+                        hasPlayedDrawAnimation = false,
                     )
                 }
-
             }.onFailure { throwable ->
-
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
-                        toastMessage = throwable.message
-                            ?: "맛집 데이터를 불러오지 못했습니다."
+                        restaurantState = UiState.Failure(
+                            UiError.Message(
+                                throwable.message ?: "해당 카테고리에 맞는 식당이 없습니다."
+                            )
+                        ),
+                        randomIndex = null,
+                        hasPlayedDrawAnimation = false,
                     )
                 }
-
             }
         }
     }
 
     fun redraw() {
-        if(uiState.value.sameDrawCnt >= 2) {
+        val restaurantState = uiState.value.restaurantState
+        if (restaurantState !is UiState.Success) return
+
+        val data = restaurantState.data
+        val prevIndex = uiState.value.randomIndex
+
+        if (data.isEmpty()) return
+
+        if (uiState.value.sameDrawCnt >= 2) {
             loadDrawRestaurants()
             _uiState.update { it.copy(sameDrawCnt = 0) }
-        } else {
-            val data = uiState.value.restaurants
-            val prevIndex = uiState.value.randomIndex
-            val newIndex = data.indices
-                .filter { it != prevIndex }
-                .random()
+            return
+        }
 
+        if (data.size == 1) {
             _uiState.update {
                 it.copy(
-                    randomIndex = newIndex,
-                    sameDrawCnt = uiState.value.sameDrawCnt + 1
+                    randomIndex = 0,
+                    sameDrawCnt = it.sameDrawCnt + 1,
+                    hasPlayedDrawAnimation = false,
                 )
             }
+            return
+        }
+
+        val newIndex = data.indices
+            .filter { it != prevIndex }
+            .random()
+
+        _uiState.update {
+            it.copy(
+                randomIndex = newIndex,
+                sameDrawCnt = it.sameDrawCnt + 1,
+                hasPlayedDrawAnimation = false,
+            )
+        }
+    }
+
+    fun markDrawAnimationPlayed() {
+        _uiState.update {
+            if (it.hasPlayedDrawAnimation) it
+            else it.copy(hasPlayedDrawAnimation = true)
         }
     }
 }
