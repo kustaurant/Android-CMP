@@ -1,7 +1,11 @@
 package com.kus.feature.my.ui.editprofile
 
+import UiState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +13,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -21,6 +28,8 @@ import com.kus.designsystem.component.KusBasicTextField
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.my.component.MyPageTopBar
+import com.kus.feature.my.ui.event.MyNavigationEvent
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -28,25 +37,56 @@ fun EditProfileRoute(
     nickName: String,
     email: String,
     phoneNumber: String,
+    onShowMessage: (String) -> Unit,
     onBackClick: () -> Unit,
     viewModel: EditProfileViewModel = koinViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+        launch {
+            viewModel.errorMsgEvent.collect { onShowMessage(it) }
+        }
+        launch {
+            viewModel.navigationEvent.collect { event ->
+                when (event) {
+                    is MyNavigationEvent.NavigateToUp -> onBackClick()
+                    else -> {}
+                }
+            }
+        }
+
         viewModel.init(nickName, email, phoneNumber)
     }
 
-    EditProfileScreen(
-        nickName = uiState.value.nickname,
-        email = uiState.value.originalEmail,
-        phone = uiState.value.phoneNumber,
-        isPhoneNumberError = uiState.value.isPhoneNumberError,
-        isButtonAvailable = uiState.value.isButtonAvailable,
-        onBackClick = onBackClick,
-        onNicknameChanged = viewModel::updateNickname,
-        onPhoneNumberChanged = viewModel::updatePhoneNumber,
-    )
+    Box {
+        EditProfileScreen(
+            nickName = uiState.value.nickname,
+            email = uiState.value.originalEmail,
+            phone = uiState.value.phoneNumber,
+            isPhoneNumberError = uiState.value.isPhoneNumberError,
+            isButtonAvailable = uiState.value.isButtonAvailable,
+            onBackClick = onBackClick,
+            onNicknameChanged = viewModel::updateNickname,
+            onPhoneNumberChanged = viewModel::updatePhoneNumber,
+            onEditButtonClick = viewModel::updateProfileInfo,
+        )
+
+        if (uiState.value.uiState is UiState.Loading) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(KusTheme.colors.c_000000.copy(alpha = 0.3f))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {},
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+    }
 }
 
 @Composable
@@ -60,6 +100,7 @@ fun EditProfileScreen(
     onBackClick: () -> Unit,
     onNicknameChanged: (String) -> Unit,
     onPhoneNumberChanged: (String) -> Unit,
+    onEditButtonClick: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -126,7 +167,7 @@ fun EditProfileScreen(
                 enabled = isButtonAvailable,
                 buttonName = "프로필 수정하기",
                 roundedCornerShape = RoundedCornerShape(30.dp),
-                onClick = { },
+                onClick = onEditButtonClick,
             )
 
             Spacer(Modifier.height(24.dp))

@@ -1,6 +1,9 @@
 package com.kus.feature.my.ui.state
 
+import UiState
+
 data class EditProfileUiState(
+    val uiState: UiState<Unit> = UiState.Idle,
     val originalNickname: String = "",
     val originalEmail: String = "",
     val originalPhoneNumber: String = "",

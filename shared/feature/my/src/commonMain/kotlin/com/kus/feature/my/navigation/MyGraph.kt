@@ -142,6 +142,7 @@ fun NavGraphBuilder.myFullscreenNavGraph(
             nickName = args.nickName,
             email = args.email,
             phoneNumber = args.phoneNumber,
+            onShowMessage = onShowMessage,
             onBackClick = navigateToUp,
         )
     }
