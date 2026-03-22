@@ -17,6 +17,6 @@ class FeedbackViewModel(
     fun postFeedback(content: String) = viewModelScope.launch {
         runCatching { postFeedbackUseCase(content) }
             .onSuccess { _eventFlow.emit(it)  }
-            .onFailure { _eventFlow.emit(it.message ?: "의견 보내기에 실패했습니다.") }
+            .onFailure { _eventFlow.emit("의견 보내기에 실패했습니다.") }
     }
 }

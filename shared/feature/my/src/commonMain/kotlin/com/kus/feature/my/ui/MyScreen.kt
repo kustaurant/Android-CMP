@@ -62,6 +62,7 @@ fun MyScreen(
         viewModel.navigationEvent.collect { event ->
             when (event) {
                 is MyNavigationEvent.NavigateToLogin -> onLoginNavigate()
+                else -> {}
             }
         }
     }
