@@ -54,6 +54,7 @@ class TierViewModel(
                 categoryChangeMap = true,
             )
         }
+
         ensureDataForCurrentTab(force = true)
     }
 
@@ -158,7 +159,7 @@ class TierViewModel(
     fun toggleAiTier() {
         _uiState.update {
             it.copy(
-                isAiTier = !it.isAiTier,
+                isAITier = !it.isAITier,
                 scrollToTopTrigger = it.scrollToTopTrigger + 1,
                 tierListLastPosition = 0,
                 categoryChangeList = false,
@@ -189,7 +190,7 @@ class TierViewModel(
 
         val filter = snapshot.filterState.normalized()
         val isPartnership = filter.isPartnership
-        val isAiTier = snapshot.isAiTier
+        val isAiTier = snapshot.isAITier
 
         viewModelScope.launch {
             runCatching {

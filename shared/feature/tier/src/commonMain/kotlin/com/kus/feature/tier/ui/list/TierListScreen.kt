@@ -48,6 +48,7 @@ fun TierListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showTierInfo by rememberSaveable { mutableStateOf(false) }
+    val isAITier = uiState.isAITier
 
     if (showTierInfo) {
         TierInfoPopup(onDismiss = { showTierInfo = false })
@@ -78,7 +79,7 @@ fun TierListScreen(
             .background(Color.White)
     ) {
         TierAiToggleRow(
-            isAiTier = uiState.isAiTier,
+            isAiTier = uiState.isAITier,
             onAiToggleClick = viewModel::toggleAiTier,
             onTierGuideClick = { showTierInfo = true }
         )
@@ -156,9 +157,15 @@ fun TierListScreen(
                                         ambientColor = Color.Transparent,
                                     )
                             ) {
+                                val displayTier = if (isAITier || !restaurant.isTempTier) {
+                                    restaurant.mainTier
+                                } else {
+                                    -1
+                                }
+
                                 KusRestThumbnail(
                                     modifier = Modifier.fillMaxWidth(),
-                                    tier = restaurant.mainTier,
+                                    tier = displayTier,
                                     restName = restaurant.restaurantName,
                                     restThumbnail = restaurant.restaurantImgUrl,
                                     restAlliance = restaurant.partnershipInfo,
@@ -166,7 +173,7 @@ fun TierListScreen(
                                     location = restaurant.restaurantPosition,
                                     isSaved = restaurant.isFavorite,
                                     isEvaluated = restaurant.isEvaluated,
-                                    isTempTier = viewModel.uiState.value.isAiTier,
+                                    isTempTier = restaurant.isTempTier,
                                     onClick = { onRestaurantClick(restaurant) }
                                 )
                             }

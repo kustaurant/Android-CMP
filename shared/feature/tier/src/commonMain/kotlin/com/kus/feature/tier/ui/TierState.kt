@@ -62,7 +62,7 @@ data class TierUiState(
     val selectedCategories: Set<String> = setOf("전체"),
 
     val listState: UiState<List<TierRestaurant>> = UiState.Loading,
-    val isAiTier : Boolean = false,
+    val isAITier : Boolean = false,
     val scrollToTopTrigger: Int = 0,
 
     val pageState: TierPageState = TierPageState(),
