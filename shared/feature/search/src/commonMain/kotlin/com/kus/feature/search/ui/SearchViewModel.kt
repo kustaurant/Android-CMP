@@ -2,6 +2,7 @@ package com.kus.feature.search.ui
 
 import UiError
 import UiState
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.feature.search.state.SearchUiState
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val getSearchResultUseCase: GetSearchResultUseCase,
 ) : ViewModel() {
-    private val _searchTerm = MutableStateFlow("")
+    private val _searchTerm = MutableStateFlow(TextFieldValue(""))
     val searchTerm = _searchTerm.asStateFlow()
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
@@ -34,7 +35,7 @@ class SearchViewModel(
                 .debounce(DEBOUNCE_DELAY)
                 .distinctUntilChanged()
                 .collectLatest { term ->
-                    val query = term.trim()
+                    val query = term.text.trim()
 
                     if (query.isBlank()) {
                         _uiState.value = SearchUiState()
@@ -82,7 +83,7 @@ class SearchViewModel(
         val state = _uiState.value
         val term = _searchTerm.value
 
-        if (state.isPaging || state.isLastPage || term.isBlank()) return
+        if (state.isPaging || state.isLastPage || term.text.isBlank()) return
 
         viewModelScope.launch {
             _uiState.update { it.copy(isPaging = true) }
@@ -90,7 +91,7 @@ class SearchViewModel(
             val nextPage = state.page + 1
 
             runCatching {
-                getSearchResultUseCase(term, nextPage)
+                getSearchResultUseCase(term.text, nextPage)
             }.onSuccess { result ->
                 val merged = (state.items + result.items).distinctBy { it.id }
 
@@ -109,7 +110,7 @@ class SearchViewModel(
         }
     }
 
-    fun updateSearchTerm(new: String) {
+    fun updateSearchTerm(new: TextFieldValue) {
         _searchTerm.value = new
     }
 

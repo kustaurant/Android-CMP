@@ -3,6 +3,8 @@ package com.kus.feature.search.ui
 import UiState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,10 +23,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.theme.KusTheme
@@ -69,16 +77,41 @@ fun SearchRoute(
 
 @Composable
 fun SearchScreen(
-    searchTerm: String,
+    searchTerm: TextFieldValue,
     uiState: SearchUiState,
     listState: LazyListState,
     onBackClick: () -> Unit,
-    onSearchTermChange: (String) -> Unit,
+    onSearchTermChange: (TextFieldValue) -> Unit,
     onRestaurantItemClick: (Long) -> Unit,
 ) {
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.isScrollInProgress }
+            .collect { isScrolling ->
+                if (isScrolling) {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }
+            }
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
-            .background(KusTheme.colors.c_F3F3F3),
+            .background(KusTheme.colors.c_F3F3F3)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            },
         state = listState,
     ) {
         stickyHeader {
@@ -100,7 +133,9 @@ fun SearchScreen(
                 KusSearchBox(
                     searchTerm = searchTerm,
                     onValueChange = onSearchTermChange,
-                    onSearchButonClick = { /* 기능 없음*/ }
+                    onSearchButonClick = { /* 기능 없음*/ },
+                    modifier = Modifier
+                        .focusRequester(focusRequester),
                 )
             }
         }
@@ -117,7 +152,7 @@ fun SearchScreen(
             is UiState.Success -> {
                 val resultItems = uiState.items
 
-                if (resultItems.isEmpty() && searchTerm.isNotEmpty()) {
+                if (resultItems.isEmpty() && searchTerm.text.isNotEmpty()) {
                     item {
                         Column(
                             modifier = Modifier.fillMaxWidth().background(KusTheme.colors.c_F3F3F3)
