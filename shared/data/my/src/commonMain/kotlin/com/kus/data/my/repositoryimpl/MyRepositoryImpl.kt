@@ -6,6 +6,7 @@ import com.kus.data.my.mapper.toDomain
 import com.kus.data.my.remote.response.request.FeedbackRequest
 import com.kus.data.my.remote.response.request.PatchProfileInfoRequest
 import com.kus.shared.domain.model.my.MyInfo
+import com.kus.shared.domain.model.my.ProfileInfo
 
 class MyRepositoryImpl(
     private val api: MyApi,
@@ -17,8 +18,8 @@ class MyRepositoryImpl(
         api.postFeedback(FeedbackRequest(content))
 
     override suspend fun patchProfileInfo(
-        nickname: String,
+        nickname: String?,
         phoneNumber: String?,
-    ): String =
-        api.patchProfileInfo(PatchProfileInfoRequest(nickname, phoneNumber))
+    ): ProfileInfo =
+        api.patchProfileInfo(PatchProfileInfoRequest(nickname, phoneNumber)).toDomain()
 }

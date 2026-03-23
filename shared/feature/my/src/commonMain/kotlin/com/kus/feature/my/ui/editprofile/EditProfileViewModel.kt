@@ -40,12 +40,14 @@ class EditProfileViewModel(
         runCatching {
             with(uiState.value) {
                 val phoneNumber = phoneNumber?.trim()?.ifEmpty { null }
-                patchProfileInfoUseCase(nickname, phoneNumber)
+                val name = if (originalNickname==nickname) null else nickname
+                patchProfileInfoUseCase(name, phoneNumber)
             }
         }
             .onSuccess {
                 _uiState.update { it.copy(uiState = UiState.Success(Unit)) }
                 _navigationEvent.emit(MyNavigationEvent.NavigateToUp)
+                _errorMsgEvent.emit("프로필이 수정되었습니다.")
             }
             .onFailure {
                 _uiState.update { it.copy(uiState = UiState.Success(Unit)) }

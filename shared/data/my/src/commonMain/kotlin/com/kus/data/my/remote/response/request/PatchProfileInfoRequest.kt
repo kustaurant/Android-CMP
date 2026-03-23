@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PatchProfileInfoRequest(
-    val nickname: String,
+    val nickname: String?,
     val phoneNumber: String?,
 )

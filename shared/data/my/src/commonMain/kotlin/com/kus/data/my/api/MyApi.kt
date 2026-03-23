@@ -1,6 +1,7 @@
 package com.kus.data.my.api
 
 import com.kus.data.my.remote.response.MyInfoResponse
+import com.kus.data.my.remote.response.PatchProfileResponse
 import com.kus.data.my.remote.response.request.FeedbackRequest
 import com.kus.data.my.remote.response.request.PatchProfileInfoRequest
 import io.ktor.client.HttpClient
@@ -26,7 +27,7 @@ class MyApi(
         }.body()
     }
 
-    suspend fun patchProfileInfo(request: PatchProfileInfoRequest): String {
+    suspend fun patchProfileInfo(request: PatchProfileInfoRequest): PatchProfileResponse {
         return client.patch("/api/v2/auth/mypage/profile") {
             contentType(ContentType.Application.Json)
             setBody(request)
