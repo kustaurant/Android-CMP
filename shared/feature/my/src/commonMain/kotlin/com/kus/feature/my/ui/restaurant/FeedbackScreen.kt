@@ -80,7 +80,7 @@ internal fun FeedbackScreen(
                         .aspectRatio(3f),
                     placeholder = {
                         Text(
-                            text = "쿠스토랑에 대한 자유로운 의견들을 입력해주세요",
+                            text = "쿠스토랑에 대한 자유로운 의견들을 입력해주세요\n(최소 10자 이상부터 등록 가능합니다)",
                             style = KusTheme.typography.type14r,
                             color = KusTheme.colors.c_AAAAAA,
                         )
