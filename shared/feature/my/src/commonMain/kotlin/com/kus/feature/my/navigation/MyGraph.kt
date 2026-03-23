@@ -11,7 +11,7 @@ import com.kus.feature.my.ui.community.MyScrapScreen
 import com.kus.feature.my.ui.editprofile.EditProfileRoute
 import com.kus.feature.my.ui.restaurant.CheckedRestaurantScreen
 import com.kus.feature.my.ui.restaurant.FavoriteRestaurantScreen
-import com.kus.feature.my.ui.restaurant.FeedbackScreen
+import com.kus.feature.my.ui.feedback.FeedbackScreen
 import com.kus.feature.my.ui.webview.MyPageWebViewScreen
 import kotlinx.serialization.Serializable
 
