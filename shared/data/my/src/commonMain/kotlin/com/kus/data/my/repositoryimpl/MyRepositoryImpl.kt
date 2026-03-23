@@ -18,7 +18,7 @@ class MyRepositoryImpl(
 
     override suspend fun patchProfileInfo(
         nickname: String,
-        phoneNumber: String,
+        phoneNumber: String?,
     ): String =
         api.patchProfileInfo(PatchProfileInfoRequest(nickname, phoneNumber))
 }

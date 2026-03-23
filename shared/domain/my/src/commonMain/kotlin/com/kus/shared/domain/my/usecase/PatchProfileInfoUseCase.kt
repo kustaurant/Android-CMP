@@ -7,7 +7,7 @@ class PatchProfileInfoUseCase(
 ) {
     suspend operator fun invoke(
         nickname: String,
-        phoneNumber: String,
+        phoneNumber: String?,
     ): String {
         return repository.patchProfileInfo(nickname, phoneNumber)
     }

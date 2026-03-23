@@ -93,7 +93,7 @@ fun EditProfileRoute(
 fun EditProfileScreen(
     nickName: String,
     email: String,
-    phone: String,
+    phone: String?,
     isPhoneNumberError: Boolean,
     isButtonAvailable: Boolean,
     modifier: Modifier = Modifier,
@@ -145,7 +145,7 @@ fun EditProfileScreen(
 
             KusBasicTextField(
                 title = "연락처",
-                value = phone,
+                value = phone ?: "",
                 subtitle = "이벤트 쿠폰 수신을 위해 핸드폰 번호를 입력해주세요",
                 placeholder = "연락처를 입력해주세요(‘-’제외)",
                 onValueChange = onPhoneNumberChanged,

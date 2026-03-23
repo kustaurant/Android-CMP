@@ -6,9 +6,9 @@ data class EditProfileUiState(
     val uiState: UiState<Unit> = UiState.Idle,
     val originalNickname: String = "",
     val originalEmail: String = "",
-    val originalPhoneNumber: String = "",
+    val originalPhoneNumber: String? = null,
     val nickname: String = "",
-    val phoneNumber: String = "",
+    val phoneNumber: String? = null,
     val isPhoneNumberError: Boolean = false,
     val isButtonAvailable: Boolean = false,
 )

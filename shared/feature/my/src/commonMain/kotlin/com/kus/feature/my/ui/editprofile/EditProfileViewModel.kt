@@ -60,7 +60,7 @@ class EditProfileViewModel(
     fun updatePhoneNumber(new: String) {
         _uiState.update {
             it.copy(
-                phoneNumber = new,
+                phoneNumber = new.ifEmpty { null },
                 isPhoneNumberError = isValidPhoneNumber(new),
             )
         }
@@ -76,8 +76,9 @@ class EditProfileViewModel(
         val isAvailable =
             (uiState.value.nickname != uiState.value.originalNickname &&
                     uiState.value.nickname.length in 2..10) ||
-                    uiState.value.phoneNumber != uiState.value.originalPhoneNumber &&
-                    !uiState.value.isPhoneNumberError
+                    uiState.value.phoneNumber == null ||
+                    (uiState.value.phoneNumber != uiState.value.originalPhoneNumber &&
+                            !uiState.value.isPhoneNumberError)
 
         _uiState.update { it.copy(isButtonAvailable = isAvailable) }
     }
