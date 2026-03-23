@@ -88,6 +88,10 @@ internal fun CheckedRestaurantScreen(
 
                         HorizontalDivider(thickness = 1.dp, color = KusTheme.colors.c_EAEAEA)
                     }
+
+                    item {
+                        Spacer(Modifier.height(20.dp))
+                    }
                 }
             }
         }

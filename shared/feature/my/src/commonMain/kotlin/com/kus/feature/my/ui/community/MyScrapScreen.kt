@@ -78,7 +78,7 @@ internal fun MyScrapScreen(
                     }
 
                     item {
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(20.dp))
                     }
                 }
             }
