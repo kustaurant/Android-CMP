@@ -9,6 +9,6 @@ data class EvaluatedResponse(
     val restaurantImgURL: String,
     val cuisine: String,
     val evaluationScore: Double,
-    val evaluationBody: String,
-    val evaluationItemScores: List<String>,
+    val evaluationBody: String?,
+    val evaluationItemScores: List<String>?,
 )
