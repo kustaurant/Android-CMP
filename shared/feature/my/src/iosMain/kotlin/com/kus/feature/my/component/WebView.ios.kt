@@ -17,37 +17,47 @@ actual fun WebView(
     onLoadingChanged: (Boolean) -> Unit,
     modifier: Modifier,
 ) {
+    var webViewRef: WKWebView? = null
+
     UIKitView(
         modifier = modifier,
         factory = {
-            val webView = WKWebView()
+            WKWebView().apply {
+                webViewRef = this
 
-            webView.navigationDelegate = object : NSObject(), WKNavigationDelegateProtocol {
+                navigationDelegate = object : NSObject(), WKNavigationDelegateProtocol {
 
-                @ObjCSignatureOverride
-                override fun webView(
-                    webView: WKWebView,
-                    didStartProvisionalNavigation: WKNavigation?
-                ) {
-                    onLoadingChanged(true)
+                    @ObjCSignatureOverride
+                    override fun webView(
+                        webView: WKWebView,
+                        didStartProvisionalNavigation: WKNavigation?
+                    ) {
+                        onLoadingChanged(true)
+                    }
+
+                    @ObjCSignatureOverride
+                    override fun webView(
+                        webView: WKWebView,
+                        didFinishNavigation: WKNavigation?
+                    ) {
+                        onLoadingChanged(false)
+                    }
                 }
 
-                @ObjCSignatureOverride
-                override fun webView(
-                    webView: WKWebView,
-                    didFinishNavigation: WKNavigation?
-                ) {
-                    onLoadingChanged(false)
+                loadRequest(
+                    NSURLRequest.requestWithURL(NSURL.URLWithString(url)!!)
+                )
+            }
+        },
+        update = {
+            webViewRef?.let {
+                val currentUrl = it.URL?.absoluteString
+                if (currentUrl != url) {
+                    it.loadRequest(
+                        NSURLRequest.requestWithURL(NSURL.URLWithString(url)!!)
+                    )
                 }
             }
-
-            val request = NSURLRequest.requestWithURL(
-                NSURL.URLWithString(url)!!
-            )
-
-            webView.loadRequest(request)
-
-            webView
         }
     )
 }
