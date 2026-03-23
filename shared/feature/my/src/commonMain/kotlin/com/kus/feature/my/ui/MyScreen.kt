@@ -29,8 +29,8 @@ import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.my.component.MyActivityScreen
 import com.kus.feature.my.component.MyProfileScreen
 import com.kus.feature.my.component.MyTabRow
-import com.kus.feature.my.ui.event.MyNavigationEvent
-import com.kus.feature.my.ui.type.MyTab
+import com.kus.feature.my.event.MyNavigationEvent
+import com.kus.feature.my.type.MyTab
 import com.kus.shared.domain.model.my.MyInfo
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel

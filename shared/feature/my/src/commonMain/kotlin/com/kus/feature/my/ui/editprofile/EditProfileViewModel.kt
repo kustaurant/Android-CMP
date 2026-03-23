@@ -3,8 +3,8 @@ package com.kus.feature.my.ui.editprofile
 import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kus.feature.my.ui.event.MyNavigationEvent
-import com.kus.feature.my.ui.state.EditProfileUiState
+import com.kus.feature.my.event.MyNavigationEvent
+import com.kus.feature.my.state.EditProfileUiState
 import com.kus.shared.domain.my.usecase.PatchProfileInfoUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

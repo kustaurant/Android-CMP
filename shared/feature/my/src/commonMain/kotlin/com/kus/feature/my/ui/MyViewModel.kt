@@ -8,8 +8,8 @@ import com.kus.domain.auth.session.SessionEvent
 import com.kus.domain.auth.session.SessionEventEmitter
 import com.kus.domain.auth.usecase.DeleteUserInfoUseCase
 import com.kus.domain.auth.usecase.LogoutUseCase
-import com.kus.feature.my.ui.event.MyNavigationEvent
-import com.kus.feature.my.ui.state.MyUiState
+import com.kus.feature.my.event.MyNavigationEvent
+import com.kus.feature.my.state.MyUiState
 import com.kus.shared.domain.my.usecase.GetMyInfoUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

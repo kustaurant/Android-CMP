@@ -28,7 +28,7 @@ import com.kus.designsystem.component.KusBasicTextField
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.my.component.MyPageTopBar
-import com.kus.feature.my.ui.event.MyNavigationEvent
+import com.kus.feature.my.event.MyNavigationEvent
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 

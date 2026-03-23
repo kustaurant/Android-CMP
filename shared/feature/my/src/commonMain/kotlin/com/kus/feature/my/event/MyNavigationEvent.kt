@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.event
+package com.kus.feature.my.event
 
 sealed interface MyNavigationEvent {
     data object NavigateToLogin: MyNavigationEvent

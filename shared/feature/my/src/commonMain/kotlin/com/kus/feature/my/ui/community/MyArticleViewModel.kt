@@ -4,7 +4,7 @@ import UiError
 import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kus.feature.my.ui.state.MyArticleUiState
+import com.kus.feature.my.state.MyArticleUiState
 import com.kus.shared.domain.my.usecase.GetMyPostsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
