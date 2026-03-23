@@ -39,6 +39,7 @@ class EditProfileViewModel(
         _uiState.update { it.copy(uiState = UiState.Loading) }
         runCatching {
             with(uiState.value) {
+                val phoneNumber = phoneNumber?.trim()?.ifEmpty { null }
                 patchProfileInfoUseCase(nickname, phoneNumber)
             }
         }
