@@ -28,6 +28,7 @@ import org.jetbrains.compose.resources.painterResource
 internal fun KusSearchBox(
     searchTerm: TextFieldValue,
     modifier: Modifier = Modifier,
+    textFieldModifier: Modifier = Modifier,
     placeholder: String = "검색어를 입력하세요",
     onValueChange: (TextFieldValue) -> Unit,
     onSearchButonClick: () -> Unit,
@@ -55,7 +56,7 @@ internal fun KusSearchBox(
                 onValueChange = onValueChange,
                 singleLine = true,
                 enabled = true,
-                modifier = Modifier.weight(1f),
+                modifier = textFieldModifier.weight(1f),
                 textStyle = KusTheme.typography.type14r.copy(
                     color = KusTheme.colors.c_323232
                 ),

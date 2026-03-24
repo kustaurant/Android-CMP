@@ -134,8 +134,8 @@ fun SearchScreen(
                     searchTerm = searchTerm,
                     onValueChange = onSearchTermChange,
                     onSearchButonClick = { /* 기능 없음*/ },
-                    modifier = Modifier
-                        .focusRequester(focusRequester),
+                    modifier = Modifier,
+                    textFieldModifier = Modifier.focusRequester(focusRequester),
                 )
             }
         }
