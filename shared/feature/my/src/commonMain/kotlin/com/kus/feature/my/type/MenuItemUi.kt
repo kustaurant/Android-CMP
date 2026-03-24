@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.type
+package com.kus.feature.my.type
 
 import org.jetbrains.compose.resources.DrawableResource
 

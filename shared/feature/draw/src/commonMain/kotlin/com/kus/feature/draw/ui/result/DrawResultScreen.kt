@@ -38,9 +38,7 @@ import com.kus.designsystem.component.KusTopBar
 import com.kus.designsystem.theme.KusTheme
 import com.kus.shared.domain.model.tier.filter.Cuisine
 import com.kus.shared.domain.model.tier.filter.Location
-import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
-import kustaurant.shared.core.designsystem.generated.resources.ic_search
 import kustaurant.shared.feature.draw.generated.resources.Res
 import kustaurant.shared.feature.draw.generated.resources.ic_retry
 import org.jetbrains.compose.resources.painterResource
@@ -97,11 +95,7 @@ fun DrawResultScreen(
                     .height(64.dp)
                     .padding(horizontal = 8.dp),
                 leftIcon = painterResource(CoreRes.drawable.ic_arrow_back),
-                rightFirstIcon = painterResource(CoreRes.drawable.ic_search),
-                rightSecondIcon = painterResource(CoreRes.drawable.ic_alarm_off),
                 onLeftClicked = onBackClick,
-                onRightFirstClicked = {},
-                onRightSecondClicked = {},
             ) {
                 Text(
                     text = "랜덤 맛집 뽑기",

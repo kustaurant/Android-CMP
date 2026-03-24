@@ -44,6 +44,7 @@ multiplatform-settings = "1.1.1"
 kotlinx-io = "0.8.2"
 compottie = "2.0.2"
 cameraX = "1.5.3"
+androidx-webkit = "1.9.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -115,6 +116,7 @@ compose-ui-graphics = { module = "org.jetbrains.compose.ui:ui-graphics", version
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatform-settings" }
 compottie-core = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 
+androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "androidx-webkit" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

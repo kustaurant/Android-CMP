@@ -40,14 +40,14 @@ import com.kus.feature.login.navigation.Login
 import com.kus.feature.my.navigation.My
 import com.kus.feature.my.navigation.myMainNavGraph
 import com.kus.feature.my.navigation.navigateToCheckedRest
-import com.kus.feature.my.navigation.navigateToFeedback
+import com.kus.feature.my.navigation.navigateToEditProfile
 import com.kus.feature.my.navigation.navigateToFavoriteRest
+import com.kus.feature.my.navigation.navigateToFeedback
 import com.kus.feature.my.navigation.navigateToMyArticle
 import com.kus.feature.my.navigation.navigateToMyComment
 import com.kus.feature.my.navigation.navigateToMyWebView
 import com.kus.feature.my.navigation.navigateToScrap
 import com.kus.feature.search.navigation.Search
-import com.kus.feature.tier.TierKeys as TierResultKeys
 import com.kus.feature.tier.config.TierKeys.TIER_INITIAL_JSON
 import com.kus.feature.tier.config.TierKeys.TIER_RESULT_JSON
 import com.kus.feature.tier.navigation.Tier
@@ -55,6 +55,7 @@ import com.kus.feature.tier.navigation.TierCategorySelect
 import com.kus.feature.tier.navigation.tierMainNavGraph
 import com.kus.feature.tier.ui.TierFilterState
 import com.kus.shared.domain.model.tier.filter.Cuisine
+import com.kus.feature.tier.TierKeys as TierResultKeys
 
 @Composable
 fun MainScreen(
@@ -194,8 +195,6 @@ fun MainScreen(
             )
 
             drawNavGraph(
-                onSearchClick = { rootNavController.navigate(Search) },
-                onAlarmClick = {},
                 navigateToDrawResult = { route -> mainNavController.navigate(route) },
                 onBackClick = { mainNavController.popBackStack() },
             )
@@ -230,11 +229,13 @@ fun MainScreen(
                 onPostWriteClick = {
                     rootNavController.navigate(CommunityWrite)
                 },
-                onSearchClick = { },
             )
 
             myMainNavGraph(
                 onShowMessage = onShowMessage,
+                navigateToEditProfile = { nickName, email, phoneNumber ->
+                    rootNavController.navigateToEditProfile(nickName, email, phoneNumber)
+                },
                 navigateToNotice = {
                     rootNavController.navigateToMyWebView(
                         title = "공지사항",

@@ -14,7 +14,5 @@
 	<string>$(NAVER_MAP_CLIENT_ID)</string>
 	<key>PRODUCT_NAME</key>
 	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundleDisplayName</key>
-	<string>${CFBundleDisplayName}</string>
 </dict>
 </plist>
