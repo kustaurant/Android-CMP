@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.my.ui.type.MyTab
+import com.kus.feature.my.type.MyTab
 
 @Composable
 internal fun MyTabRow(

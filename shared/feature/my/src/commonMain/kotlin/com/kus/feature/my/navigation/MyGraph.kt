@@ -8,9 +8,10 @@ import androidx.navigation.toRoute
 import com.kus.feature.my.ui.community.MyArticleScreen
 import com.kus.feature.my.ui.community.MyCommentScreen
 import com.kus.feature.my.ui.community.MyScrapScreen
+import com.kus.feature.my.ui.editprofile.EditProfileRoute
 import com.kus.feature.my.ui.restaurant.CheckedRestaurantScreen
 import com.kus.feature.my.ui.restaurant.FavoriteRestaurantScreen
-import com.kus.feature.my.ui.restaurant.FeedbackScreen
+import com.kus.feature.my.ui.feedback.FeedbackScreen
 import com.kus.feature.my.ui.webview.MyPageWebViewScreen
 import kotlinx.serialization.Serializable
 
@@ -38,8 +39,16 @@ fun NavController.navigateToMyComment(navOptions: NavOptions? = null) =
 fun NavController.navigateToScrap(navOptions: NavOptions? = null) =
     navigate(MyScrap, navOptions)
 
+fun NavController.navigateToEditProfile(
+    nickName: String,
+    email: String,
+    phoneNumber: String,
+    navOptions: NavOptions? = null,
+) = navigate(EditProfile(nickName, email, phoneNumber), navOptions)
+
 fun NavGraphBuilder.myMainNavGraph(
     onShowMessage: (String) -> Unit,
+    navigateToEditProfile: (String, String, String) -> Unit,
     navigateToNotice: () -> Unit,
     navigateToTerms: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
@@ -54,7 +63,7 @@ fun NavGraphBuilder.myMainNavGraph(
     composable<My> {
         MyRoute(
             onShowMessage = onShowMessage,
-            navigateToProfileEdit = { },
+            navigateToProfileEdit = navigateToEditProfile,
             navigateToNotice = navigateToNotice,
             navigateToTerms = navigateToTerms,
             navigateToPrivacyPolicy = navigateToPrivacyPolicy,
@@ -125,6 +134,18 @@ fun NavGraphBuilder.myFullscreenNavGraph(
             onItemClick = onArticleClick,
         )
     }
+
+    composable<EditProfile> { backStackEntry ->
+        val args = backStackEntry.toRoute<EditProfile>()
+
+        EditProfileRoute(
+            nickName = args.nickName,
+            email = args.email,
+            phoneNumber = args.phoneNumber,
+            onShowMessage = onShowMessage,
+            onBackClick = navigateToUp,
+        )
+    }
 }
 
 @Serializable
@@ -153,3 +174,10 @@ data object MyComment
 
 @Serializable
 data object MyScrap
+
+@Serializable
+data class EditProfile(
+    val nickName: String,
+    val email: String,
+    val phoneNumber: String,
+)

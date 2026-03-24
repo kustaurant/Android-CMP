@@ -1,5 +1,6 @@
 package com.kus.feature.tier.ui.map
 
+import UiState
 import android.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -7,8 +8,17 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -63,6 +73,7 @@ fun TierMapAndroidScreen(
     val latestOnMapTapped by rememberUpdatedState(onMapTapped)
     val mapAlpha by animateFloatAsState(if (isMapReadyToShow) 1f else 0f)
 
+    val tierMarkerSize = with(LocalDensity.current) { 25.dp.toPx() }
 
     DisposableEffect(lifecycleOwner, mapView) {
         val obs = LifecycleEventObserver { _, event ->
@@ -121,6 +132,7 @@ fun TierMapAndroidScreen(
                     restaurantMarkers = mapInstance.restaurantMarkers,
                     onRestaurantSelected = latestOnRestaurantSelected,
                     outlineColor = outlineColorInt,
+                    tierMarkerSize = tierMarkerSize.toInt(),
                 )
             }
         }
@@ -149,6 +161,7 @@ fun TierMapAndroidScreen(
             restaurantMarkers = mapInstance.restaurantMarkers,
             onRestaurantSelected = latestOnRestaurantSelected,
             outlineColor = outlineColorInt,
+            tierMarkerSize = tierMarkerSize.toInt(),
         )
 
         if (isBoundsChanged) {
@@ -258,6 +271,7 @@ private fun updateMap(
     restaurantMarkers: MutableList<Marker>,
     onRestaurantSelected: (Long) -> Unit,
     outlineColor: Int,
+    tierMarkerSize : Int,
 ) {
     clearOverlaysAndMarkers(polygonOverlays, polylineOverlays, restaurantMarkers)
 
@@ -309,18 +323,18 @@ private fun updateMap(
     }
 
     mapData.favoriteTierRestaurants.forEach { r ->
-        createRestaurantMarker(map, r, onRestaurantSelected, restaurantMarkers)
+        createRestaurantMarker(map, r, onRestaurantSelected, restaurantMarkers, tierMarkerSize)
     }
 
     mapData.tieredTierRestaurants.forEach { r ->
-        createRestaurantMarker(map, r, onRestaurantSelected, restaurantMarkers)
+        createRestaurantMarker(map, r, onRestaurantSelected, restaurantMarkers, tierMarkerSize)
     }
 
     mapData.nonTieredRestaurants
         .filter { it.zoom <= currentZoom }
         .forEach { group ->
             group.tierRestaurants.forEach { r ->
-                createRestaurantMarker(map, r, onRestaurantSelected, restaurantMarkers)
+                createRestaurantMarker(map, r, onRestaurantSelected, restaurantMarkers, tierMarkerSize)
             }
         }
 }
@@ -343,10 +357,17 @@ private fun createRestaurantMarker(
     restaurant: TierRestaurant,
     onRestaurantSelected: (Long) -> Unit,
     restaurantMarkers: MutableList<Marker>,
+    tierMarkerSize : Int
 ) {
     val marker = Marker().apply {
         position = LatLng(restaurant.latitude, restaurant.longitude)
         icon = getMarkerIcon(restaurant)
+
+        if (!restaurant.isFavorite && restaurant.mainTier in 1..4) {
+            width = tierMarkerSize
+            height = tierMarkerSize
+        }
+
         this.map = map
         zIndex = if (restaurant.isFavorite) {
             5
