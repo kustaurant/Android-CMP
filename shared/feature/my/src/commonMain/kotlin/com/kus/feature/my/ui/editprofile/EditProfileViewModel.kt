@@ -50,7 +50,7 @@ class EditProfileViewModel(
                 _errorMsgEvent.emit("프로필이 수정되었습니다.")
             }
             .onFailure {
-                _uiState.update { it.copy(uiState = UiState.Success(Unit)) }
+                _uiState.update { it.copy(uiState = UiState.Success(Unit)) } /* 기본 화면 유지 */
                 _errorMsgEvent.emit("오류가 발생했습니다. 다시 시도해주세요.")
             }
     }
@@ -64,7 +64,7 @@ class EditProfileViewModel(
         _uiState.update {
             it.copy(
                 phoneNumber = new.ifEmpty { null },
-                isPhoneNumberError = isValidPhoneNumber(new),
+                isPhoneNumberError = !isValidPhoneNumber(new),
             )
         }
         updateButtonAvailable()
@@ -72,14 +72,13 @@ class EditProfileViewModel(
 
     private fun isValidPhoneNumber(phone: String): Boolean {
         val regex = Regex("^010\\d{8}$")
-        return !(regex.matches(phone) || phone.isEmpty())
+        return (regex.matches(phone) || phone.isEmpty())
     }
 
     private fun updateButtonAvailable() {
         val isAvailable =
             (uiState.value.nickname != uiState.value.originalNickname &&
                     uiState.value.nickname.length in 2..10) ||
-                    uiState.value.phoneNumber == null ||
                     (uiState.value.phoneNumber != uiState.value.originalPhoneNumber &&
                             !uiState.value.isPhoneNumberError)
 
