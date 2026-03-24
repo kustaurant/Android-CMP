@@ -97,7 +97,7 @@ fun MainScreen(
                 .savedStateHandle[TIER_INITIAL_JSON] = json
         }
 
-        mainBackStackEntry.savedStateHandle[TIER_INITIAL_JSON] = null
+        mainBackStackEntry.savedStateHandle.remove<String>(TIER_INITIAL_JSON)
     }
 
     LaunchedEffect(tierResultJson) {
