@@ -195,7 +195,6 @@ fun MainScreen(
             )
 
             drawNavGraph(
-                onShowMessage = onShowMessage,
                 navigateToDrawResult = { route -> mainNavController.navigate(route) },
                 onBackClick = { mainNavController.popBackStack() },
             )

@@ -1,6 +1,7 @@
 package com.kus.feature.tier.ui.list
 
 import UiState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,8 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.kus.designsystem.component.KusLoadingAnimation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.tier.ui.TierPhase
@@ -36,6 +37,9 @@ import com.kus.feature.tier.ui.popup.TierInfoPopup
 import com.kus.shared.domain.model.tier.TierRestaurant
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import kustaurant.shared.core.designsystem.generated.resources.img_no_result
+import org.jetbrains.compose.resources.painterResource
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun TierListScreen(
@@ -114,12 +118,12 @@ fun TierListScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        KamelImage(
-                            resource = asyncPainterResource("ic_kus_disable.png"),
-                            contentDescription = "disabled image"
+                        Image(
+                            painter = painterResource(CoreRes.drawable.img_no_result),
+                            contentDescription = null,
                         )
-
-                        Spacer(Modifier.height(26.dp))
+ 
+                        Spacer(Modifier.height(6.dp))
 
                         Text(
                             text = "카테고리에 해당하는 음식점이 없어요.",

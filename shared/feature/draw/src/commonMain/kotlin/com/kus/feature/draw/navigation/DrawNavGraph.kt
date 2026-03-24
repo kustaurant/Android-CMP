@@ -19,7 +19,6 @@ data class DrawResult(
 )
 
 fun NavGraphBuilder.drawNavGraph(
-    onShowMessage: (String) -> Unit,
     navigateToDrawResult: (DrawResult) -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -55,7 +54,6 @@ fun NavGraphBuilder.drawNavGraph(
             initialLocations = payload.locations.toSet(),
             initialCuisines = payload.cuisines.toSet(),
             onBackClick = onBackClick,
-            onShowMessage = onShowMessage,
         )
     }
 }
