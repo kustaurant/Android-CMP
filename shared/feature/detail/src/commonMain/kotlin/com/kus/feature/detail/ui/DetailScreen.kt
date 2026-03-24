@@ -85,9 +85,7 @@ fun DetailRoute(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                KusLoadingAnimation(
-                    modifier = Modifier.size(120.dp)
-                )
+                KusLoadingAnimation()
             }
         }
 

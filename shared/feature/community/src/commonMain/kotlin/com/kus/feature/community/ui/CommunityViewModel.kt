@@ -1,12 +1,12 @@
 package com.kus.feature.community.ui
 
-import GetSessionAvailabilityUseCase
 import UiError
 import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.domain.auth.session.SessionEvent
 import com.kus.domain.auth.session.SessionEventEmitter
+import com.kus.domain.auth.usecase.GetSessionAvailabilityUseCase
 import com.kus.domain.community.model.ListSortType
 import com.kus.domain.community.model.PostCategory
 import com.kus.domain.community.model.RankingSortType

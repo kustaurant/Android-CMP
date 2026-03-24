@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.kus.designsystem.component.KusLoadingAnimation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusRestThumbnail
 import com.kus.designsystem.theme.KusTheme
@@ -81,7 +81,7 @@ fun TierListScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                    KusLoadingAnimation()
                 }
             }
 
@@ -163,7 +163,7 @@ fun TierListScreen(
                                         .padding(vertical = 14.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                                    KusLoadingAnimation()
                                 }
                             }
                         }

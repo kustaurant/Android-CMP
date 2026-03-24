@@ -1,9 +1,9 @@
 package com.kus.feature.community.ui.detail
 
-import GetSessionAvailabilityUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kus.designsystem.util.stripHtml
+import com.kus.domain.auth.usecase.GetSessionAvailabilityUseCase
 import com.kus.domain.community.model.LikeEvent
 import com.kus.domain.community.usecase.DeleteCommunityCommentUseCase
 import com.kus.domain.community.usecase.DeleteCommunityPostUseCase

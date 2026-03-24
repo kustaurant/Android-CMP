@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.kus.core.designsystem.R
+import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.theme.KusTheme
 import com.kus.shared.domain.model.tier.TierMapData
 import com.kus.shared.domain.model.tier.TierRestaurant
@@ -207,7 +207,7 @@ fun TierMapAndroidScreen(
 
         if (!isMapReadyToShow) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+                KusLoadingAnimation()
             }
         }
 

@@ -9,7 +9,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,10 +17,11 @@ import cocoapods.NMapsMap.NMFMapViewTouchDelegateProtocol
 import cocoapods.NMapsMap.NMFMapViewCameraDelegateProtocol
 import cocoapods.NMapsMap.NMGLatLng
 import cocoapods.NMapsMap.NMFCameraUpdate
+import com.kus.designsystem.component.KusLoadingAnimation
+import com.kus.designsystem.theme.KusTheme
 import com.kus.shared.domain.model.tier.TierMapData
 import com.kus.shared.domain.model.tier.TierRestaurant
 import platform.UIKit.UIColor
-import com.kus.designsystem.theme.KusTheme
 import kotlinx.cinterop.ExperimentalForeignApi
 import cocoapods.NMapsMap.NMFMapView 
 import kotlinx.cinterop.CValue
@@ -217,7 +217,7 @@ fun TierMapIosScreen(
                     .background(KusTheme.colors.c_FFFFFF),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = KusTheme.colors.c_43AB38)
+                KusLoadingAnimation()
             }
         }
     }
@@ -451,4 +451,3 @@ private fun moveCameraToVisibleBoundsIos(
         onComplete()
     }
 }
-

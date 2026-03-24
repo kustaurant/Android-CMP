@@ -2,6 +2,7 @@ package com.kus.feature.evaluate.ui
 
 import UiState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -21,6 +22,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusLoadingAnimation
@@ -77,9 +81,7 @@ fun EvaluateRoute(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center,
                     ) {
-                        KusLoadingAnimation(
-                            modifier = Modifier.size(120.dp)
-                        )
+                        KusLoadingAnimation()
                     }
                 }
 
@@ -176,6 +178,17 @@ private fun EvaluateSuccessScreen(
     onImageSelected: (ByteArray) -> Unit,
     onSubmitClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        if (listState.isScrollInProgress) {
+            focusManager.clearFocus()
+            keyboardController?.hide()
+        }
+    }
+
     val isRatingSelected = evaluation.evaluationScore != 0.0
     val isSubmitting = submitState is UiState.Loading
     val submitButtonColor =
@@ -185,8 +198,15 @@ private fun EvaluateSuccessScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = KusTheme.colors.c_FFFFFF)
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                })
+            }
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxWidth()
         ) {
             item {
