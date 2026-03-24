@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -58,7 +59,9 @@ fun DrawRouletteSection(
         }
     }
 
-    val allImagesLoaded = preloadedResources.all { it is Resource.Success }
+    val allImagesLoaded =
+        preloadedResources.all { it is Resource.Success || it is Resource.Failure }
+    val hasAnyFailure = preloadedResources.any { it is Resource.Failure }
 
     BoxWithConstraints(
         modifier = modifier
@@ -67,12 +70,16 @@ fun DrawRouletteSection(
     ) {
         if (items.isEmpty()) return@BoxWithConstraints
 
-        if (!allImagesLoaded) {
+        if (!allImagesLoaded || hasAnyFailure) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                KusLoadingAnimation()
+                if (hasAnyFailure) {
+                    Text("이미지 로딩 실패했어요.")
+                } else {
+                    KusLoadingAnimation()
+                }
             }
             return@BoxWithConstraints
         }
@@ -266,7 +273,7 @@ private fun DrawRestaurantImage(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier ,
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         KamelImage(
