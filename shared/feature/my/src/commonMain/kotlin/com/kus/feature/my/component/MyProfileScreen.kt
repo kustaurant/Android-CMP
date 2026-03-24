@@ -26,8 +26,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
-import com.kus.feature.my.ui.type.AccountMenu
-import com.kus.feature.my.ui.type.ServiceMenu
+import com.kus.feature.my.type.AccountMenu
+import com.kus.feature.my.type.ServiceMenu
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 

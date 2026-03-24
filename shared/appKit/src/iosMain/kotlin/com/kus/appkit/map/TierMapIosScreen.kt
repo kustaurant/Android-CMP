@@ -2,6 +2,7 @@
 
 package com.kus.appkit.map
 
+import UiState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,29 +14,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
-import cocoapods.NMapsMap.NMFMapViewTouchDelegateProtocol
-import cocoapods.NMapsMap.NMFMapViewCameraDelegateProtocol
-import cocoapods.NMapsMap.NMGLatLng
 import cocoapods.NMapsMap.NMFCameraUpdate
-import com.kus.designsystem.component.KusLoadingAnimation
-import com.kus.designsystem.theme.KusTheme
-import com.kus.shared.domain.model.tier.TierMapData
-import com.kus.shared.domain.model.tier.TierRestaurant
-import platform.UIKit.UIColor
-import kotlinx.cinterop.ExperimentalForeignApi
-import cocoapods.NMapsMap.NMFMapView 
-import kotlinx.cinterop.CValue
-import platform.CoreGraphics.CGPoint
-import platform.darwin.NSObject
-import cocoapods.NMapsMap.NMFPolygonOverlay
-import cocoapods.NMapsMap.NMFPolylineOverlay
+import cocoapods.NMapsMap.NMFMapView
+import cocoapods.NMapsMap.NMFMapViewCameraDelegateProtocol
+import cocoapods.NMapsMap.NMFMapViewTouchDelegateProtocol
 import cocoapods.NMapsMap.NMFMarker
 import cocoapods.NMapsMap.NMFOverlayImage
+import cocoapods.NMapsMap.NMFPolygonOverlay
+import cocoapods.NMapsMap.NMFPolylineOverlay
+import cocoapods.NMapsMap.NMGLatLng
+import com.kus.designsystem.component.KusLoadingAnimation
+import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.toUIColor
 import com.kus.feature.tier.ui.map.MapCameraState
 import com.kus.feature.tier.ui.map.TierMapUiState
 import com.kus.feature.tier.ui.map.TierRestaurantBottomSheetCard
-import platform.Foundation.NSLog
+import com.kus.shared.domain.model.tier.TierMapData
+import com.kus.shared.domain.model.tier.TierRestaurant
+import kotlinx.cinterop.CValue
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.CoreGraphics.CGPoint
+import platform.UIKit.UIColor
+import platform.darwin.NSObject
 
 @Composable
 fun TierMapIosScreen(
@@ -62,6 +62,10 @@ fun TierMapIosScreen(
     val latestOnMapTapped by rememberUpdatedState(onMapTapped)
     val latestOnRestaurantSelected by rememberUpdatedState(onRestaurantSelected)
     val latestState by rememberUpdatedState(state)
+
+    LaunchedEffect(naverMapView) {
+        naverMapView.showZoomControls = false
+    }
 
     val touchDelegate = remember {
         object : NSObject(), NMFMapViewTouchDelegateProtocol {
@@ -372,9 +376,18 @@ private fun createRestaurantMarkerIos(
         val isNoneMarker = !restaurant.isFavorite &&
                 restaurant.partnershipInfo.isNotEmpty() ||
                 restaurant.mainTier !in 1..4
+
+        val isTier = restaurant.mainTier in 1..4 &&
+                !restaurant.isFavorite
+
         if (isNoneMarker) {
             width = 15.0
             height = 20.0
+        }
+
+        if(isTier) {
+            width = 25.0
+            height = 25.0
         }
 
         this.mapView = mapView

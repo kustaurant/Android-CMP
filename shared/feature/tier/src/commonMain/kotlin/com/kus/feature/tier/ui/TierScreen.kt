@@ -42,22 +42,15 @@ import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.tier.ui.list.TierListScreen
 import com.kus.feature.tier.ui.map.TierMapPlatform
 import kotlinx.coroutines.launch
-import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
-import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
-import kustaurant.shared.core.designsystem.generated.resources.ic_search
 import kustaurant.shared.feature.tier.generated.resources.Res
 import kustaurant.shared.feature.tier.generated.resources.ic_filter
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun TierScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
-    onSearchClick: () -> Unit = {},
-    onAlarmClick: () -> Unit = {},
     onFilterClick: () -> Unit = {},
     onShowMessage: (String) -> Unit,
     onNavigateRestaurantDetail: (Long) -> Unit = {},
@@ -89,12 +82,6 @@ fun TierScreen(
                 .fillMaxWidth()
                 .height(56.dp)
                 .padding(horizontal = 8.dp),
-            leftIcon = painterResource(CoreRes.drawable.ic_arrow_back),
-            rightFirstIcon = painterResource(CoreRes.drawable.ic_search),
-            rightSecondIcon = painterResource(CoreRes.drawable.ic_alarm_off),
-            onLeftClicked = onBackClick,
-            onRightFirstClicked = onSearchClick,
-            onRightSecondClicked = onAlarmClick,
         ) {
             TierCenterTabs(
                 selectedIndex = pagerState.currentPage,

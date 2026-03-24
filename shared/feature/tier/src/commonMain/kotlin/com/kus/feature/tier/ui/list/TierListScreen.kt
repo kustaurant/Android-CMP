@@ -1,6 +1,7 @@
 package com.kus.feature.tier.ui.list
 
 import UiState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,9 @@ import com.kus.feature.tier.ui.popup.TierInfoPopup
 import com.kus.shared.domain.model.tier.TierRestaurant
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import kustaurant.shared.core.designsystem.generated.resources.img_no_result
+import org.jetbrains.compose.resources.painterResource
+import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun TierListScreen(
@@ -123,12 +127,12 @@ fun TierListScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        KamelImage(
-                            resource = asyncPainterResource("ic_kus_disable.png"),
-                            contentDescription = "disabled image"
+                        Image(
+                            painter = painterResource(CoreRes.drawable.img_no_result),
+                            contentDescription = null,
                         )
-
-                        Spacer(Modifier.height(26.dp))
+ 
+                        Spacer(Modifier.height(6.dp))
 
                         Text(
                             text = "카테고리에 해당하는 음식점이 없어요.",

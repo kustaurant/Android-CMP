@@ -40,6 +40,7 @@ import com.kus.feature.login.navigation.Login
 import com.kus.feature.my.navigation.My
 import com.kus.feature.my.navigation.myMainNavGraph
 import com.kus.feature.my.navigation.navigateToCheckedRest
+import com.kus.feature.my.navigation.navigateToEditProfile
 import com.kus.feature.my.navigation.navigateToFavoriteRest
 import com.kus.feature.my.navigation.navigateToFeedback
 import com.kus.feature.my.navigation.navigateToMyArticle
@@ -206,9 +207,6 @@ fun MainScreen(
             )
 
             drawNavGraph(
-                onSearchClick = { rootNavController.navigate(Search) },
-                onAlarmClick = {},
-                onShowMessage = onShowMessage,
                 navigateToDrawResult = { route -> mainNavController.navigate(route) },
                 onBackClick = { mainNavController.popBackStack() },
             )
@@ -235,11 +233,13 @@ fun MainScreen(
                 onPostWriteClick = {
                     rootNavController.navigate(CommunityWrite)
                 },
-                onSearchClick = { },
             )
 
             myMainNavGraph(
                 onShowMessage = onShowMessage,
+                navigateToEditProfile = { nickName, email, phoneNumber ->
+                    rootNavController.navigateToEditProfile(nickName, email, phoneNumber)
+                },
                 navigateToNotice = {
                     rootNavController.navigateToMyWebView(
                         title = "공지사항",

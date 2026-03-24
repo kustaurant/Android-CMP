@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
@@ -25,10 +26,11 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 internal fun KusSearchBox(
-    searchTerm: String,
+    searchTerm: TextFieldValue,
     modifier: Modifier = Modifier,
+    textFieldModifier: Modifier = Modifier,
     placeholder: String = "검색어를 입력하세요",
-    onValueChange: (String) -> Unit,
+    onValueChange: (TextFieldValue) -> Unit,
     onSearchButonClick: () -> Unit,
 ) {
     Box(
@@ -54,12 +56,12 @@ internal fun KusSearchBox(
                 onValueChange = onValueChange,
                 singleLine = true,
                 enabled = true,
-                modifier = Modifier.weight(1f),
+                modifier = textFieldModifier.weight(1f),
                 textStyle = KusTheme.typography.type14r.copy(
                     color = KusTheme.colors.c_323232
                 ),
                 decorationBox = { innerTextField ->
-                    if (searchTerm.isEmpty()) {
+                    if (searchTerm.text.isEmpty()) {
                         Text(
                             text = placeholder,
                             style = KusTheme.typography.type14r,
@@ -70,14 +72,14 @@ internal fun KusSearchBox(
                 },
             )
 
-            if (searchTerm.isNotEmpty()) {
+            if (searchTerm.text.isNotEmpty()) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_x_circle),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(start = 13.dp, end = 6.dp)
                         .size(20.dp)
-                        .noRippleClickable { onValueChange("") },
+                        .noRippleClickable { onValueChange(TextFieldValue("")) },
                     tint = Color.Unspecified,
                 )
             }
