@@ -6,6 +6,7 @@ import com.kus.shared.domain.my.usecase.GetMyCommentsUseCase
 import com.kus.shared.domain.my.usecase.GetMyInfoUseCase
 import com.kus.shared.domain.my.usecase.GetMyPostsUseCase
 import com.kus.shared.domain.my.usecase.GetMyScrapsUseCase
+import com.kus.shared.domain.my.usecase.PatchProfileInfoUseCase
 import com.kus.shared.domain.my.usecase.PostFeedbackUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -13,6 +14,7 @@ import org.koin.dsl.module
 val myDomainModule = module {
     singleOf(::GetMyInfoUseCase)
     singleOf(::PostFeedbackUseCase)
+    singleOf(::PatchProfileInfoUseCase)
 
     singleOf(::GetMyCommentsUseCase)
     singleOf(::GetMyPostsUseCase)

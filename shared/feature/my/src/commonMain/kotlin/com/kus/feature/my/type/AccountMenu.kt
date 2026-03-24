@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.type
+package com.kus.feature.my.type
 
 import kustaurant.shared.feature.my.generated.resources.Res
 import kustaurant.shared.feature.my.generated.resources.ic_delete_account
