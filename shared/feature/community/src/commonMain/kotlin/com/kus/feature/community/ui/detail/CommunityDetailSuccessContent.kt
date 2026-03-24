@@ -146,7 +146,7 @@ private fun DetailAuthorHeader(post: CommunityPostUi) {
         Spacer(Modifier.width(2.dp))
 
         Text(
-            text = post.timeAgo ?: "",
+            text = post.timeAgo,
             style = KusTheme.typography.type12r,
             color = KusTheme.colors.c_666666
         )

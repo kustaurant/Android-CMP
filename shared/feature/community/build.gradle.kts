@@ -65,6 +65,7 @@ kotlin {
                 implementation(libs.naver.maps)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.koin.android)
+                implementation(libs.androidx.webkit)
             }
         }
 
