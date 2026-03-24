@@ -12,12 +12,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.UIKitView
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
+import platform.Foundation.NSBundle
 import platform.UIKit.UIColor
 import platform.UIKit.UIUserInterfaceStyle
 import platform.WebKit.WKNavigation
 import platform.WebKit.WKNavigationDelegateProtocol
 import platform.WebKit.WKWebView
 import platform.darwin.NSObject
+
+private fun String.escapeForJsSingleQuote(): String {
+    return this
+        .replace("\\", "\\\\")
+        .replace("'", "\\'")
+        .replace("\n", "\\n")
+        .replace("\r", "")
+        .replace("</script>", "<\\/script>")
+}
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
@@ -28,26 +38,39 @@ actual fun HtmlBodyView(
     var webViewHeight by remember { mutableStateOf(1) }
 
     val styledHtml = remember(html) {
+        val escapedHtml = html.escapeForJsSingleQuote()
+
         """
-    <html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * { box-sizing: border-box; }
-        html { background-color: #ffffff !important; }
-        body { 
-            margin: 0; 
-            padding: 0; 
-            font-size: 16px; 
-            color: #000000 !important;
-            background-color: #ffffff !important;
-            -webkit-text-fill-color: #000000 !important;
-        }
-    </style>
-    </head>
-    <body>$html</body>
-    </html>
-    """.trimIndent()
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                * { box-sizing: border-box; }
+                html { background-color: #ffffff !important; }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 16px;
+                    color: #000000 !important;
+                    background-color: #ffffff !important;
+                    -webkit-text-fill-color: #000000 !important;
+                    overflow: hidden;
+                }
+            </style>
+
+            <script src="editor/purify.min.js"></script>
+        </head>
+        <body>
+            <div id="content"></div>
+
+            <script>
+                const rawHtml = '$escapedHtml';
+                const cleanHtml = DOMPurify.sanitize(rawHtml);
+                document.getElementById('content').innerHTML = cleanHtml;
+            </script>
+        </body>
+        </html>
+        """.trimIndent()
     }
 
     val delegate = remember {
@@ -71,18 +94,20 @@ actual fun HtmlBodyView(
             .fillMaxWidth()
             .height(webViewHeight.dp),
         factory = {
-            val webView = WKWebView(frame = CGRectMake(0.0, 0.0, 300.0, 300.0))
-            webView.navigationDelegate = delegate
-            webView.opaque = true
-            webView.backgroundColor = UIColor.whiteColor
-            webView.scrollView.backgroundColor = UIColor.whiteColor
-            webView.scrollView.scrollEnabled = false
-            webView.overrideUserInterfaceStyle = UIUserInterfaceStyle.UIUserInterfaceStyleLight
-
-            webView
+            WKWebView(frame = CGRectMake(0.0, 0.0, 300.0, 300.0)).apply {
+                navigationDelegate = delegate
+                opaque = true
+                backgroundColor = UIColor.whiteColor
+                scrollView.backgroundColor = UIColor.whiteColor
+                scrollView.scrollEnabled = false
+                overrideUserInterfaceStyle = UIUserInterfaceStyle.UIUserInterfaceStyleLight
+            }
         },
         update = { webView ->
-            webView.loadHTMLString(styledHtml, baseURL = null)
+            webView.loadHTMLString(
+                styledHtml,
+                baseURL = NSBundle.mainBundle.bundleURL
+            )
         }
     )
 }
