@@ -161,7 +161,7 @@ private fun DetailStatsRow(
 ) {
     val isLiked = post.myReaction == "LIKE"
     val likeTint = if (isLiked) KusTheme.colors.c_43AB38 else KusTheme.colors.c_AAAAAA
-
+    val scrapTint = if(post.isScrapped) KusTheme.colors.c_FFB900 else KusTheme.colors.c_AAAAAA
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -195,9 +195,9 @@ private fun DetailStatsRow(
             buttonName = post.scrapCount.toString(),
             roundedCornerShape = RoundedCornerShape(100.dp),
             textStyle = KusTheme.typography.type14r,
-            contentColor = KusTheme.colors.c_AAAAAA,
+            contentColor = scrapTint,
             containerColor = KusTheme.colors.c_FFFFFF,
-            borderColor = KusTheme.colors.c_AAAAAA,
+            borderColor = scrapTint,
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 16.dp),
             leftIcon = painterResource(CoreRes.drawable.ic_scrap),
             onClick = onScrapClick,
