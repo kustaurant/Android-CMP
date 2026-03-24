@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,6 +52,7 @@ fun TierListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showTierInfo by rememberSaveable { mutableStateOf(false) }
+    val isAITier = uiState.isAITier
 
     if (showTierInfo) {
         TierInfoPopup(onDismiss = { showTierInfo = false })
@@ -65,6 +68,10 @@ fun TierListScreen(
             .collect { index -> viewModel.setTierListLastPosition(index) }
     }
 
+    LaunchedEffect(uiState.scrollToTopTrigger) {
+        listState.scrollToItem(0)
+    }
+
     InfiniteScrollEffect(
         listState = listState,
         onLoadMore = { viewModel.fetchNextRestaurants() }
@@ -76,6 +83,8 @@ fun TierListScreen(
             .background(Color.White)
     ) {
         TierAiToggleRow(
+            isAiTier = uiState.isAITier,
+            onAiToggleClick = viewModel::toggleAiTier,
             onTierGuideClick = { showTierInfo = true }
         )
 
@@ -144,19 +153,34 @@ fun TierListScreen(
                             items = list,
                             key = { it.restaurantId }
                         ) { restaurant ->
-                            KusRestThumbnail(
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxWidth(),
-                                tier = restaurant.mainTier,
-                                restName = restaurant.restaurantName,
-                                restThumbnail = restaurant.restaurantImgUrl,
-                                restAlliance = restaurant.partnershipInfo,
-                                categories = arrayListOf(restaurant.restaurantCuisine),
-                                location = restaurant.restaurantPosition,
-                                isSaved = restaurant.isFavorite,
-                                isEvaluated = restaurant.isEvaluated,
-                                onClick = { onRestaurantClick(restaurant) }
-                            )
+                                    .shadow(
+                                        elevation = 4.dp,
+                                        shape = RoundedCornerShape(16.dp),
+                                        ambientColor = Color.Transparent,
+                                    )
+                            ) {
+                                val displayTier = if (isAITier || !restaurant.isTempTier) {
+                                    restaurant.mainTier
+                                } else {
+                                    -1
+                                }
+
+                                KusRestThumbnail(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    tier = displayTier,
+                                    restName = restaurant.restaurantName,
+                                    restThumbnail = restaurant.restaurantImgUrl,
+                                    restAlliance = restaurant.partnershipInfo,
+                                    categories = arrayListOf(restaurant.restaurantCuisine),
+                                    location = restaurant.restaurantPosition,
+                                    isSaved = restaurant.isFavorite,
+                                    isEvaluated = restaurant.isEvaluated,
+                                    isTempTier = restaurant.isTempTier,
+                                    onClick = { onRestaurantClick(restaurant) }
+                                )
+                            }
                         }
 
                         item {

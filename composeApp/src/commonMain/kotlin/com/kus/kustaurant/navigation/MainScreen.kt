@@ -85,6 +85,21 @@ fun MainScreen(
         .getStateFlow<Long?>(COMMUNITY_POST_DELETE_ID, null)
         .collectAsStateWithLifecycle()
 
+    val tierInitialJson by mainBackStackEntry.savedStateHandle
+        .getStateFlow<String?>(TIER_INITIAL_JSON, null)
+        .collectAsStateWithLifecycle()
+
+    LaunchedEffect(tierInitialJson) {
+        val json = tierInitialJson ?: return@LaunchedEffect
+
+        runCatching {
+            mainNavController.getBackStackEntry<Tier>()
+                .savedStateHandle[TIER_INITIAL_JSON] = json
+        }
+
+        mainBackStackEntry.savedStateHandle.remove<String>(TIER_INITIAL_JSON)
+    }
+
     LaunchedEffect(tierResultJson) {
         val json = tierResultJson ?: return@LaunchedEffect
 
@@ -183,10 +198,7 @@ fun MainScreen(
                     val filter = TierFilterState(cuisines = setOf(resolved)).normalized()
                     val json = KusJson.json.encodeToString(filter)
 
-                    mainNavController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(TIER_INITIAL_JSON, json)
-
+                    mainBackStackEntry.savedStateHandle[TIER_INITIAL_JSON] = json
                     mainNavController.navigateToTab(BottomTab.TIER.key)
                 },
                 navigateToDetail = { restaurantId ->
@@ -201,14 +213,6 @@ fun MainScreen(
 
             tierMainNavGraph(
                 onShowMessage = onShowMessage,
-                initialProvider = {
-                    val json = mainNavController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.get<String>(TIER_INITIAL_JSON)
-
-                    if (json == null) TierFilterState()
-                    else KusJson.json.decodeFromString<TierFilterState>(json)
-                },
                 navigateToTierCategorySelect = { initial ->
                     val json = KusJson.json.encodeToString(initial)
                     mainBackStackEntry.savedStateHandle[TIER_INITIAL_JSON] = json
