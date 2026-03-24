@@ -82,8 +82,9 @@ class SearchViewModel(
     fun loadNextPage() {
         val state = _uiState.value
         val term = _searchTerm.value
+        val query = term.text.trim()
 
-        if (state.isPaging || state.isLastPage || term.text.isBlank()) return
+        if (state.isPaging || state.isLastPage || query.isBlank()) return
 
         viewModelScope.launch {
             _uiState.update { it.copy(isPaging = true) }
@@ -91,7 +92,7 @@ class SearchViewModel(
             val nextPage = state.page + 1
 
             runCatching {
-                getSearchResultUseCase(term.text, nextPage)
+                getSearchResultUseCase(query, nextPage)
             }.onSuccess { result ->
                 val merged = (state.items + result.items).distinctBy { it.id }
 
