@@ -195,8 +195,6 @@ fun MainScreen(
             )
 
             drawNavGraph(
-                onSearchClick = { rootNavController.navigate(Search) },
-                onAlarmClick = {},
                 onShowMessage = onShowMessage,
                 navigateToDrawResult = { route -> mainNavController.navigate(route) },
                 onBackClick = { mainNavController.popBackStack() },
@@ -232,7 +230,6 @@ fun MainScreen(
                 onPostWriteClick = {
                     rootNavController.navigate(CommunityWrite)
                 },
-                onSearchClick = { },
             )
 
             myMainNavGraph(
