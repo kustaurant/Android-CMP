@@ -13,7 +13,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun TierRoute(
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
     initialFilter: TierFilterState?,
-    navigateToDetail: (Long) -> Unit,
+    navigateToDetail: (Long, Boolean) -> Unit,
     resultFilter: TierFilterState?,
     consumeInitial: () -> Unit,
     consumeResult: () -> Unit,
