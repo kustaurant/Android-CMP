@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.my.ui.type.MenuItemUi
+import com.kus.feature.my.type.MenuItemUi
 import org.jetbrains.compose.resources.painterResource
 import kotlin.enums.EnumEntries
 

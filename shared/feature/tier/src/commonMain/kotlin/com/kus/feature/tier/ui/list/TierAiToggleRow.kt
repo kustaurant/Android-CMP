@@ -19,15 +19,14 @@ import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_off
 import kustaurant.shared.feature.tier.generated.resources.ic_ai_filter_on
 import org.jetbrains.compose.resources.painterResource
 
-
 @Composable
 fun TierAiToggleRow(
     modifier: Modifier = Modifier,
-    isAiOn: Boolean = false,
-    onAiToggle: (Boolean) -> Unit = {},
+    isAiTier: Boolean,
+    onAiToggleClick: () -> Unit,
     onTierGuideClick: () -> Unit = {},
 ) {
-    val iconRes = if (isAiOn) {
+    val iconRes = if (isAiTier) {
         Res.drawable.ic_ai_filter_on
     } else {
         Res.drawable.ic_ai_filter_off
@@ -41,8 +40,7 @@ fun TierAiToggleRow(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clickable { onAiToggle(!isAiOn) }
+            modifier = Modifier.clickable(onClick = onAiToggleClick)
         ) {
             Image(
                 painter = painterResource(iconRes),

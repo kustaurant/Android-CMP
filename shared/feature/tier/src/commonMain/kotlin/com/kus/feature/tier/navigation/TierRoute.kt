@@ -3,7 +3,6 @@ package com.kus.feature.tier.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.feature.tier.ui.TierFilterState
 import com.kus.feature.tier.ui.TierScreen
@@ -13,38 +12,37 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TierRoute(
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
-    initialFilter: () -> TierFilterState,
-    navigateToDetail: (Long, Boolean) -> Unit,
+    initialFilter: TierFilterState?,
+    navigateToDetail: (Long) -> Unit,
     resultFilter: TierFilterState?,
+    consumeInitial: () -> Unit,
     consumeResult: () -> Unit,
     onShowMessage: (String) -> Unit,
 ) {
     val viewModel: TierViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val initialFilter = remember { initialFilter() }
+    LaunchedEffect(initialFilter, resultFilter) {
+        when {
+            resultFilter != null -> {
+                viewModel.setCategory(
+                    cuisines = resultFilter.cuisines,
+                    situations = resultFilter.situations,
+                    locations = resultFilter.locations,
+                )
+                consumeResult()
+                consumeInitial()
+            }
 
-    LaunchedEffect(Unit) {
-        val isDefault = initialFilter == TierFilterState()
-        if (!isDefault) {
-            viewModel.setCategory(
-                cuisines = initialFilter.cuisines,
-                situations = initialFilter.situations,
-                locations = initialFilter.locations,
-            )
+            initialFilter != null -> {
+                viewModel.setCategory(
+                    cuisines = initialFilter.cuisines,
+                    situations = initialFilter.situations,
+                    locations = initialFilter.locations,
+                )
+                consumeInitial()
+            }
         }
-    }
-
-    LaunchedEffect(resultFilter) {
-        val result = resultFilter ?: return@LaunchedEffect
-
-        viewModel.setCategory(
-            cuisines = result.cuisines,
-            situations = result.situations,
-            locations = result.locations,
-        )
-
-        consumeResult()
     }
 
     TierScreen(

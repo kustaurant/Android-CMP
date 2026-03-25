@@ -29,8 +29,8 @@ import com.kus.designsystem.util.noRippleClickable
 import com.kus.feature.my.component.MyActivityScreen
 import com.kus.feature.my.component.MyProfileScreen
 import com.kus.feature.my.component.MyTabRow
-import com.kus.feature.my.ui.event.MyNavigationEvent
-import com.kus.feature.my.ui.type.MyTab
+import com.kus.feature.my.event.MyNavigationEvent
+import com.kus.feature.my.type.MyTab
 import com.kus.shared.domain.model.my.MyInfo
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -39,7 +39,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun MyScreen(
     modifier: Modifier = Modifier,
     onShowMessage: (String) -> Unit,
-    onProfileEditNavigate: () -> Unit,
+    onProfileEditNavigate: (String, String, String) -> Unit,
     onNoticeNavigate: () -> Unit,
     onTermsNavigate: () -> Unit,
     onPrivacyPolicyNavigate: () -> Unit,
@@ -62,6 +62,7 @@ fun MyScreen(
         viewModel.navigationEvent.collect { event ->
             when (event) {
                 is MyNavigationEvent.NavigateToLogin -> onLoginNavigate()
+                else -> {}
             }
         }
     }
@@ -124,7 +125,7 @@ private fun MySuccessScreen(
     selectedTab: Int,
     myInfo: MyInfo,
     onTabSelected: (Int) -> Unit,
-    onProfileEditNavigate: () -> Unit,
+    onProfileEditNavigate: (String, String, String) -> Unit,
     onNoticeNavigate: () -> Unit,
     onTermsNavigate: () -> Unit,
     onPrivacyPolicyNavigate: () -> Unit,
@@ -170,7 +171,7 @@ private fun MySuccessScreen(
                             userName = myInfo.nickname,
                             userImgUrl = myInfo.iconUrl,
                             modifier = Modifier,
-                            onEditProfileClick = onProfileEditNavigate,
+                            onEditProfileClick = { onProfileEditNavigate(myInfo.nickname, myInfo.email, myInfo.phoneNumber ?: "") },
                             onNoticeClick = onNoticeNavigate,
                             onTermsClick = onTermsNavigate,
                             onPrivacyPolicyClick = onPrivacyPolicyNavigate,
