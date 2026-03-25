@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -150,10 +151,11 @@ fun MainScreen(
         contentWindowInsets = WindowInsets.statusBars,
         containerColor = KusTheme.colors.c_FFFFFF,
         bottomBar = {
-            KusBottomBar(
-                selectedKey = selectedKey,
-                onNavigateToTab = { key -> mainNavController.navigateToTab(key) },
-            )
+                KusBottomBar(
+                    modifier = Modifier.zIndex(2f),
+                    selectedKey = selectedKey,
+                    onNavigateToTab = { key -> mainNavController.navigateToTab(key) },
+                )
         },
     ) { padding ->
         NavHost(
