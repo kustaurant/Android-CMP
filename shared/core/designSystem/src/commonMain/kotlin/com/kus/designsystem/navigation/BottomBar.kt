@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,40 +37,46 @@ fun BottomBar(
     labelUnselected: Color = C_AAAAAA,
 ) {
     Column(modifier.background(KusTheme.colors.c_FFFFFF)) {
-        Surface(color = C_EAEAEA) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 17.dp)
-                    .padding(vertical = 7.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                items.forEach { item ->
-                    val selected = item.key == selectedKey
+        Surface(color = KusTheme.colors.c_FFFFFF) {
+            Column {
+                HorizontalDivider(color = C_EAEAEA, thickness = 2.dp)
 
-                    Column(
-                        modifier = Modifier.weight(1f)
-                            .noRippleClickable { onItemClick(item.key) }
-                            .padding(vertical = 6.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Box(Modifier.size(26.dp), contentAlignment = Alignment.Center) {
-                            Icon(
-                                painter = item.icon,
-                                contentDescription = item.title,
-                                tint = if (selected) selectedTint else Color.Unspecified,
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 17.dp)
+                        .padding(vertical = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    items.forEach { item ->
+                        val selected = item.key == selectedKey
+
+                        Column(
+                            modifier = Modifier.weight(1f)
+                                .noRippleClickable { onItemClick(item.key) }
+                                .padding(vertical = 6.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Box(Modifier.size(26.dp), contentAlignment = Alignment.Center) {
+                                Icon(
+                                    painter = item.icon,
+                                    contentDescription = item.title,
+                                    tint = if (selected) selectedTint else Color.Unspecified,
+                                )
+                            }
+
+                            Spacer(Modifier.height(1.dp))
+
+                            Text(
+                                text = item.title,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = if (selected) selectedTint else labelUnselected,
                             )
                         }
-
-                        Spacer(Modifier.height(4.dp))
-
-                        Text(
-                            text = item.title,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (selected) selectedTint else labelUnselected,
-                        )
                     }
                 }
             }
