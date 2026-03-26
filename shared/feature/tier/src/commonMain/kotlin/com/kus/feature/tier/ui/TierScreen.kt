@@ -103,7 +103,7 @@ fun TierScreen(
                             onRestaurantClick = { restaurant ->
                                 onNavigateRestaurantDetail(
                                     restaurant.restaurantId,
-                                    uiState.filterState.isAiTierViewEnabled
+                                    uiState.isAITier
                                 )
                             },
                             modifier = Modifier
