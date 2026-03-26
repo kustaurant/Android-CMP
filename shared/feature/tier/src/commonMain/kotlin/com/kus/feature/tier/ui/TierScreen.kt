@@ -53,7 +53,7 @@ fun TierScreen(
     modifier: Modifier = Modifier,
     onFilterClick: () -> Unit = {},
     onShowMessage: (String) -> Unit,
-    onNavigateRestaurantDetail: (Long) -> Unit = {},
+    onNavigateRestaurantDetail: (Long, Boolean) -> Unit = { _, _ -> },
 ) {
     val tabs = remember { TierTab.entries }
     val pagerState = rememberPagerState { tabs.size }
@@ -100,7 +100,12 @@ fun TierScreen(
                         TierListScreen(
                             viewModel = viewModel,
                             listState = listState,
-                            onRestaurantClick = { restaurant -> onNavigateRestaurantDetail(restaurant.restaurantId) },
+                            onRestaurantClick = { restaurant ->
+                                onNavigateRestaurantDetail(
+                                    restaurant.restaurantId,
+                                    uiState.isAITier
+                                )
+                            },
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(top = 44.dp)

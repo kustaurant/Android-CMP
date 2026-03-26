@@ -2,7 +2,6 @@ package com.kus.kustaurant
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -134,7 +133,7 @@ fun SetNavigation(
                 onSplashLoadingChanged = onSplashLoadingChanged,
                 modifier = Modifier
                     .fillMaxSize()
-                    .navigationBarsPadding(),
+                    .platformNavigationBarsPadding(),
             )
 
             KusSnackBarOverlay(

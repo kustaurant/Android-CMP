@@ -20,7 +20,7 @@ data object TierCategorySelect
 fun NavGraphBuilder.tierMainNavGraph(
     onShowMessage: (String) -> Unit,
     navigateToTierCategorySelect: (TierFilterState) -> Unit,
-    navigateToDetail: (Long) -> Unit,
+    navigateToDetail: (Long, Boolean) -> Unit,
 ) {
     composable<Tier> { entry ->
         val initialJson by entry.savedStateHandle
