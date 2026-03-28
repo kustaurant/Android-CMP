@@ -42,9 +42,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kus.designsystem.platform
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.component.KusTopBar
@@ -189,6 +191,7 @@ private fun DetailSuccessScreen(
     onCommentDeleteClick: (Int, Int) -> Unit,
 ) {
     val displayTempTier = isTempTier || restaurant.isTempTier
+    val density = LocalDensity.current
     var restInfoTopInWindow by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
     var topBarBottomInWindow by remember { mutableFloatStateOf(0f) }
     val useWhiteTopBar by remember {
@@ -204,6 +207,16 @@ private fun DetailSuccessScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val bottomBarHeight = 76.dp
+    val safeAreaBottomPadding = with(density) {
+        if (platform() == "iOS") {
+            WindowInsets.safeDrawing
+                .only(WindowInsetsSides.Bottom)
+                .getBottom(this)
+                .toDp()
+        } else {
+            0.dp
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -211,7 +224,7 @@ private fun DetailSuccessScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = bottomBarHeight)
+            contentPadding = PaddingValues(bottom = bottomBarHeight + safeAreaBottomPadding)
         ) {
             item {
                 val imageHeight = 329.dp
