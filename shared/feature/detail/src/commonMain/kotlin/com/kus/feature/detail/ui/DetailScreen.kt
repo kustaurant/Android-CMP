@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,6 +63,7 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_saved
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailRoute(
@@ -74,6 +76,14 @@ fun DetailRoute(
     viewModel: DetailViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    val runIfLoggedIn: (() -> Unit) -> Unit = { action ->
+        scope.launch {
+            if (viewModel.requireLogin()) {
+                action()
+            }
+        }
+    }
 
     LaunchedEffect(restaurantId) {
         viewModel.getRestaurantDetail(restaurantId)
@@ -101,16 +111,45 @@ fun DetailRoute(
                 isTempTier = isTempTier,
                 reviewsState = uiState.reviews,
                 reviewSort = uiState.reviewSort,
-                navigateToEvaluate = { navigateToEvaluate(restaurantState.data) },
+                runIfLoggedIn = runIfLoggedIn,
+                navigateToEvaluate = {
+                    runIfLoggedIn {
+                        navigateToEvaluate(restaurantState.data)
+                    }
+                },
                 onBackClick = navigateToUp,
-                onFavoriteClick = { viewModel.onFavoriteClick() },
+                onFavoriteClick = {
+                    runIfLoggedIn {
+                        viewModel.onFavoriteClick()
+                    }
+                },
                 onSortSelected = { sort -> viewModel.getRestaurantReviews(sort) },
                 onReviewTabSelected = { viewModel.getRestaurantReviewsIfNeeded() },
-                onReviewLikeClick = { evalId -> viewModel.onReviewLikeClick(evalId) },
-                onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
-                onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
-                onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
-                onCommentSubmit = { evalId, body -> viewModel.postComment(evalId, body) },
+                onReviewLikeClick = { evalId ->
+                    runIfLoggedIn {
+                        viewModel.onReviewLikeClick(evalId)
+                    }
+                },
+                onReviewDislikeClick = { evalId ->
+                    runIfLoggedIn {
+                        viewModel.onReviewDislikeClick(evalId)
+                    }
+                },
+                onCommentLikeClick = { evalId, commentId ->
+                    runIfLoggedIn {
+                        viewModel.onCommentLikeClick(evalId, commentId)
+                    }
+                },
+                onCommentDislikeClick = { evalId, commentId ->
+                    runIfLoggedIn {
+                        viewModel.onCommentDislikeClick(evalId, commentId)
+                    }
+                },
+                onCommentSubmit = { evalId, body ->
+                    runIfLoggedIn {
+                        viewModel.postComment(evalId, body)
+                    }
+                },
                 onCommentDeleteClick = { evalId, commentId -> viewModel.deleteComment(evalId, commentId) },
             )
         }
@@ -136,6 +175,7 @@ private fun DetailSuccessScreen(
     isTempTier: Boolean,
     reviewsState: UiState<List<RestaurantReview>>,
     reviewSort: ReviewSort,
+    runIfLoggedIn: (() -> Unit) -> Unit,
     navigateToEvaluate: () -> Unit,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -222,8 +262,10 @@ private fun DetailSuccessScreen(
                     onReviewLikeClick = onReviewLikeClick,
                     onReviewDislikeClick = onReviewDislikeClick,
                     onCommentClick = { evalId ->
-                        selectedEvalId = evalId
-                        isCommentInputVisible = true
+                        runIfLoggedIn {
+                            selectedEvalId = evalId
+                            isCommentInputVisible = true
+                        }
                     },
                     onCommentLikeClick = onCommentLikeClick,
                     onCommentDislikeClick = onCommentDislikeClick,
