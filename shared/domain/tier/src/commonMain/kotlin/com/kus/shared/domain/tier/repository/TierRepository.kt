@@ -11,7 +11,8 @@ interface TierRepository {
         cuisines: Set<Cuisine>,
         situations: Set<Situation>,
         locations: Set<Location>,
-        page: Int
+        page: Int,
+        isAiTier : Boolean,
     ): List<TierRestaurant>
 
     suspend fun getRestaurantMapList(

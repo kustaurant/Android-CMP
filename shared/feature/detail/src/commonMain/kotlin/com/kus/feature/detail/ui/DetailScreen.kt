@@ -13,12 +13,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -61,6 +66,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailRoute(
     restaurantId: Long = 510L,
+    isTempTier: Boolean = false,
     navigateToEvaluate: (RestaurantDetail) -> Unit,
     navigateToUp: () -> Unit,
     shouldRefreshFromEvaluate: Boolean = false,
@@ -92,6 +98,7 @@ fun DetailRoute(
         is UiState.Success -> {
             DetailSuccessScreen(
                 restaurant = restaurantState.data,
+                isTempTier = isTempTier,
                 reviewsState = uiState.reviews,
                 reviewSort = uiState.reviewSort,
                 navigateToEvaluate = { navigateToEvaluate(restaurantState.data) },
@@ -126,6 +133,7 @@ fun DetailRoute(
 @Composable
 private fun DetailSuccessScreen(
     restaurant: RestaurantDetail,
+    isTempTier: Boolean,
     reviewsState: UiState<List<RestaurantReview>>,
     reviewSort: ReviewSort,
     navigateToEvaluate: () -> Unit,
@@ -140,6 +148,7 @@ private fun DetailSuccessScreen(
     onCommentSubmit: (Int, String) -> Unit,
     onCommentDeleteClick: (Int, Int) -> Unit,
 ) {
+    val displayTempTier = isTempTier || restaurant.isTempTier
     var restInfoTopInWindow by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
     var topBarBottomInWindow by remember { mutableFloatStateOf(0f) }
     val useWhiteTopBar by remember {
@@ -179,7 +188,7 @@ private fun DetailSuccessScreen(
                         situationList = restaurant.situationList,
                         mainTier = restaurant.mainTier,
                         isEvaluated = restaurant.isEvaluated,
-                        isTempTier = restaurant.isTempTier,
+                        isTempTier = displayTempTier,
                         restaurantCuisine = restaurant.restaurantCuisine,
                         restaurantCuisineImgUrl = restaurant.restaurantCuisineImgUrl,
                         restaurantPosition = restaurant.restaurantPosition,
@@ -256,6 +265,7 @@ private fun DetailSuccessScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
                     .padding(horizontal = 20.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

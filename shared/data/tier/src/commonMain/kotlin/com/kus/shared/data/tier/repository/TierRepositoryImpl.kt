@@ -20,13 +20,15 @@ class TierRepositoryImpl(
         cuisines: Set<Cuisine>,
         situations: Set<Situation>,
         locations: Set<Location>,
-        page: Int
+        page: Int,
+        isAiTier : Boolean,
     ): List<TierRestaurant> {
         return api.getRestaurantList(
             cuisines = cuisines.toCuisineQuery(),
             situations = situations.toSituationQuery(),
             locations = locations.toLocationQuery(),
-            page = page
+            page = page,
+            isAiTier = isAiTier,
         ).restaurants.map { it.toDomain() }
     }
 

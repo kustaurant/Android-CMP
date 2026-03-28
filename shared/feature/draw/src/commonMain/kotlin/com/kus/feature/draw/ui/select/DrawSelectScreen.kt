@@ -35,20 +35,12 @@ import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.draw.mapper.toImage
 import com.kus.shared.domain.model.tier.filter.Cuisine
 import com.kus.shared.domain.model.tier.filter.Location
-import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
-import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
-import kustaurant.shared.core.designsystem.generated.resources.ic_search
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.collections.chunked
-import kotlin.collections.forEach
-import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DrawSelectScreen(
-    onSearchClick: () -> Unit,
-    onAlarmClick: () -> Unit,
     onApplyClick: (Set<Location>, Set<Cuisine>) -> Unit,
     onBackClick: () -> Unit,
     viewModel: DrawSelectViewModel = koinViewModel(),
@@ -68,11 +60,6 @@ fun DrawSelectScreen(
                         .fillMaxWidth()
                         .height(64.dp)
                         .padding(horizontal = 8.dp),
-                    leftIcon = painterResource(CoreRes.drawable.ic_arrow_back),
-                    rightFirstIcon = painterResource(CoreRes.drawable.ic_search),
-                    rightSecondIcon = painterResource(CoreRes.drawable.ic_alarm_off),
-                    onRightFirstClicked = onSearchClick,
-                    onRightSecondClicked = onAlarmClick,
                 ) {
                     Text(
                         text = "랜덤 맛집 뽑기",
