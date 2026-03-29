@@ -17,7 +17,9 @@ class AuthTokenStoreImpl(
 
     override suspend fun save(tokens: AuthToken) {
         prefs.setAccessToken(tokens.accessToken)
-        prefs.setRefreshToken(tokens.refreshToken)
+        tokens.refreshToken?.let {
+            prefs.setRefreshToken(it)
+        }
     }
 
     override suspend fun clear() {
