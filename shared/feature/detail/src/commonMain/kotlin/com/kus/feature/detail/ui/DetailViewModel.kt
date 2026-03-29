@@ -4,6 +4,9 @@ import UiError
 import UiState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kus.domain.auth.session.SessionEvent
+import com.kus.domain.auth.session.SessionEventEmitter
+import com.kus.domain.auth.usecase.GetSessionAvailabilityUseCase
 import com.kus.feature.detail.model.ReviewSort
 import com.kus.feature.detail.state.DetailUiState
 import com.kus.shared.domain.detail.usecase.DeleteCommentUseCase
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
+    private val getSessionAvailabilityUseCase: GetSessionAvailabilityUseCase,
     private val getRestaurantDetailUseCase: GetRestaurantDetailUseCase,
     private val getRestaurantReviewsUseCase: GetRestaurantReviewsUseCase,
     private val putEvaluationReactionUseCase: PutEvaluationReactionUseCase,
@@ -30,6 +34,7 @@ class DetailViewModel(
     private val deleteRestaurantFavoriteUseCase: DeleteRestaurantFavoriteUseCase,
     private val postCommentUseCase: PostCommentUseCase,
     private val deleteCommentUseCase: DeleteCommentUseCase,
+    private val sessionEvents: SessionEventEmitter,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -41,6 +46,14 @@ class DetailViewModel(
     private val inFlightReviewReactions = mutableSetOf<Int>()
     private val inFlightCommentReactions = mutableSetOf<Int>()
     private val inFlightPostComments = mutableSetOf<Int>()
+
+    suspend fun requireLogin(): Boolean {
+        if (!getSessionAvailabilityUseCase()) {
+            sessionEvents.emit(SessionEvent.LoginRequired)
+            return false
+        }
+        return true
+    }
 
     fun getRestaurantDetail(restaurantId: Long) = viewModelScope.launch {
         if (currentRestaurantId != restaurantId) {
@@ -240,6 +253,7 @@ class DetailViewModel(
                     } else review
                 }
             }
+            _uiState.update { it.copy(toastMessage = "대댓글이 작성되었어요.") }
         }.also {
             inFlightPostComments.remove(evalId)
         }
@@ -259,5 +273,9 @@ class DetailViewModel(
                 }
             }
         }
+    }
+
+    fun clearToastMessage() {
+        _uiState.update { it.copy(toastMessage = null) }
     }
 }
