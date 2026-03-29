@@ -48,14 +48,15 @@ fun EvaluationKeyword(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             situations.forEachIndexed { index, situation ->
+                val situationIndex = index + 1
                 KusChip(
                     chipName = situation,
-                    isSelected = selectedSituations.contains(index),
+                    isSelected = selectedSituations.contains(situationIndex),
                     onClick = {
-                        val newList = if (selectedSituations.contains(index)) {
-                            selectedSituations - index
+                        val newList = if (selectedSituations.contains(situationIndex)) {
+                            selectedSituations - situationIndex
                         } else {
-                            selectedSituations + index
+                            selectedSituations + situationIndex
                         }
                         onSituationChanged(newList)
                     }

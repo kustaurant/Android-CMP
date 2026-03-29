@@ -2,17 +2,27 @@ package com.kus.feature.evaluate.ui
 
 import UiState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -20,11 +30,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import kotlinx.coroutines.delay
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusLoadingAnimation
@@ -181,11 +194,29 @@ private fun EvaluateSuccessScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val listState = rememberLazyListState()
+    val density = LocalDensity.current
 
-    LaunchedEffect(listState.isScrollInProgress) {
-        if (listState.isScrollInProgress) {
-            focusManager.clearFocus()
-            keyboardController?.hide()
+    val imeBottom = WindowInsets.ime.getBottom(density)
+    val isImeVisible = imeBottom > 0
+    val canDismissKeyboard = remember { mutableStateOf(true) }
+
+    LaunchedEffect(isImeVisible) {
+        if (isImeVisible) {
+            canDismissKeyboard.value = false
+            delay(500)
+            canDismissKeyboard.value = true
+        }
+    }
+
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (canDismissKeyboard.value && source == NestedScrollSource.UserInput && available.y != 0f) {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }
+                return Offset.Zero
+            }
         }
     }
 
@@ -197,17 +228,14 @@ private fun EvaluateSuccessScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
             .background(color = KusTheme.colors.c_FFFFFF)
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                })
-            }
     ) {
         LazyColumn(
             state = listState,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .nestedScroll(nestedScrollConnection)
         ) {
             item {
                 EvaluationRestInfoCard(restaurant = restaurant)
@@ -249,25 +277,28 @@ private fun EvaluateSuccessScreen(
                         .height(72.dp)
                 )
             }
-        }
 
-        Box(
-            modifier = Modifier
-                .background(color = KusTheme.colors.c_FFFFFF)
-                .padding(horizontal = 20.dp, vertical = 10.dp)
-                .align(Alignment.BottomCenter),
-        ) {
-            KusButton(
-                enabled = isRatingSelected && !isSubmitting,
-                buttonName = if (isSubmitting) "제출 중..." else "평가 제출하기",
-                roundedCornerShape = RoundedCornerShape(50.dp),
-                containerColor = submitButtonColor,
-                borderColor = submitButtonColor,
-                onClick = {
-                    if (!isRatingSelected || isSubmitting) return@KusButton
-                    onSubmitClick()
-                },
-            )
+            item {
+                Box(
+                    modifier = Modifier
+                        .background(color = KusTheme.colors.c_FFFFFF)
+                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
+                        .align(Alignment.BottomCenter),
+                ) {
+                    KusButton(
+                        enabled = isRatingSelected && !isSubmitting,
+                        buttonName = if (isSubmitting) "제출 중..." else "평가 제출하기",
+                        roundedCornerShape = RoundedCornerShape(50.dp),
+                        containerColor = submitButtonColor,
+                        borderColor = submitButtonColor,
+                        onClick = {
+                            if (!isRatingSelected || isSubmitting) return@KusButton
+                            onSubmitClick()
+                        },
+                    )
+                }
+            }
         }
     }
 }

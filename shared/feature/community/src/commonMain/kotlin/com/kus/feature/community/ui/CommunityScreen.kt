@@ -39,13 +39,8 @@ import com.kus.feature.community.ui.floatingButton.WriteFab
 import com.kus.feature.community.ui.list.CommunityListContent
 import com.kus.feature.community.ui.ranking.RankingContent
 import kotlinx.coroutines.launch
-import kustaurant.shared.core.designsystem.generated.resources.ic_alarm_off
-import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
-import kustaurant.shared.core.designsystem.generated.resources.ic_search
-import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import rememberFabVisibleOnScrollUp
-import kustaurant.shared.core.designsystem.generated.resources.Res as CoreRes
 
 @Composable
 fun CommunityScreen(
@@ -88,12 +83,6 @@ fun CommunityScreen(
                         .fillMaxWidth()
                         .height(64.dp)
                         .padding(horizontal = 8.dp),
-                    leftIcon = painterResource(CoreRes.drawable.ic_arrow_back),
-                    rightFirstIcon = painterResource(CoreRes.drawable.ic_search),
-                    rightSecondIcon = painterResource(CoreRes.drawable.ic_alarm_off),
-                    onLeftClicked = onBackClick,
-                    onRightFirstClicked = onSearchClick,
-                    onRightSecondClicked = onAlarmClick,
                 ) {
                     Text(
                         text = "커뮤니티",

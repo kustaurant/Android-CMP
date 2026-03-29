@@ -21,6 +21,7 @@ data class TierFilterState(
     val cuisines: Set<Cuisine> = setOf(Cuisine.ALL),
     val situations: Set<Situation> = setOf(Situation.ALL),
     val locations: Set<Location> = setOf(Location.ALL),
+    val isAiTierViewEnabled: Boolean = false,
 ) {
     fun normalized(): TierFilterState = copy(
         cuisines = Cuisine.normalize(cuisines),
@@ -62,6 +63,8 @@ data class TierUiState(
     val selectedCategories: Set<String> = setOf("전체"),
 
     val listState: UiState<List<TierRestaurant>> = UiState.Loading,
+    val isAITier : Boolean = false,
+    val scrollToTopTrigger: Int = 0,
 
     val pageState: TierPageState = TierPageState(),
     val tierListLastPosition: Int = 0,

@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.type
+package com.kus.feature.my.type
 
 enum class MyTab(val title: String) {
     PROFILE("프로필"),

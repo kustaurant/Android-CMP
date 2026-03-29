@@ -14,7 +14,8 @@ class GetTierRestaurantListUseCase(
         situations: Set<Situation>,
         locations: Set<Location>,
         page: Int,
+        isAiTier : Boolean = false,
     ): List<TierRestaurant> {
-        return tierRepository.getRestaurantList(cuisines, situations, locations, page)
+        return tierRepository.getRestaurantList(cuisines, situations, locations, page, isAiTier)
     }
 }

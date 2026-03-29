@@ -44,8 +44,7 @@ fun EvaluationRestInfoCard(
                     color = KusTheme.colors.c_FFFFFF,
                     shape = shape
                 )
-                .padding(top = 68.dp, bottom = 20.dp)
-                .padding(horizontal = 20.dp)
+                .padding(all = 20.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()

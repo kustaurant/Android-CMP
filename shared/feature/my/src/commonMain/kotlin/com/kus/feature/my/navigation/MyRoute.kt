@@ -8,7 +8,7 @@ import com.kus.feature.my.ui.MyScreen
 fun MyRoute(
     modifier: Modifier = Modifier,
     onShowMessage: (String) -> Unit,
-    navigateToProfileEdit: () -> Unit,
+    navigateToProfileEdit: (String, String, String) -> Unit,
     navigateToNotice: () -> Unit,
     navigateToTerms: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,

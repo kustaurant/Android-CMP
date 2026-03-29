@@ -28,6 +28,10 @@ fun DetailRestInfoRank(
     mainTier: Int,
     isTempTier: Boolean = false,
 ) {
+    val tierText = when (mainTier) {
+        1, 2, 3 -> mainTier.toString()
+        else -> "-"
+    }
     val outerSize = 40.dp
     val borderInnerSize = 38.dp
     val innerSize = 36.dp
@@ -93,7 +97,7 @@ fun DetailRestInfoRank(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = mainTier.toString(),
+                text = tierText,
                 style = KusTheme.typography.type26sb.copy(
                     color = KusTheme.colors.c_FFFFFF
                 )
