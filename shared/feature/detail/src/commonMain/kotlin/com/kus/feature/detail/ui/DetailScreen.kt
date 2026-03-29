@@ -71,6 +71,7 @@ import kotlinx.coroutines.launch
 fun DetailRoute(
     restaurantId: Long = 510L,
     isTempTier: Boolean = false,
+    onShowMessage: (String) -> Unit,
     navigateToEvaluate: (RestaurantDetail) -> Unit,
     navigateToUp: () -> Unit,
     shouldRefreshFromEvaluate: Boolean = false,
@@ -95,6 +96,13 @@ fun DetailRoute(
         if (!shouldRefreshFromEvaluate) return@LaunchedEffect
         viewModel.refreshAfterEvaluation()
         clearEvaluateRefreshFlag()
+    }
+
+    LaunchedEffect(uiState.toastMessage) {
+        uiState.toastMessage?.let {
+            onShowMessage(it)
+            viewModel.clearToastMessage()
+        }
     }
 
     when (val restaurantState = uiState.restaurant) {

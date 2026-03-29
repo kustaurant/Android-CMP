@@ -27,6 +27,7 @@ fun NavController.navigateToDetail(
 fun NavGraphBuilder.detailNavGraph(
     navigateToUp: () -> Unit,
     navigateToEvaluate: (RestaurantDetail) -> Unit,
+    onShowMessage: (String) -> Unit,
 ) {
     composable<Detail> { backStackEntry ->
         val route = backStackEntry.toRoute<Detail>()
@@ -37,6 +38,7 @@ fun NavGraphBuilder.detailNavGraph(
         DetailRoute(
             restaurantId = route.restaurantId,
             isTempTier = route.isTempTier,
+            onShowMessage = onShowMessage,
             navigateToEvaluate = navigateToEvaluate,
             navigateToUp = navigateToUp,
             shouldRefreshFromEvaluate = shouldRefreshFromEvaluate,

@@ -9,4 +9,5 @@ data class DetailUiState(
     val restaurant: UiState<RestaurantDetail> = UiState.Loading,
     val reviews: UiState<List<RestaurantReview>> = UiState.Idle,
     val reviewSort: ReviewSort = ReviewSort.Popular,
+    val toastMessage: String? = null,
 )

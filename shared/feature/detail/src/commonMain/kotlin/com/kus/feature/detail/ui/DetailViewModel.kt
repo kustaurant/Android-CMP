@@ -253,6 +253,7 @@ class DetailViewModel(
                     } else review
                 }
             }
+            _uiState.update { it.copy(toastMessage = "대댓글이 작성되었어요.") }
         }.also {
             inFlightPostComments.remove(evalId)
         }
@@ -272,5 +273,9 @@ class DetailViewModel(
                 }
             }
         }
+    }
+
+    fun clearToastMessage() {
+        _uiState.update { it.copy(toastMessage = null) }
     }
 }
