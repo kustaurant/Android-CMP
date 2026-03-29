@@ -114,7 +114,7 @@ fun TierScreen(
                             mapInstance = sharedMapInstance,
                             onMapTapped = { viewModel.onMapTapped() },
                             onRestaurantSelected = { id -> viewModel.onRestaurantMarkerClicked(id) },
-                            onBottomSheetClick = { id -> },
+                            onBottomSheetClick =  { id -> onNavigateRestaurantDetail(id) },
                             onCameraIdle = { camera ->
                                 viewModel.onCameraIdle(camera)
                             }

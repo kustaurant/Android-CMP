@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 
 class TierViewModel(
-   private val getTierRestaurantListUseCase: GetTierRestaurantListUseCase,
+    private val getTierRestaurantListUseCase: GetTierRestaurantListUseCase,
     private val getTierRestaurantMapUseCase: GetTierRestaurantMapUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TierUiState())
@@ -52,6 +52,11 @@ class TierViewModel(
                 tierListLastPosition = 0,
                 categoryChangeList = true,
                 categoryChangeMap = true,
+                mapUiState = it.mapUiState.copy(
+                    cameraState = null,
+                    selectedRestaurantId = null,
+                    isShowBottomSheet = false,
+                )
             )
         }
 
@@ -73,19 +78,23 @@ class TierViewModel(
         loadRestaurantList(1)
     }
 
-
     private fun fetchMap() {
         val filter = _uiState.value.filterState.normalized()
 
         _uiState.update { cur ->
             cur.copy(
                 categoryChangeMap = false,
-                mapUiState = cur.mapUiState.copy(map = UiState.Loading)
+                mapUiState = cur.mapUiState.copy(
+                    map = UiState.Loading,
+                    selectedRestaurantId = null,
+                    isShowBottomSheet = false,
+                )
             )
         }
 
         viewModelScope.launch {
-            val data = getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations)
+            val data =
+                getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations)
             _uiState.update { cur ->
                 cur.copy(
                     mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
@@ -95,8 +104,12 @@ class TierViewModel(
     }
 
     fun onCameraIdle(camera: MapCameraState) {
-        _uiState.update { cur ->
-            cur.copy(mapUiState = cur.mapUiState.copy(cameraState = camera))
+        _uiState.update { current ->
+            current.copy(
+                mapUiState = current.mapUiState.copy(
+                    cameraState = camera
+                )
+            )
         }
     }
 
@@ -150,7 +163,8 @@ class TierViewModel(
         _uiState.update { cur ->
             cur.copy(
                 mapUiState = cur.mapUiState.copy(
-                    isShowBottomSheet = false
+                    isShowBottomSheet = false,
+                    selectedRestaurantId = null
                 )
             )
         }
