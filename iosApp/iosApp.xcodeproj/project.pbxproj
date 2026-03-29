@@ -12,12 +12,10 @@
 		BF20D3832F4B3806009E8A2B /* quill.html in Resources */ = {isa = PBXBuildFile; fileRef = BF20D37F2F4B26BB009E8A2B /* quill.html */; };
 		BF20D3842F4B3806009E8A2B /* quill.min.js in Resources */ = {isa = PBXBuildFile; fileRef = BF20D3802F4B26BB009E8A2B /* quill.min.js */; };
 		BF20D3852F4B3806009E8A2B /* quill.snow.css in Resources */ = {isa = PBXBuildFile; fileRef = BF20D3812F4B26BB009E8A2B /* quill.snow.css */; };
-		BFBA73432F34D8C500C94D68 /* NaverLoginBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */; };
 		BFBA73452F34D8C500C94D68 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA733F2F34D8C500C94D68 /* ContentView.swift */; };
 		BFBA73462F34D8C500C94D68 /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA73412F34D8C500C94D68 /* iOSApp.swift */; };
 		BFBA73472F34D8C500C94D68 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733C2F34D8C500C94D68 /* Preview Assets.xcassets */; };
 		BFBA73482F34D8C500C94D68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733E2F34D8C500C94D68 /* Assets.xcassets */; };
-		BFBA734A2F34D8C500C94D68 /* NaverLoginBridgeError.swift in Resources */ = {isa = PBXBuildFile; fileRef = BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +27,6 @@
 		BF20D37F2F4B26BB009E8A2B /* quill.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = quill.html; sourceTree = "<group>"; };
 		BF20D3802F4B26BB009E8A2B /* quill.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = quill.min.js; sourceTree = "<group>"; };
 		BF20D3812F4B26BB009E8A2B /* quill.snow.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = quill.snow.css; sourceTree = "<group>"; };
-		BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginBridge.swift; sourceTree = "<group>"; };
-		BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginBridgeError.swift; sourceTree = "<group>"; };
 		BFBA733C2F34D8C500C94D68 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BFBA733E2F34D8C500C94D68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BFBA733F2F34D8C500C94D68 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -86,15 +82,6 @@
 			path = editor;
 			sourceTree = "<group>";
 		};
-		BFBA733B2F34D8C500C94D68 /* login */ = {
-			isa = PBXGroup;
-			children = (
-				BFBA73392F34D8C500C94D68 /* NaverLoginBridge.swift */,
-				BFBA733A2F34D8C500C94D68 /* NaverLoginBridgeError.swift */,
-			);
-			path = login;
-			sourceTree = "<group>";
-		};
 		BFBA733D2F34D8C500C94D68 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,7 +93,6 @@
 		BFBA73422F34D8C500C94D68 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
-				BFBA733B2F34D8C500C94D68 /* login */,
 				BFBA733D2F34D8C500C94D68 /* Preview Content */,
 				BFBA733E2F34D8C500C94D68 /* Assets.xcassets */,
 				BFBA733F2F34D8C500C94D68 /* ContentView.swift */,
@@ -204,7 +190,6 @@
 				BF20D3842F4B3806009E8A2B /* quill.min.js in Resources */,
 				BF20D3852F4B3806009E8A2B /* quill.snow.css in Resources */,
 				BFBA73472F34D8C500C94D68 /* Preview Assets.xcassets in Resources */,
-				BFBA734A2F34D8C500C94D68 /* NaverLoginBridgeError.swift in Resources */,
 				BFBA73482F34D8C500C94D68 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -302,7 +287,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BFBA73432F34D8C500C94D68 /* NaverLoginBridge.swift in Sources */,
 				BFBA73452F34D8C500C94D68 /* ContentView.swift in Sources */,
 				BFBA73462F34D8C500C94D68 /* iOSApp.swift in Sources */,
 			);
