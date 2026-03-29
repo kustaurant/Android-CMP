@@ -234,6 +234,7 @@ private fun ReviewContent(
         KamelImage(
             resource = { asyncPainterResource(imgUrl) },
             contentDescription = "음식 카테고리 이미지",
+            contentScale = ContentScale.Crop,
             modifier = Modifier.padding(top = 10.dp)
                 .size(128.dp)
                 .clip(RoundedCornerShape(10.dp))
