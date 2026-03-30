@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.restaurant
+package com.kus.feature.my.ui.feedback
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures

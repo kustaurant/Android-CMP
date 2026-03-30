@@ -13,16 +13,21 @@ import com.kus.shared.domain.model.detail.RestaurantDetail
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Detail(val restaurantId: Long)
+data class Detail(
+    val restaurantId: Long,
+    val isTempTier: Boolean = false,
+)
 
 fun NavController.navigateToDetail(
     restaurantId: Long,
+    isTempTier: Boolean = false,
     navOptions: NavOptions?= null,
-) = navigate(Detail(restaurantId), navOptions)
+) = navigate(Detail(restaurantId, isTempTier), navOptions)
 
 fun NavGraphBuilder.detailNavGraph(
     navigateToUp: () -> Unit,
     navigateToEvaluate: (RestaurantDetail) -> Unit,
+    onShowMessage: (String) -> Unit,
 ) {
     composable<Detail> { backStackEntry ->
         val route = backStackEntry.toRoute<Detail>()
@@ -32,6 +37,8 @@ fun NavGraphBuilder.detailNavGraph(
 
         DetailRoute(
             restaurantId = route.restaurantId,
+            isTempTier = route.isTempTier,
+            onShowMessage = onShowMessage,
             navigateToEvaluate = navigateToEvaluate,
             navigateToUp = navigateToUp,
             shouldRefreshFromEvaluate = shouldRefreshFromEvaluate,

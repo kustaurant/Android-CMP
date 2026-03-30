@@ -6,8 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.kus.designsystem.theme.KusTheme
-import com.kus.feature.my.ui.type.CommunityMenu
-import com.kus.feature.my.ui.type.RestaurantMenu
+import com.kus.feature.my.type.CommunityMenu
+import com.kus.feature.my.type.RestaurantMenu
 
 @Composable
 internal fun MyActivityScreen(

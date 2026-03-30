@@ -13,12 +13,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -30,15 +35,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kus.designsystem.platform
 import com.kus.designsystem.component.KusButton
 import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.component.KusTopBar
@@ -57,10 +65,13 @@ import kustaurant.shared.core.designsystem.generated.resources.ic_saved
 import kustaurant.shared.core.designsystem.generated.resources.ic_unsaved
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailRoute(
     restaurantId: Long = 510L,
+    isTempTier: Boolean = false,
+    onShowMessage: (String) -> Unit,
     navigateToEvaluate: (RestaurantDetail) -> Unit,
     navigateToUp: () -> Unit,
     shouldRefreshFromEvaluate: Boolean = false,
@@ -68,6 +79,14 @@ fun DetailRoute(
     viewModel: DetailViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    val runIfLoggedIn: (() -> Unit) -> Unit = { action ->
+        scope.launch {
+            if (viewModel.requireLogin()) {
+                action()
+            }
+        }
+    }
 
     LaunchedEffect(restaurantId) {
         viewModel.getRestaurantDetail(restaurantId)
@@ -77,6 +96,13 @@ fun DetailRoute(
         if (!shouldRefreshFromEvaluate) return@LaunchedEffect
         viewModel.refreshAfterEvaluation()
         clearEvaluateRefreshFlag()
+    }
+
+    LaunchedEffect(uiState.toastMessage) {
+        uiState.toastMessage?.let {
+            onShowMessage(it)
+            viewModel.clearToastMessage()
+        }
     }
 
     when (val restaurantState = uiState.restaurant) {
@@ -92,18 +118,48 @@ fun DetailRoute(
         is UiState.Success -> {
             DetailSuccessScreen(
                 restaurant = restaurantState.data,
+                isTempTier = isTempTier,
                 reviewsState = uiState.reviews,
                 reviewSort = uiState.reviewSort,
-                navigateToEvaluate = { navigateToEvaluate(restaurantState.data) },
+                runIfLoggedIn = runIfLoggedIn,
+                navigateToEvaluate = {
+                    runIfLoggedIn {
+                        navigateToEvaluate(restaurantState.data)
+                    }
+                },
                 onBackClick = navigateToUp,
-                onFavoriteClick = { viewModel.onFavoriteClick() },
+                onFavoriteClick = {
+                    runIfLoggedIn {
+                        viewModel.onFavoriteClick()
+                    }
+                },
                 onSortSelected = { sort -> viewModel.getRestaurantReviews(sort) },
                 onReviewTabSelected = { viewModel.getRestaurantReviewsIfNeeded() },
-                onReviewLikeClick = { evalId -> viewModel.onReviewLikeClick(evalId) },
-                onReviewDislikeClick = { evalId -> viewModel.onReviewDislikeClick(evalId) },
-                onCommentLikeClick = { evalId, commentId -> viewModel.onCommentLikeClick(evalId, commentId) },
-                onCommentDislikeClick = { evalId, commentId -> viewModel.onCommentDislikeClick(evalId, commentId) },
-                onCommentSubmit = { evalId, body -> viewModel.postComment(evalId, body) },
+                onReviewLikeClick = { evalId ->
+                    runIfLoggedIn {
+                        viewModel.onReviewLikeClick(evalId)
+                    }
+                },
+                onReviewDislikeClick = { evalId ->
+                    runIfLoggedIn {
+                        viewModel.onReviewDislikeClick(evalId)
+                    }
+                },
+                onCommentLikeClick = { evalId, commentId ->
+                    runIfLoggedIn {
+                        viewModel.onCommentLikeClick(evalId, commentId)
+                    }
+                },
+                onCommentDislikeClick = { evalId, commentId ->
+                    runIfLoggedIn {
+                        viewModel.onCommentDislikeClick(evalId, commentId)
+                    }
+                },
+                onCommentSubmit = { evalId, body ->
+                    runIfLoggedIn {
+                        viewModel.postComment(evalId, body)
+                    }
+                },
                 onCommentDeleteClick = { evalId, commentId -> viewModel.deleteComment(evalId, commentId) },
             )
         }
@@ -126,8 +182,10 @@ fun DetailRoute(
 @Composable
 private fun DetailSuccessScreen(
     restaurant: RestaurantDetail,
+    isTempTier: Boolean,
     reviewsState: UiState<List<RestaurantReview>>,
     reviewSort: ReviewSort,
+    runIfLoggedIn: (() -> Unit) -> Unit,
     navigateToEvaluate: () -> Unit,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -140,6 +198,8 @@ private fun DetailSuccessScreen(
     onCommentSubmit: (Int, String) -> Unit,
     onCommentDeleteClick: (Int, Int) -> Unit,
 ) {
+    val displayTempTier = isTempTier || restaurant.isTempTier
+    val density = LocalDensity.current
     var restInfoTopInWindow by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
     var topBarBottomInWindow by remember { mutableFloatStateOf(0f) }
     val useWhiteTopBar by remember {
@@ -155,6 +215,16 @@ private fun DetailSuccessScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val bottomBarHeight = 76.dp
+    val safeAreaBottomPadding = with(density) {
+        if (platform() == "iOS") {
+            WindowInsets.safeDrawing
+                .only(WindowInsetsSides.Bottom)
+                .getBottom(this)
+                .toDp()
+        } else {
+            0.dp
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -162,7 +232,7 @@ private fun DetailSuccessScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = bottomBarHeight)
+            contentPadding = PaddingValues(bottom = bottomBarHeight + safeAreaBottomPadding)
         ) {
             item {
                 val imageHeight = 329.dp
@@ -179,7 +249,7 @@ private fun DetailSuccessScreen(
                         situationList = restaurant.situationList,
                         mainTier = restaurant.mainTier,
                         isEvaluated = restaurant.isEvaluated,
-                        isTempTier = restaurant.isTempTier,
+                        isTempTier = displayTempTier,
                         restaurantCuisine = restaurant.restaurantCuisine,
                         restaurantCuisineImgUrl = restaurant.restaurantCuisineImgUrl,
                         restaurantPosition = restaurant.restaurantPosition,
@@ -213,8 +283,10 @@ private fun DetailSuccessScreen(
                     onReviewLikeClick = onReviewLikeClick,
                     onReviewDislikeClick = onReviewDislikeClick,
                     onCommentClick = { evalId ->
-                        selectedEvalId = evalId
-                        isCommentInputVisible = true
+                        runIfLoggedIn {
+                            selectedEvalId = evalId
+                            isCommentInputVisible = true
+                        }
                     },
                     onCommentLikeClick = onCommentLikeClick,
                     onCommentDislikeClick = onCommentDislikeClick,
@@ -256,6 +328,7 @@ private fun DetailSuccessScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom))
                     .padding(horizontal = 20.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

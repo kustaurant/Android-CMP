@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -40,21 +41,23 @@ import com.kus.feature.login.navigation.Login
 import com.kus.feature.my.navigation.My
 import com.kus.feature.my.navigation.myMainNavGraph
 import com.kus.feature.my.navigation.navigateToCheckedRest
-import com.kus.feature.my.navigation.navigateToFeedback
+import com.kus.feature.my.navigation.navigateToEditProfile
 import com.kus.feature.my.navigation.navigateToFavoriteRest
+import com.kus.feature.my.navigation.navigateToFeedback
 import com.kus.feature.my.navigation.navigateToMyArticle
 import com.kus.feature.my.navigation.navigateToMyComment
 import com.kus.feature.my.navigation.navigateToMyWebView
 import com.kus.feature.my.navigation.navigateToScrap
 import com.kus.feature.search.navigation.Search
-import com.kus.feature.tier.TierKeys as TierResultKeys
 import com.kus.feature.tier.config.TierKeys.TIER_INITIAL_JSON
 import com.kus.feature.tier.config.TierKeys.TIER_RESULT_JSON
 import com.kus.feature.tier.navigation.Tier
 import com.kus.feature.tier.navigation.TierCategorySelect
 import com.kus.feature.tier.navigation.tierMainNavGraph
 import com.kus.feature.tier.ui.TierFilterState
+import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.shared.domain.model.tier.filter.Cuisine
+import com.kus.feature.tier.TierKeys as TierResultKeys
 
 @Composable
 fun MainScreen(
@@ -83,6 +86,21 @@ fun MainScreen(
     val communityDeletedPostId by mainBackStackEntry.savedStateHandle
         .getStateFlow<Long?>(COMMUNITY_POST_DELETE_ID, null)
         .collectAsStateWithLifecycle()
+
+    val tierInitialJson by mainBackStackEntry.savedStateHandle
+        .getStateFlow<String?>(TIER_INITIAL_JSON, null)
+        .collectAsStateWithLifecycle()
+
+    LaunchedEffect(tierInitialJson) {
+        val json = tierInitialJson ?: return@LaunchedEffect
+
+        runCatching {
+            mainNavController.getBackStackEntry<Tier>()
+                .savedStateHandle[TIER_INITIAL_JSON] = json
+        }
+
+        mainBackStackEntry.savedStateHandle.remove<String>(TIER_INITIAL_JSON)
+    }
 
     LaunchedEffect(tierResultJson) {
         val json = tierResultJson ?: return@LaunchedEffect
@@ -133,10 +151,11 @@ fun MainScreen(
         contentWindowInsets = WindowInsets.statusBars,
         containerColor = KusTheme.colors.c_FFFFFF,
         bottomBar = {
-            KusBottomBar(
-                selectedKey = selectedKey,
-                onNavigateToTab = { key -> mainNavController.navigateToTab(key) },
-            )
+                KusBottomBar(
+                    modifier = Modifier.zIndex(2f),
+                    selectedKey = selectedKey,
+                    onNavigateToTab = { key -> mainNavController.navigateToTab(key) },
+                )
         },
     ) { padding ->
         NavHost(
@@ -182,43 +201,32 @@ fun MainScreen(
                     val filter = TierFilterState(cuisines = setOf(resolved)).normalized()
                     val json = KusJson.json.encodeToString(filter)
 
-                    mainNavController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(TIER_INITIAL_JSON, json)
-
+                    mainBackStackEntry.savedStateHandle[TIER_INITIAL_JSON] = json
                     mainNavController.navigateToTab(BottomTab.TIER.key)
                 },
                 navigateToDetail = { restaurantId ->
-                    rootNavController.navigate(Detail(restaurantId))
+                    rootNavController.navigateToDetail(restaurantId)
                 },
             )
 
             drawNavGraph(
-                onSearchClick = { rootNavController.navigate(Search) },
-                onAlarmClick = {},
-                onShowMessage = onShowMessage,
                 navigateToDrawResult = { route -> mainNavController.navigate(route) },
                 onBackClick = { mainNavController.popBackStack() },
             )
 
             tierMainNavGraph(
                 onShowMessage = onShowMessage,
-                initialProvider = {
-                    val json = mainNavController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.get<String>(TIER_INITIAL_JSON)
-
-                    if (json == null) TierFilterState()
-                    else KusJson.json.decodeFromString<TierFilterState>(json)
-                },
                 navigateToTierCategorySelect = { initial ->
                     val json = KusJson.json.encodeToString(initial)
                     mainBackStackEntry.savedStateHandle[TIER_INITIAL_JSON] = json
 
                     rootNavController.navigate(TierCategorySelect)
                 },
-                navigateToDetail = { restaurantId ->
-                    rootNavController.navigate(Detail(restaurantId))
+                navigateToDetail = { restaurantId, isTempTier ->
+                    rootNavController.navigateToDetail(
+                        restaurantId = restaurantId,
+                        isTempTier = isTempTier
+                    )
                 },
             )
 
@@ -231,11 +239,13 @@ fun MainScreen(
                 onPostWriteClick = {
                     rootNavController.navigate(CommunityWrite)
                 },
-                onSearchClick = { },
             )
 
             myMainNavGraph(
                 onShowMessage = onShowMessage,
+                navigateToEditProfile = { nickName, email, phoneNumber ->
+                    rootNavController.navigateToEditProfile(nickName, email, phoneNumber)
+                },
                 navigateToNotice = {
                     rootNavController.navigateToMyWebView(
                         title = "공지사항",

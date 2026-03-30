@@ -1,4 +1,4 @@
-package com.kus.feature.my.ui.state
+package com.kus.feature.my.state
 
 data class MyPageState(
     val page: Int = 1,
