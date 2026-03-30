@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,12 +51,13 @@ fun CommunityRankingTopCard(
     modifier: Modifier = Modifier,
     isFirst: Boolean = false,
 ) {
-    val height = if (sizeType == RankCardSize.Center) 188.dp else 140.dp
-    val medalSize = if (sizeType == RankCardSize.Center) 56.dp else 40.dp
-    val avatarSize = if (sizeType == RankCardSize.Center) 100.dp else 62.dp
-    val topPaddingHeight = if (rank == 1) 12.dp else 8.dp
-    val infoTypo = if (rank == 1) KusTheme.typography.type16m else KusTheme.typography.type12r
-    val bgColor = if (rank == 1) KusTheme.colors.c_FFFFFF else KusTheme.colors.c_EAEAEA
+    val isCenter = sizeType == RankCardSize.Center
+    val height = if (isCenter) 188.dp else 140.dp
+    val medalSize = if (isCenter) 56.dp else 40.dp
+    val avatarSize = if (isCenter) 100.dp else 62.dp
+    val topPaddingHeight = if (isCenter) 12.dp else 8.dp
+    val infoTypo = if (isCenter) KusTheme.typography.type16m else KusTheme.typography.type12r
+    val bgColor = if (isCenter) KusTheme.colors.c_FFFFFF else KusTheme.colors.c_EAEAEA
 
     val medalRes = when (rank) {
         1 -> Res.drawable.ic_medal_1
@@ -70,16 +72,15 @@ fun CommunityRankingTopCard(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(height),
+                .fillMaxWidth(),
             shape = cardShape,
             border = if (isFirst) BorderStroke(1.dp, KusTheme.colors.c_43AB38) else null,
             shadowElevation = 0.dp,
         ) {
             Column(
                 modifier = Modifier
+                    .defaultMinSize(minHeight = height)
                     .background(bgColor)
-                    .fillMaxSize()
                     .padding(horizontal = 10.dp, vertical = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
