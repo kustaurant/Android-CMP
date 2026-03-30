@@ -9,14 +9,6 @@ import com.kus.feature.tier.ui.map.MapCameraState
 import com.kus.shared.domain.model.tier.TierRestaurant
 import kotlinx.cinterop.ExperimentalForeignApi
 
-const val SELECTED_TIER_MARKER_SCALE = 1.2
-
-const val DEFAULT_MARKER_WIDTH = 15.0
-const val DEFAULT_MARKER_HEIGHT = 20.0
-
-const val SAVED_MARKER_WIDTH = 12.0
-const val SAVED_MARKER_HEIGHT = 15.0
-
 class MapHolder(val mapView: NMFNaverMapView) {
     var lastCameraState: MapCameraState? = null
     var didApplyInitialBounds: Boolean = false
@@ -32,4 +24,9 @@ class MapHolder(val mapView: NMFNaverMapView) {
 
     val markerRestaurantMap = mutableMapOf<NMFMarker, TierRestaurant>()
     val restaurantIdMarkerMap = mutableMapOf<Long, NMFMarker>()
+
+    var lastOverlayDataKey: Int? = null
+    var lastMarkerDataKey: Int? = null
+    var lastRenderedMarkerZoom: Int? = null
+    var lastRenderedViewportKey: ViewportKey? = null
 }

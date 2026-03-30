@@ -19,11 +19,13 @@ import cocoapods.NMapsMap.NMFCameraUpdate
 import cocoapods.NMapsMap.NMFMapView
 import cocoapods.NMapsMap.NMFMapViewCameraDelegateProtocol
 import cocoapods.NMapsMap.NMFMapViewTouchDelegateProtocol
-import cocoapods.NMapsMap.NMFMarker
-import cocoapods.NMapsMap.NMFOverlayImage
 import cocoapods.NMapsMap.NMFPolygonOverlay
 import cocoapods.NMapsMap.NMFPolylineOverlay
 import cocoapods.NMapsMap.NMGLatLng
+import cocoapods.NMapsMap.NMGLatLngBounds
+import com.kus.appkit.util.buildOverlayDataKey
+import com.kus.appkit.util.closeLine
+import com.kus.appkit.util.normalizeRing
 import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.toUIColor
@@ -62,6 +64,7 @@ fun TierMapIosScreen(
 
     val latestOnMapTapped by rememberUpdatedState(onMapTapped)
     val latestOnRestaurantSelected by rememberUpdatedState(onRestaurantSelected)
+    val latestOnCameraIdle by rememberUpdatedState(onCameraIdle)
     val latestState by rememberUpdatedState(state)
 
     LaunchedEffect(naverMapView) {
@@ -84,7 +87,8 @@ fun TierMapIosScreen(
         object : NSObject(), NMFMapViewCameraDelegateProtocol {
             override fun mapViewCameraIdle(mapView: NMFMapView) {
                 val camera = mapView.cameraPosition
-                currentZoomState.intValue = camera.zoom.toInt()
+                val currentZoom = camera.zoom.toInt()
+                currentZoomState.intValue = currentZoom
 
                 if (holder.suppressCameraIdle || !holder.didApplyInitialBounds) {
                     return
@@ -95,21 +99,21 @@ fun TierMapIosScreen(
                     longitude = camera.target.lng(),
                     zoom = camera.zoom,
                     tilt = camera.tilt,
-                    bearing = camera.heading
+                    bearing = camera.heading,
                 )
 
                 holder.lastCameraState = cameraState
-                onCameraIdle(cameraState)
+                latestOnCameraIdle(cameraState)
 
                 val data = (latestState.map as? UiState.Success)?.data ?: return
-                updateMapIos(
+
+                refreshVisibleMarkersIos(
                     mapView = mapView,
                     mapData = data,
-                    currentZoom = camera.zoom.toInt(),
+                    currentZoom = currentZoom,
                     mapHolder = holder,
                     selectedRestaurantId = latestState.selectedRestaurantId,
                     onRestaurantSelected = latestOnRestaurantSelected,
-                    outlineColor = outlineUiColor,
                     tierMarkerSize = tierMarkerSize,
                 )
             }
@@ -126,31 +130,81 @@ fun TierMapIosScreen(
     }
 
     LaunchedEffect(state.map) {
-        if (state.map is UiState.Loading) {
-            holder.didApplyInitialBounds = false
-            holder.lastVisibleBounds = emptyList()
-            holder.selectedMarker = null
-            holder.markerRestaurantMap.clear()
+        when (val mapState = state.map) {
+            is UiState.Loading -> {
+                holder.didApplyInitialBounds = false
+                holder.suppressCameraIdle = false
+                holder.lastVisibleBounds = emptyList()
+                holder.selectedMarker = null
+
+                holder.lastOverlayDataKey = null
+                holder.lastMarkerDataKey = null
+                holder.lastRenderedMarkerZoom = null
+                holder.lastRenderedViewportKey = null
+
+                clearAllMapObjectsIos(holder)
+                isCameraReady.value = false
+            }
+
+            is UiState.Success -> {
+                val data = mapState.data
+                mapView.minZoomLevel = data.minZoom.toDouble()
+
+                ensureRegionOverlaysIos(
+                    mapView = mapView,
+                    mapData = data,
+                    mapHolder = holder,
+                    outlineColor = outlineUiColor,
+                )
+
+                val incomingBounds = data.visibleBounds
+                val shouldApplyBounds =
+                    !holder.didApplyInitialBounds || holder.lastVisibleBounds != incomingBounds
+
+                if (shouldApplyBounds && incomingBounds.size >= 4) {
+                    holder.suppressCameraIdle = true
+                    isCameraReady.value = false
+
+                    moveCameraToVisibleBoundsIos(mapView, incomingBounds) {
+                        val currentZoom = mapView.cameraPosition.zoom.toInt()
+                        currentZoomState.intValue = currentZoom
+
+                        holder.lastVisibleBounds = incomingBounds
+                        holder.didApplyInitialBounds = true
+                        holder.suppressCameraIdle = false
+                        isCameraReady.value = true
+
+                        refreshVisibleMarkersIos(
+                            mapView = mapView,
+                            mapData = data,
+                            currentZoom = currentZoom,
+                            mapHolder = holder,
+                            selectedRestaurantId = state.selectedRestaurantId,
+                            onRestaurantSelected = latestOnRestaurantSelected,
+                            tierMarkerSize = tierMarkerSize,
+                        )
+                    }
+                } else {
+                    val currentZoom = mapView.cameraPosition.zoom.toInt()
+                    currentZoomState.intValue = currentZoom
+                    holder.didApplyInitialBounds = true
+
+                    refreshVisibleMarkersIos(
+                        mapView = mapView,
+                        mapData = data,
+                        currentZoom = currentZoom,
+                        mapHolder = holder,
+                        selectedRestaurantId = state.selectedRestaurantId,
+                        onRestaurantSelected = latestOnRestaurantSelected,
+                        tierMarkerSize = tierMarkerSize,
+                    )
+
+                    isCameraReady.value = true
+                }
+            }
+
+            else -> Unit
         }
-    }
-
-    LaunchedEffect(state.map, currentZoomState.intValue) {
-        val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
-
-        mapView.minZoomLevel = data.minZoom.toDouble()
-
-        updateMapIos(
-            mapView = mapView,
-            mapData = data,
-            currentZoom = currentZoomState.intValue,
-            mapHolder = holder,
-            selectedRestaurantId = state.selectedRestaurantId,
-            onRestaurantSelected = latestOnRestaurantSelected,
-            outlineColor = outlineUiColor,
-            tierMarkerSize = tierMarkerSize,
-        )
-
-        isCameraReady.value = true
     }
 
     LaunchedEffect(state.selectedRestaurantId, state.map) {
@@ -164,50 +218,28 @@ fun TierMapIosScreen(
         )
     }
 
-    LaunchedEffect(state.map) {
-        val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
-
-        mapView.minZoomLevel = data.minZoom.toDouble()
-
-        val incomingBounds = data.visibleBounds
-        val shouldApplyBounds =
-            !holder.didApplyInitialBounds || holder.lastVisibleBounds != incomingBounds
-
-        if (shouldApplyBounds && incomingBounds.size >= 4) {
-            holder.suppressCameraIdle = true
-            isCameraReady.value = false
-
-            moveCameraToVisibleBoundsIos(mapView, incomingBounds) {
-                currentZoomState.intValue = mapView.cameraPosition.zoom.toInt()
-                holder.lastVisibleBounds = incomingBounds
-                holder.didApplyInitialBounds = true
-                holder.suppressCameraIdle = false
-                isCameraReady.value = true
-
-                updateMapIos(
-                    mapView = mapView,
-                    mapData = data,
-                    currentZoom = currentZoomState.intValue,
-                    mapHolder = holder,
-                    selectedRestaurantId = state.selectedRestaurantId,
-                    onRestaurantSelected = latestOnRestaurantSelected,
-                    outlineColor = outlineUiColor,
-                    tierMarkerSize = tierMarkerSize,
-                )
-            }
-        }
-    }
-
     LaunchedEffect(state.cameraState) {
         val cameraState = state.cameraState ?: holder.lastCameraState ?: return@LaunchedEffect
-        if (state.map !is UiState.Success) return@LaunchedEffect
+        val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
         if (!holder.didApplyInitialBounds) return@LaunchedEffect
 
         holder.suppressCameraIdle = true
+
         moveCameraToCameraStateIos(mapView, cameraState) {
-            currentZoomState.intValue = cameraState.zoom.toInt()
+            val currentZoom = cameraState.zoom.toInt()
+            currentZoomState.intValue = currentZoom
             holder.lastCameraState = cameraState
             holder.suppressCameraIdle = false
+
+            refreshVisibleMarkersIos(
+                mapView = mapView,
+                mapData = data,
+                currentZoom = currentZoom,
+                mapHolder = holder,
+                selectedRestaurantId = state.selectedRestaurantId,
+                onRestaurantSelected = latestOnRestaurantSelected,
+                tierMarkerSize = tierMarkerSize,
+            )
         }
     }
 
@@ -226,7 +258,7 @@ fun TierMapIosScreen(
         UIKitView(
             modifier = Modifier.fillMaxSize(),
             factory = { naverMapView },
-            update = { _ -> }
+            update = { _ -> },
         )
 
         val visible = state.isShowBottomSheet && selectedRestaurant != null
@@ -235,12 +267,12 @@ fun TierMapIosScreen(
             visible = visible,
             modifier = Modifier.align(Alignment.BottomCenter),
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
         ) {
             val r = selectedRestaurant ?: return@AnimatedVisibility
             TierRestaurantBottomSheetCard(
                 restaurant = r,
-                onClick = { onBottomSheetClick(r.restaurantId) }
+                onClick = { onBottomSheetClick(r.restaurantId) },
             )
         }
 
@@ -249,7 +281,7 @@ fun TierMapIosScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(KusTheme.colors.c_FFFFFF),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 KusLoadingAnimation()
             }
@@ -257,19 +289,16 @@ fun TierMapIosScreen(
     }
 }
 
-private fun updateMapIos(
+private fun ensureRegionOverlaysIos(
     mapView: NMFMapView,
     mapData: TierMapData,
-    currentZoom: Int,
     mapHolder: MapHolder,
-    selectedRestaurantId: Long?,
-    onRestaurantSelected: (Long) -> Unit,
     outlineColor: UIColor,
-    tierMarkerSize: Double,
 ) {
-    clearOverlaysAndMarkersIos(
-        mapHolder = mapHolder
-    )
+    val overlayDataKey = buildOverlayDataKey(mapData)
+    if (mapHolder.lastOverlayDataKey == overlayDataKey) return
+
+    clearRegionOverlaysIos(mapHolder)
 
     mapData.solidPolygonCoordsList.forEach { line ->
         if (line.isEmpty()) return@forEach
@@ -332,307 +361,32 @@ private fun updateMapIos(
         }
     }
 
-    mapData.favoriteTierRestaurants.forEach { r ->
-        createRestaurantMarkerIos(
-            mapView = mapView,
-            restaurant = r,
-            selectedRestaurantId = selectedRestaurantId,
-            onRestaurantSelected = onRestaurantSelected,
-            restaurantMarkers = mapHolder.restaurantMarkers,
-            markerRestaurantMap = mapHolder.markerRestaurantMap,
-            restaurantIdMarkerMap = mapHolder.restaurantIdMarkerMap,
-            mapHolder = mapHolder,
-            tierMarkerSize = tierMarkerSize,
-        )
-    }
-
-    mapData.tieredTierRestaurants.forEach { r ->
-        createRestaurantMarkerIos(
-            mapView = mapView,
-            restaurant = r,
-            selectedRestaurantId = selectedRestaurantId,
-            onRestaurantSelected = onRestaurantSelected,
-            restaurantMarkers = mapHolder.restaurantMarkers,
-            markerRestaurantMap = mapHolder.markerRestaurantMap,
-            restaurantIdMarkerMap = mapHolder.restaurantIdMarkerMap,
-            mapHolder = mapHolder,
-            tierMarkerSize = tierMarkerSize,
-        )
-    }
-
-    mapData.nonTieredRestaurants
-        .filter { it.zoom <= currentZoom }
-        .forEach { group ->
-            group.tierRestaurants.forEach { r ->
-                createRestaurantMarkerIos(
-                    mapView = mapView,
-                    restaurant = r,
-                    selectedRestaurantId = selectedRestaurantId,
-                    onRestaurantSelected = onRestaurantSelected,
-                    restaurantMarkers = mapHolder.restaurantMarkers,
-                    markerRestaurantMap = mapHolder.markerRestaurantMap,
-                    restaurantIdMarkerMap = mapHolder.restaurantIdMarkerMap,
-                    mapHolder = mapHolder,
-                    tierMarkerSize = tierMarkerSize,
-                )
-            }
-        }
-
-    mapHolder.selectedMarker = mapHolder.restaurantMarkers
-        .firstOrNull { mapHolder.markerRestaurantMap[it]?.restaurantId == selectedRestaurantId }
+    mapHolder.lastOverlayDataKey = overlayDataKey
 }
 
-private fun closeLine(coords: List<NMGLatLng>): List<NMGLatLng> {
-    if (coords.size < 2) return coords
-    val first = coords.first()
-    val last = coords.last()
-    return if (first.lat() == last.lat() && first.lng() == last.lng()) coords else coords + first
-}
-
-private fun closeRing(coords: List<NMGLatLng>): List<NMGLatLng> {
-    if (coords.size < 3) return coords
-    val first = coords.first()
-    val last = coords.last()
-    return if (first.lat() == last.lat() && first.lng() == last.lng()) coords else coords + first
-}
-
-private fun isClockwise(coords: List<NMGLatLng>): Boolean {
-    var sum = 0.0
-    for (i in 0 until coords.size - 1) {
-        val p1 = coords[i]
-        val p2 = coords[i + 1]
-        sum += (p2.lng() - p1.lng()) * (p2.lat() + p1.lat())
-    }
-    return sum > 0
-}
-
-private fun normalizeRing(coords: List<NMGLatLng>): List<NMGLatLng> {
-    val closed = closeRing(coords)
-    return if (isClockwise(closed)) closed.reversed() else closed
-}
-
-private fun clearOverlaysAndMarkersIos(mapHolder: MapHolder) {
+fun clearRegionOverlaysIos(mapHolder: MapHolder) {
     mapHolder.polygonOverlays.forEach { it.mapView = null }
     mapHolder.polylineOverlays.forEach { it.mapView = null }
-    mapHolder.restaurantMarkers.forEach { it.mapView = null }
-
     mapHolder.polygonOverlays.clear()
     mapHolder.polylineOverlays.clear()
-    mapHolder.restaurantMarkers.clear()
-    mapHolder.markerRestaurantMap.clear()
-    mapHolder.restaurantIdMarkerMap.clear()
-    mapHolder.selectedMarker = null
 }
 
+fun expandedContentBounds(
+    bounds: NMGLatLngBounds,
+    latBufferRatio: Double = 0.08,
+    lngBufferRatio: Double = 0.08,
+    minLatBuffer: Double = 0.0003,
+    minLngBuffer: Double = 0.0003,
+): NMGLatLngBounds {
+    val latBuffer = maxOf(bounds.latSpan() * latBufferRatio, minLatBuffer)
+    val lngBuffer = maxOf(bounds.lngSpan() * lngBufferRatio, minLngBuffer)
 
-private fun applyMarkerAppearanceIos(
-    marker: NMFMarker,
-    restaurant: TierRestaurant,
-    isSelected: Boolean,
-    tierMarkerSize: Double,
-) {
-    val isSaved = restaurant.isFavorite
-    val isTier = restaurant.mainTier in 1..4 && !isSaved
-    val scale = if (isSelected) SELECTED_TIER_MARKER_SCALE else 1.0
-
-    marker.iconImage = if (isSelected) {
-        getSelectedMarkerIconIos(restaurant)
-    } else {
-        getMarkerIconIos(restaurant)
-    }
-
-    when {
-        isTier -> {
-            val size = tierMarkerSize * scale
-            marker.width = size
-            marker.height = size
-        }
-
-        isSaved -> {
-            marker.width = SAVED_MARKER_WIDTH * scale
-            marker.height = SAVED_MARKER_HEIGHT * scale
-        }
-
-        else -> {
-            marker.width = DEFAULT_MARKER_WIDTH * scale
-            marker.height = DEFAULT_MARKER_HEIGHT * scale
-        }
-    }
-
-    marker.zIndex = when {
-        isSelected -> 10
-        isSaved -> 5
-        else -> when (restaurant.mainTier) {
-            1 -> 4
-            2 -> 3
-            3 -> 2
-            4 -> 1
-            else -> 0
-        }
-    }
-}
-
-private fun updateSelectedMarkerIos(
-    mapHolder: MapHolder,
-    newMarker: NMFMarker,
-    tierMarkerSize: Double,
-) {
-    if (mapHolder.selectedMarker === newMarker) return
-
-    mapHolder.selectedMarker?.let { oldMarker ->
-        mapHolder.markerRestaurantMap[oldMarker]?.let { oldRestaurant ->
-            applyMarkerAppearanceIos(
-                marker = oldMarker,
-                restaurant = oldRestaurant,
-                isSelected = false,
-                tierMarkerSize = tierMarkerSize,
-            )
-        }
-    }
-
-    mapHolder.markerRestaurantMap[newMarker]?.let { newRestaurant ->
-        applyMarkerAppearanceIos(
-            marker = newMarker,
-            restaurant = newRestaurant,
-            isSelected = true,
-            tierMarkerSize = tierMarkerSize,
-        )
-    }
-
-    mapHolder.selectedMarker = newMarker
-}
-
-
-private fun createRestaurantMarkerIos(
-    mapView: NMFMapView,
-    restaurant: TierRestaurant,
-    selectedRestaurantId: Long?,
-    onRestaurantSelected: (Long) -> Unit,
-    restaurantMarkers: MutableList<NMFMarker>,
-    markerRestaurantMap: MutableMap<NMFMarker, TierRestaurant>,
-    restaurantIdMarkerMap: MutableMap<Long, NMFMarker>,
-    mapHolder: MapHolder,
-    tierMarkerSize: Double,
-) {
-    val isSelected = selectedRestaurantId == restaurant.restaurantId
-
-    val marker = NMFMarker().apply {
-        position = NMGLatLng().apply {
-            setLat(restaurant.latitude)
-            setLng(restaurant.longitude)
-        }
-
-        applyMarkerAppearanceIos(
-            marker = this,
-            restaurant = restaurant,
-            isSelected = isSelected,
-            tierMarkerSize = tierMarkerSize,
-        )
-
-        this.mapView = mapView
-
-        touchHandler = { _ ->
-            updateSelectedMarkerIos(
-                mapHolder = mapHolder,
-                newMarker = this,
-                tierMarkerSize = tierMarkerSize,
-            )
-            onRestaurantSelected(restaurant.restaurantId)
-            true
-        }
-    }
-
-    restaurantMarkers.add(marker)
-    markerRestaurantMap[marker] = restaurant
-    restaurantIdMarkerMap[restaurant.restaurantId] = marker
-
-    if (isSelected) {
-        mapHolder.selectedMarker = marker
-    }
-}
-
-private fun updateSelectedMarkerOnlyIos(
-    mapHolder: MapHolder,
-    selectedRestaurantId: Long?,
-    tierMarkerSize: Double,
-) {
-    val prev = mapHolder.selectedMarker
-    val prevRestaurant = prev?.let { mapHolder.markerRestaurantMap[it] }
-
-    if (prev != null && prevRestaurant != null) {
-        applyMarkerAppearanceIos(
-            marker = prev,
-            restaurant = prevRestaurant,
-            isSelected = false,
-            tierMarkerSize = tierMarkerSize,
-        )
-    }
-
-    val next = selectedRestaurantId
-        ?.let { mapHolder.restaurantIdMarkerMap[it] }
-
-    val nextRestaurant = next?.let { mapHolder.markerRestaurantMap[it] }
-    if (next != null && nextRestaurant != null) {
-        applyMarkerAppearanceIos(
-            marker = next,
-            restaurant = nextRestaurant,
-            isSelected = true,
-            tierMarkerSize = tierMarkerSize,
-        )
-    }
-
-    mapHolder.selectedMarker = next
-}
-
-private fun getSelectedMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
-    val imageName = if (restaurant.isTempTier) {
-        when {
-            restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_tier_partnership_selected"
-            restaurant.mainTier == 1 -> "ic_temp_tier_1_selected"
-            restaurant.mainTier == 2 -> "ic_temp_tier_2_selected"
-            restaurant.mainTier == 3 -> "ic_temp_tier_3_selected"
-            restaurant.mainTier == 4 -> "ic_temp_tier_4_selected"
-            else -> "ic_marker_none_selected"
-        }
-    } else {
-        when {
-            restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_tier_partnership_selected"
-            restaurant.mainTier == 1 -> "ic_tier_1_selected"
-            restaurant.mainTier == 2 -> "ic_tier_2_selected"
-            restaurant.mainTier == 3 -> "ic_tier_3_selected"
-            restaurant.mainTier == 4 -> "ic_tier_4_selected"
-            else -> "ic_marker_none_selected"
-        }
-    }
-
-    return NMFOverlayImage.overlayImageWithName(imageName)!!
-}
-
-private fun getMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
-    val imageName = if (restaurant.isTempTier) {
-        when {
-            restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership"
-            restaurant.mainTier == 1 -> "ic_temp_tier_1"
-            restaurant.mainTier == 2 -> "ic_temp_tier_2"
-            restaurant.mainTier == 3 -> "ic_temp_tier_3"
-            restaurant.mainTier == 4 -> "ic_temp_tier_4"
-            else -> "ic_marker_none"
-        }
-    } else {
-        when {
-            restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership"
-            restaurant.mainTier == 1 -> "ic_tier_1"
-            restaurant.mainTier == 2 -> "ic_tier_2"
-            restaurant.mainTier == 3 -> "ic_tier_3"
-            restaurant.mainTier == 4 -> "ic_tier_4"
-            else -> "ic_marker_none"
-        }
-    }
-    return NMFOverlayImage.overlayImageWithName(imageName)!!
+    return NMGLatLngBounds.latLngBoundsWithSouthWestLat(
+        southWestLat = bounds.southWestLat() - latBuffer,
+        southWestLng = bounds.southWestLng() - lngBuffer,
+        northEastLat = bounds.northEastLat() + latBuffer,
+        northEastLng = bounds.northEastLng() + lngBuffer,
+    )
 }
 
 private fun moveCameraToVisibleBoundsIos(
@@ -647,11 +401,11 @@ private fun moveCameraToVisibleBoundsIos(
     val south = visibleBounds[2]
     val north = visibleBounds[3]
 
-    val bounds = cocoapods.NMapsMap.NMGLatLngBounds.latLngBoundsWithSouthWestLat(
+    val bounds = NMGLatLngBounds.latLngBoundsWithSouthWestLat(
         southWestLat = south,
         southWestLng = west,
         northEastLat = north,
-        northEastLng = east
+        northEastLng = east,
     )
 
     val update = NMFCameraUpdate.cameraUpdateWithFitBounds(bounds = bounds)
