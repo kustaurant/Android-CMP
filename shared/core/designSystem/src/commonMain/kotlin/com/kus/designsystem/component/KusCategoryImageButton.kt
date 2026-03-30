@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -61,6 +62,7 @@ fun KusCategoryImageButton(
 
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .border(width = 1.dp, color = borderColor, shape = roundedCornerShape)
                 .clip(roundedCornerShape)
                 .background(KusTheme.colors.c_F5F5F5)
