@@ -43,27 +43,13 @@ fun refreshVisibleMarkersIos(
 
     clearMarkersOnlyIos(mapHolder)
 
-    fun containsPoint(
-        bounds: NMGLatLngBounds,
-        point: NMGLatLng,
-    ): Boolean {
-        return point.lat() >= bounds.southWestLat() &&
-                point.lat() <= bounds.northEastLat() &&
-                point.lng() >= bounds.southWestLng() &&
-                point.lng() <= bounds.northEastLng()
-    }
+    val visibleRestaurants = buildVisibleRestaurantsIos(
+        mapData = mapData,
+        currentZoom = currentZoom,
+        viewportBounds = viewportBounds,
+    )
 
-    fun isVisibleInViewport(restaurant: TierRestaurant): Boolean {
-        val point = NMGLatLng().apply {
-            setLat(restaurant.latitude)
-            setLng(restaurant.longitude)
-        }
-        return containsPoint(viewportBounds, point)
-    }
-
-    fun addMarkerIfVisible(restaurant: TierRestaurant) {
-        if (!isVisibleInViewport(restaurant)) return
-
+    visibleRestaurants.forEach { restaurant ->
         createRestaurantMarkerIos(
             mapView = mapView,
             restaurant = restaurant,
@@ -77,17 +63,11 @@ fun refreshVisibleMarkersIos(
         )
     }
 
-    mapData.favoriteTierRestaurants.forEach(::addMarkerIfVisible)
-    mapData.tieredTierRestaurants.forEach(::addMarkerIfVisible)
-
-    mapData.nonTieredRestaurants
-        .filter { it.zoom <= currentZoom }
-        .forEach { group ->
-            group.tierRestaurants.forEach(::addMarkerIfVisible)
-        }
-
-    mapHolder.selectedMarker = selectedRestaurantId
-        ?.let { mapHolder.restaurantIdMarkerMap[it] }
+    updateSelectedMarkerOnlyIos(
+        mapHolder = mapHolder,
+        selectedRestaurantId = selectedRestaurantId,
+        tierMarkerSize = tierMarkerSize,
+    )
 
     mapHolder.lastMarkerDataKey = markerDataKey
     mapHolder.lastRenderedMarkerZoom = currentZoom
@@ -264,6 +244,44 @@ fun updateSelectedMarkerOnlyIos(
     }
 
     mapHolder.selectedMarker = next
+}
+
+fun buildVisibleRestaurantsIos(
+    mapData: TierMapData,
+    currentZoom: Int,
+    viewportBounds: NMGLatLngBounds,
+): List<TierRestaurant> {
+    val unique = LinkedHashMap<Long, TierRestaurant>()
+
+    fun addIfVisible(restaurant: TierRestaurant) {
+        if (!isVisibleInViewport(viewportBounds, restaurant)) return
+
+        if (!unique.containsKey(restaurant.restaurantId)) {
+            unique[restaurant.restaurantId] = restaurant
+        }
+    }
+
+    mapData.favoriteTierRestaurants.forEach(::addIfVisible)
+    mapData.tieredTierRestaurants.forEach(::addIfVisible)
+
+    mapData.nonTieredRestaurants
+        .asSequence()
+        .filter { it.zoom <= currentZoom }
+        .flatMap { it.tierRestaurants.asSequence() }
+        .forEach(::addIfVisible)
+
+    return unique.values.toList()
+}
+
+fun isVisibleInViewport(
+    viewportBounds: NMGLatLngBounds,
+    restaurant: TierRestaurant,
+): Boolean {
+    val lat = restaurant.latitude
+    val lng = restaurant.longitude
+
+    return lat in viewportBounds.southWestLat()..viewportBounds.northEastLat() &&
+            lng in viewportBounds.southWestLng()..viewportBounds.northEastLng()
 }
 
 fun getSelectedMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
