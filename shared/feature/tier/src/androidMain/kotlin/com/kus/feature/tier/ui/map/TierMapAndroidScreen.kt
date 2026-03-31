@@ -67,13 +67,16 @@ fun TierMapAndroidScreen(
     var currentZoom by remember { mutableIntStateOf(state.cameraState?.zoom?.toInt() ?: 11) }
     var suppressCameraIdle by remember { mutableStateOf(false) }
 
+    var cameraRenderTick by remember { mutableIntStateOf(0) }
+
     val outlineColorInt = KusTheme.colors.c_43AB38.toArgb()
     val latestState by rememberUpdatedState(state)
     val latestOnRestaurantSelected by rememberUpdatedState(onRestaurantSelected)
     val latestOnMapTapped by rememberUpdatedState(onMapTapped)
     val latestSelectedRestaurantId by rememberUpdatedState(state.selectedRestaurantId)
     val mapAlpha by animateFloatAsState(if (isMapReadyToShow) 1f else 0f)
-    val tierMarkerSize = with(LocalDensity.current) { 25.dp.toPx().toInt() }
+
+    val markerSizes = rememberMarkerSizes()
 
     DisposableEffect(lifecycleOwner, mapView) {
         val obs = LifecycleEventObserver { _, event ->
@@ -113,6 +116,8 @@ fun TierMapAndroidScreen(
                 currentZoom = pos.zoom.toInt()
 
                 if (!suppressCameraIdle && mapHolder.hasAppliedInitialCamera) {
+                    cameraRenderTick++
+
                     onCameraIdle(
                         MapCameraState(
                             latitude = pos.target.latitude,
@@ -130,39 +135,8 @@ fun TierMapAndroidScreen(
     LaunchedEffect(state.map) {
         if (state.map is UiState.Loading) {
             mapHolder.hasAppliedInitialCamera = false
+            resetMapRenderCache(mapHolder)
         }
-    }
-
-    LaunchedEffect(naverMap, isMapLoaded, state.map, currentZoom) {
-        val map = naverMap ?: return@LaunchedEffect
-        if (!isMapLoaded) return@LaunchedEffect
-        val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
-
-        map.minZoom = data.minZoom.toDouble()
-
-        updateMap(
-            map = map,
-            mapData = data,
-            currentZoom = currentZoom,
-            mapHolder = mapHolder,
-            selectedRestaurantId = latestSelectedRestaurantId,
-            onRestaurantSelected = latestOnRestaurantSelected,
-            outlineColor = outlineColorInt,
-            tierMarkerSize = tierMarkerSize,
-        )
-
-        isMapReadyToShow = true
-    }
-
-    LaunchedEffect(state.selectedRestaurantId, state.map) {
-        if (state.map !is UiState.Success) return@LaunchedEffect
-        if (mapHolder.restaurantMarkers.isEmpty()) return@LaunchedEffect
-
-        updateSelectedMarkerOnly(
-            mapHolder = mapHolder,
-            selectedRestaurantId = state.selectedRestaurantId,
-            tierMarkerSize = tierMarkerSize,
-        )
     }
 
     LaunchedEffect(naverMap, isMapLoaded, state.map) {
@@ -208,9 +182,43 @@ fun TierMapAndroidScreen(
             mapView.post {
                 mapHolder.hasAppliedInitialCamera = true
                 suppressCameraIdle = false
+                cameraRenderTick++
                 isMapReadyToShow = true
             }
         }
+    }
+
+    LaunchedEffect(naverMap, isMapLoaded, state.map, currentZoom, cameraRenderTick) {
+        val map = naverMap ?: return@LaunchedEffect
+        if (!isMapLoaded) return@LaunchedEffect
+        if (!mapHolder.hasAppliedInitialCamera) return@LaunchedEffect
+
+        val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
+        map.minZoom = data.minZoom.toDouble()
+
+        updateMapViewportBased(
+            map = map,
+            mapData = data,
+            currentZoom = currentZoom,
+            mapHolder = mapHolder,
+            selectedRestaurantId = latestSelectedRestaurantId,
+            onRestaurantSelected = latestOnRestaurantSelected,
+            outlineColor = outlineColorInt,
+            markerSizes = markerSizes,
+        )
+
+        isMapReadyToShow = true
+    }
+
+    LaunchedEffect(state.selectedRestaurantId, state.map) {
+        if (state.map !is UiState.Success) return@LaunchedEffect
+        if (mapHolder.restaurantMarkers.isEmpty()) return@LaunchedEffect
+
+        updateSelectedMarkerOnly(
+            mapHolder = mapHolder,
+            selectedRestaurantId = state.selectedRestaurantId,
+            markerSizes = markerSizes,
+        )
     }
 
     val selectedRestaurant: TierRestaurant? = remember(state.map, state.selectedRestaurantId) {
@@ -276,7 +284,7 @@ private fun moveCameraToBoundsAndClampZoomOnce(
     }
 }
 
-private fun updateMap(
+private fun updateMapViewportBased(
     map: NaverMap,
     mapData: TierMapData,
     currentZoom: Int,
@@ -284,14 +292,291 @@ private fun updateMap(
     selectedRestaurantId: Long?,
     onRestaurantSelected: (Long) -> Unit,
     outlineColor: Int,
-    tierMarkerSize: Int,
+    markerSizes: MarkerSizes,
 ) {
-    clearOverlaysAndMarkers(
-        polygonOverlays = mapHolder.polygonOverlays,
-        polylineOverlays = mapHolder.polylineOverlays,
+    val overlayDataKey = buildOverlayDataKey(mapData)
+    if (mapHolder.lastOverlayDataKey != overlayDataKey) {
+        clearOverlaysOnly(
+            polygonOverlays = mapHolder.polygonOverlays,
+            polylineOverlays = mapHolder.polylineOverlays,
+        )
+        drawPolygonAndPolylineOverlays(
+            map = map,
+            mapData = mapData,
+            mapHolder = mapHolder,
+            outlineColor = outlineColor,
+        )
+        mapHolder.lastOverlayDataKey = overlayDataKey
+    }
+
+    val markerDataKey = buildMarkerDataKey(mapData)
+    val viewportBounds = expandedContentBounds(map.contentBounds)
+    val viewportKey = viewportBounds.toViewportKey()
+
+    val shouldSkipMarkerRefresh =
+        mapHolder.lastMarkerDataKey == markerDataKey &&
+                mapHolder.lastRenderedMarkerZoom == currentZoom &&
+                mapHolder.lastRenderedViewportKey == viewportKey
+
+    if (shouldSkipMarkerRefresh) {
+        updateSelectedMarkerOnly(
+            mapHolder = mapHolder,
+            selectedRestaurantId = selectedRestaurantId,
+            markerSizes = markerSizes,
+        )
+        return
+    }
+
+    clearMarkersOnly(
         restaurantMarkers = mapHolder.restaurantMarkers,
+        markerRestaurantMap = mapHolder.markerRestaurantMap,
+        restaurantIdMarkerMap = mapHolder.restaurantIdMarkerMap,
     )
 
+    val visibleRestaurants = buildVisibleRestaurants(
+        mapData = mapData,
+        currentZoom = currentZoom,
+        viewportBounds = viewportBounds,
+    )
+
+    visibleRestaurants.forEach { restaurant ->
+        createRestaurantMarker(
+            map = map,
+            restaurant = restaurant,
+            selectedRestaurantId = selectedRestaurantId,
+            onRestaurantSelected = onRestaurantSelected,
+            restaurantMarkers = mapHolder.restaurantMarkers,
+            markerRestaurantMap = mapHolder.markerRestaurantMap,
+            restaurantIdMarkerMap = mapHolder.restaurantIdMarkerMap,
+            markerSizes = markerSizes,
+        )
+    }
+
+    updateSelectedMarkerOnly(
+        mapHolder = mapHolder,
+        selectedRestaurantId = selectedRestaurantId,
+        markerSizes = markerSizes,
+    )
+
+    mapHolder.lastMarkerDataKey = markerDataKey
+    mapHolder.lastRenderedMarkerZoom = currentZoom
+    mapHolder.lastRenderedViewportKey = viewportKey
+}
+
+private fun updateSelectedMarkerOnly(
+    mapHolder: MapHolder,
+    selectedRestaurantId: Long?,
+    markerSizes: MarkerSizes,
+) {
+    val prev = mapHolder.selectedMarker
+    val prevRestaurant = prev?.let { mapHolder.markerRestaurantMap[it] }
+
+    if (prev != null && prevRestaurant != null) {
+        prev.icon = getMarkerIcon(prevRestaurant)
+        prev.zIndex = if (prevRestaurant.isFavorite) {
+            5
+        } else {
+            when (prevRestaurant.mainTier) {
+                1 -> 4
+                2 -> 3
+                3 -> 2
+                4 -> 1
+                else -> 0
+            }
+        }
+        applyMarkerSize(
+            marker = prev,
+            restaurant = prevRestaurant,
+            isSelected = false,
+            markerSizes = markerSizes,
+        )
+    }
+
+    val next = selectedRestaurantId?.let { mapHolder.restaurantIdMarkerMap[it] }
+    val nextRestaurant = next?.let { mapHolder.markerRestaurantMap[it] }
+
+    if (next != null && nextRestaurant != null) {
+        next.icon = getSelectedMarkerIcon(nextRestaurant)
+        next.zIndex = 10
+        applyMarkerSize(
+            marker = next,
+            restaurant = nextRestaurant,
+            isSelected = true,
+            markerSizes = markerSizes,
+        )
+    }
+
+    mapHolder.selectedMarker = next
+}
+
+private fun applyMarkerSize(
+    marker: Marker,
+    restaurant: TierRestaurant,
+    isSelected: Boolean,
+    markerSizes: MarkerSizes,
+) {
+    val isTierMarker = restaurant.mainTier in 1..4 && restaurant.partnershipInfo.isEmpty()
+    val isSavedMarker = restaurant.isFavorite
+
+    when {
+        isSavedMarker -> {
+            marker.width = if (isSelected) {
+                markerSizes.selectedSavedWidth
+            } else {
+                markerSizes.savedWidth
+            }
+            marker.height = if (isSelected) {
+                markerSizes.selectedSavedHeight
+            } else {
+                markerSizes.savedHeight
+            }
+        }
+
+        isTierMarker -> {
+            marker.width = if (isSelected) {
+                markerSizes.selectedTierWidth
+            } else {
+                markerSizes.tierWidth
+            }
+            marker.height = if (isSelected) {
+                markerSizes.selectedTierHeight
+            } else {
+                markerSizes.tierHeight
+            }
+        }
+
+        else -> {
+            marker.width = if (isSelected) {
+                markerSizes.selectedDefaultWidth
+            } else {
+                markerSizes.defaultWidth
+            }
+            marker.height = if (isSelected) {
+                markerSizes.selectedDefaultHeight
+            } else {
+                markerSizes.defaultHeight
+            }
+        }
+    }
+}
+
+private fun clearOverlaysOnly(
+    polygonOverlays: MutableList<PolygonOverlay>,
+    polylineOverlays: MutableList<PolylineOverlay>,
+) {
+    polygonOverlays.forEach { it.map = null }
+    polygonOverlays.clear()
+
+    polylineOverlays.forEach { it.map = null }
+    polylineOverlays.clear()
+}
+
+private fun clearMarkersOnly(
+    restaurantMarkers: MutableList<Marker>,
+    markerRestaurantMap: MutableMap<Marker, TierRestaurant>,
+    restaurantIdMarkerMap: MutableMap<Long, Marker>,
+) {
+    restaurantMarkers.forEach { it.map = null }
+    restaurantMarkers.clear()
+    markerRestaurantMap.clear()
+    restaurantIdMarkerMap.clear()
+}
+
+private fun resetMapRenderCache(mapHolder: MapHolder) {
+    mapHolder.lastOverlayDataKey = null
+    mapHolder.lastMarkerDataKey = null
+    mapHolder.lastRenderedViewportKey = null
+    mapHolder.lastRenderedMarkerZoom = null
+    mapHolder.selectedMarker = null
+}
+
+private fun buildVisibleRestaurants(
+    mapData: TierMapData,
+    currentZoom: Int,
+    viewportBounds: LatLngBounds,
+): List<TierRestaurant> {
+    val unique = LinkedHashMap<Long, TierRestaurant>()
+
+    fun addIfVisible(restaurant: TierRestaurant) {
+        if (!isVisibleInViewport(viewportBounds, restaurant)) return
+        unique.putIfAbsent(restaurant.restaurantId, restaurant)
+    }
+
+    mapData.favoriteTierRestaurants.forEach(::addIfVisible)
+    mapData.tieredTierRestaurants.forEach(::addIfVisible)
+
+    mapData.nonTieredRestaurants
+        .asSequence()
+        .filter { it.zoom <= currentZoom }
+        .flatMap { it.tierRestaurants.asSequence() }
+        .forEach(::addIfVisible)
+
+    return unique.values.toList()
+}
+
+private fun createRestaurantMarker(
+    map: NaverMap,
+    restaurant: TierRestaurant,
+    selectedRestaurantId: Long?,
+    onRestaurantSelected: (Long) -> Unit,
+    restaurantMarkers: MutableList<Marker>,
+    markerRestaurantMap: MutableMap<Marker, TierRestaurant>,
+    restaurantIdMarkerMap: MutableMap<Long, Marker>,
+    markerSizes: MarkerSizes,
+) {
+    val isSelected = selectedRestaurantId == restaurant.restaurantId
+
+    val marker = Marker().apply {
+        position = LatLng(restaurant.latitude, restaurant.longitude)
+
+        icon = if (isSelected) {
+            getSelectedMarkerIcon(restaurant)
+        } else {
+            getMarkerIcon(restaurant)
+        }
+
+        applyMarkerSize(
+            marker = this,
+            restaurant = restaurant,
+            isSelected = isSelected,
+            markerSizes = markerSizes,
+        )
+
+        this.map = map
+
+        zIndex = if (isSelected) {
+            10
+        } else if (restaurant.isFavorite) {
+            5
+        } else {
+            when (restaurant.mainTier) {
+                1 -> 4
+                2 -> 3
+                3 -> 2
+                4 -> 1
+                else -> 0
+            }
+        }
+
+        tag = restaurant
+
+        setOnClickListener {
+            onRestaurantSelected(restaurant.restaurantId)
+            true
+        }
+    }
+
+    restaurantMarkers.add(marker)
+    markerRestaurantMap[marker] = restaurant
+    restaurantIdMarkerMap[restaurant.restaurantId] = marker
+}
+
+private fun drawPolygonAndPolylineOverlays(
+    map: NaverMap,
+    mapData: TierMapData,
+    mapHolder: MapHolder,
+    outlineColor: Int,
+) {
     mapData.solidPolygonCoordsList.forEach { line ->
         if (line.isNotEmpty()) {
             val coords = line.map { LatLng(it.latitude, it.longitude) }
@@ -338,139 +623,6 @@ private fun updateMap(
             mapHolder.polygonOverlays.add(polygon)
         }
     }
-
-    fun addMarker(r: TierRestaurant) {
-        createRestaurantMarker(
-            map = map,
-            restaurant = r,
-            selectedRestaurantId = selectedRestaurantId,
-            onRestaurantSelected = onRestaurantSelected,
-            restaurantMarkers = mapHolder.restaurantMarkers,
-            tierMarkerSize = tierMarkerSize,
-        )
-    }
-
-    mapData.favoriteTierRestaurants.forEach(::addMarker)
-    mapData.tieredTierRestaurants.forEach(::addMarker)
-
-    mapData.nonTieredRestaurants
-        .filter { it.zoom <= currentZoom }
-        .forEach { group ->
-            group.tierRestaurants.forEach(::addMarker)
-        }
-
-    mapHolder.selectedMarker = mapHolder.restaurantMarkers
-        .firstOrNull { (it.tag as? TierRestaurant)?.restaurantId == selectedRestaurantId }
-}
-
-private fun updateSelectedMarkerOnly(
-    mapHolder: MapHolder,
-    selectedRestaurantId: Long?,
-    tierMarkerSize: Int,
-) {
-    val prev = mapHolder.selectedMarker
-    val prevRestaurant = prev?.tag as? TierRestaurant
-
-    if (prev != null && prevRestaurant != null) {
-        prev.icon = getMarkerIcon(prevRestaurant)
-        prev.zIndex = if (prevRestaurant.isFavorite) {
-            5
-        } else {
-            when (prevRestaurant.mainTier) {
-                1 -> 4
-                2 -> 3
-                3 -> 2
-                4 -> 1
-                else -> 0
-            }
-        }
-
-        if (!prevRestaurant.isFavorite && prevRestaurant.mainTier in 1..4) {
-            prev.width = tierMarkerSize
-            prev.height = tierMarkerSize
-        }
-    }
-
-    val next = mapHolder.restaurantMarkers
-        .firstOrNull { (it.tag as? TierRestaurant)?.restaurantId == selectedRestaurantId }
-
-    val nextRestaurant = next?.tag as? TierRestaurant
-    if (next != null && nextRestaurant != null) {
-        next.icon = getSelectedMarkerIcon(nextRestaurant)
-        next.zIndex = 10
-
-        if (!nextRestaurant.isFavorite && nextRestaurant.mainTier in 1..4) {
-            val selectedSize = (tierMarkerSize * 1.2f).toInt()
-            next.width = selectedSize
-            next.height = selectedSize
-        }
-    }
-
-    mapHolder.selectedMarker = next
-}
-
-private fun clearOverlaysAndMarkers(
-    polygonOverlays: MutableList<PolygonOverlay>,
-    polylineOverlays: MutableList<PolylineOverlay>,
-    restaurantMarkers: MutableList<Marker>,
-) {
-    polygonOverlays.forEach { it.map = null }
-    polygonOverlays.clear()
-    polylineOverlays.forEach { it.map = null }
-    polylineOverlays.clear()
-    restaurantMarkers.forEach { it.map = null }
-    restaurantMarkers.clear()
-}
-
-private fun createRestaurantMarker(
-    map: NaverMap,
-    restaurant: TierRestaurant,
-    selectedRestaurantId: Long?,
-    onRestaurantSelected: (Long) -> Unit,
-    restaurantMarkers: MutableList<Marker>,
-    tierMarkerSize: Int,
-) {
-    val isSelected = selectedRestaurantId == restaurant.restaurantId
-
-    val marker = Marker().apply {
-        position = LatLng(restaurant.latitude, restaurant.longitude)
-
-        icon = if (isSelected) {
-            getSelectedMarkerIcon(restaurant)
-        } else {
-            getMarkerIcon(restaurant)
-        }
-
-        if (!restaurant.isFavorite && restaurant.mainTier in 1..4) {
-            width = tierMarkerSize
-            height = tierMarkerSize
-        }
-
-        this.map = map
-
-        zIndex = if (isSelected) {
-            10
-        } else if (restaurant.isFavorite) {
-            5
-        } else {
-            when (restaurant.mainTier) {
-                1 -> 4
-                2 -> 3
-                3 -> 2
-                4 -> 1
-                else -> 0
-            }
-        }
-
-        tag = restaurant
-
-        setOnClickListener {
-            onRestaurantSelected(restaurant.restaurantId)
-            true
-        }
-    }
-
-    restaurantMarkers.add(marker)
 }
 
 private fun getSelectedMarkerIcon(restaurant: TierRestaurant): OverlayImage {
@@ -503,7 +655,7 @@ private fun getMarkerIcon(restaurant: TierRestaurant): OverlayImage {
     return if (restaurant.isFavorite) {
         OverlayImage.fromResource(CoreRes.drawable.ic_saved)
     } else if (restaurant.partnershipInfo.isNotEmpty()) {
-        OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_marker_partnership)
+        OverlayImage.fromResource(R.drawable.ic_marker_partnership)
     } else {
         if (restaurant.isTempTier) {
             when (restaurant.mainTier) {
@@ -511,7 +663,7 @@ private fun getMarkerIcon(restaurant: TierRestaurant): OverlayImage {
                 2 -> OverlayImage.fromResource(CoreRes.drawable.ic_temp_tier_2)
                 3 -> OverlayImage.fromResource(CoreRes.drawable.ic_temp_tier_3)
                 4 -> OverlayImage.fromResource(CoreRes.drawable.ic_temp_tier_4)
-                else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_marker_none)
+                else -> OverlayImage.fromResource(R.drawable.ic_marker_none)
             }
         } else {
             when (restaurant.mainTier) {
@@ -519,7 +671,7 @@ private fun getMarkerIcon(restaurant: TierRestaurant): OverlayImage {
                 2 -> OverlayImage.fromResource(CoreRes.drawable.ic_tier_2)
                 3 -> OverlayImage.fromResource(CoreRes.drawable.ic_tier_3)
                 4 -> OverlayImage.fromResource(CoreRes.drawable.ic_tier_4)
-                else -> OverlayImage.fromResource(com.kus.feature.tier.R.drawable.ic_marker_none)
+                else -> OverlayImage.fromResource(R.drawable.ic_marker_none)
             }
         }
     }
