@@ -1,6 +1,6 @@
 #include "Secrets.xcconfig"
 
-PRODUCT_NAME=Kustaurant
+PRODUCT_NAME=쿠스토랑
 PRODUCT_BUNDLE_IDENTIFIER=kustaurant.Kustaurant
 
 CURRENT_PROJECT_VERSION=1
