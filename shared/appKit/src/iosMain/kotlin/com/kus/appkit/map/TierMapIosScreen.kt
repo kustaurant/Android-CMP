@@ -157,19 +157,80 @@ fun TierMapIosScreen(
                     outlineColor = outlineUiColor,
                 )
 
+                val restoreCameraState = state.cameraState
                 val incomingBounds = data.visibleBounds
-                val shouldApplyBounds =
-                    !holder.didApplyInitialBounds || holder.lastVisibleBounds != incomingBounds
 
-                if (shouldApplyBounds && incomingBounds.size >= 4) {
-                    holder.suppressCameraIdle = true
-                    isCameraReady.value = false
+                holder.suppressCameraIdle = true
+                isCameraReady.value = false
 
-                    moveCameraToVisibleBoundsIos(mapView, incomingBounds) {
+                when {
+                    restoreCameraState != null -> {
+                        moveCameraToCameraStateIos(mapView, restoreCameraState) {
+                            val currentZoom = restoreCameraState.zoom.toInt()
+                            currentZoomState.intValue = currentZoom
+                            holder.lastCameraState = restoreCameraState
+                            holder.didApplyInitialBounds = true
+                            holder.suppressCameraIdle = false
+                            isCameraReady.value = true
+
+                            refreshVisibleMarkersIos(
+                                mapView = mapView,
+                                mapData = data,
+                                currentZoom = currentZoom,
+                                mapHolder = holder,
+                                selectedRestaurantId = state.selectedRestaurantId,
+                                onRestaurantSelected = latestOnRestaurantSelected,
+                                tierMarkerSize = tierMarkerSize,
+                            )
+                        }
+                    }
+
+                    incomingBounds.size >= 4 -> {
+                        val shouldApplyBounds =
+                            !holder.didApplyInitialBounds || holder.lastVisibleBounds != incomingBounds
+
+                        if (shouldApplyBounds) {
+                            moveCameraToVisibleBoundsIos(mapView, incomingBounds) {
+                                val currentZoom = mapView.cameraPosition.zoom.toInt()
+                                currentZoomState.intValue = currentZoom
+
+                                holder.lastVisibleBounds = incomingBounds
+                                holder.didApplyInitialBounds = true
+                                holder.suppressCameraIdle = false
+                                isCameraReady.value = true
+
+                                refreshVisibleMarkersIos(
+                                    mapView = mapView,
+                                    mapData = data,
+                                    currentZoom = currentZoom,
+                                    mapHolder = holder,
+                                    selectedRestaurantId = state.selectedRestaurantId,
+                                    onRestaurantSelected = latestOnRestaurantSelected,
+                                    tierMarkerSize = tierMarkerSize,
+                                )
+                            }
+                        } else {
+                            val currentZoom = mapView.cameraPosition.zoom.toInt()
+                            currentZoomState.intValue = currentZoom
+                            holder.didApplyInitialBounds = true
+                            holder.suppressCameraIdle = false
+                            isCameraReady.value = true
+
+                            refreshVisibleMarkersIos(
+                                mapView = mapView,
+                                mapData = data,
+                                currentZoom = currentZoom,
+                                mapHolder = holder,
+                                selectedRestaurantId = state.selectedRestaurantId,
+                                onRestaurantSelected = latestOnRestaurantSelected,
+                                tierMarkerSize = tierMarkerSize,
+                            )
+                        }
+                    }
+
+                    else -> {
                         val currentZoom = mapView.cameraPosition.zoom.toInt()
                         currentZoomState.intValue = currentZoom
-
-                        holder.lastVisibleBounds = incomingBounds
                         holder.didApplyInitialBounds = true
                         holder.suppressCameraIdle = false
                         isCameraReady.value = true
@@ -184,22 +245,6 @@ fun TierMapIosScreen(
                             tierMarkerSize = tierMarkerSize,
                         )
                     }
-                } else {
-                    val currentZoom = mapView.cameraPosition.zoom.toInt()
-                    currentZoomState.intValue = currentZoom
-                    holder.didApplyInitialBounds = true
-
-                    refreshVisibleMarkersIos(
-                        mapView = mapView,
-                        mapData = data,
-                        currentZoom = currentZoom,
-                        mapHolder = holder,
-                        selectedRestaurantId = state.selectedRestaurantId,
-                        onRestaurantSelected = latestOnRestaurantSelected,
-                        tierMarkerSize = tierMarkerSize,
-                    )
-
-                    isCameraReady.value = true
                 }
             }
 
@@ -216,31 +261,6 @@ fun TierMapIosScreen(
             selectedRestaurantId = state.selectedRestaurantId,
             tierMarkerSize = tierMarkerSize,
         )
-    }
-
-    LaunchedEffect(state.cameraState) {
-        val cameraState = state.cameraState ?: holder.lastCameraState ?: return@LaunchedEffect
-        val data = (state.map as? UiState.Success)?.data ?: return@LaunchedEffect
-        if (!holder.didApplyInitialBounds) return@LaunchedEffect
-
-        holder.suppressCameraIdle = true
-
-        moveCameraToCameraStateIos(mapView, cameraState) {
-            val currentZoom = cameraState.zoom.toInt()
-            currentZoomState.intValue = currentZoom
-            holder.lastCameraState = cameraState
-            holder.suppressCameraIdle = false
-
-            refreshVisibleMarkersIos(
-                mapView = mapView,
-                mapData = data,
-                currentZoom = currentZoom,
-                mapHolder = holder,
-                selectedRestaurantId = state.selectedRestaurantId,
-                onRestaurantSelected = latestOnRestaurantSelected,
-                tierMarkerSize = tierMarkerSize,
-            )
-        }
     }
 
     val selectedRestaurant: TierRestaurant? = remember(state.map, state.selectedRestaurantId) {

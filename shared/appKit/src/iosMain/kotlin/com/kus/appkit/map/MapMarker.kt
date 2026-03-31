@@ -94,7 +94,7 @@ fun applyMarkerAppearanceIos(
     tierMarkerSize: Double,
 ) {
     val isSaved = restaurant.isFavorite
-    val isTier = restaurant.mainTier in 1..4 && !isSaved
+    val isTier = restaurant.mainTier in 1..4 && restaurant.partnershipInfo.isEmpty()
     val scale = if (isSelected) SELECTED_TIER_MARKER_SCALE else 1.0
 
     marker.iconImage = if (isSelected) {
@@ -104,15 +104,15 @@ fun applyMarkerAppearanceIos(
     }
 
     when {
+        isSaved -> {
+            marker.width = SAVED_MARKER_WIDTH * scale
+            marker.height = SAVED_MARKER_HEIGHT * scale
+        }
+
         isTier -> {
             val size = tierMarkerSize * scale
             marker.width = size
             marker.height = size
-        }
-
-        isSaved -> {
-            marker.width = SAVED_MARKER_WIDTH * scale
-            marker.height = SAVED_MARKER_HEIGHT * scale
         }
 
         else -> {
@@ -288,7 +288,7 @@ fun getSelectedMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
     val imageName = if (restaurant.isTempTier) {
         when {
             restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_tier_partnership_selected"
+            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership_selected"
             restaurant.mainTier == 1 -> "ic_temp_tier_1_selected"
             restaurant.mainTier == 2 -> "ic_temp_tier_2_selected"
             restaurant.mainTier == 3 -> "ic_temp_tier_3_selected"
@@ -298,7 +298,7 @@ fun getSelectedMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
     } else {
         when {
             restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_tier_partnership_selected"
+            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership_selected"
             restaurant.mainTier == 1 -> "ic_tier_1_selected"
             restaurant.mainTier == 2 -> "ic_tier_2_selected"
             restaurant.mainTier == 3 -> "ic_tier_3_selected"

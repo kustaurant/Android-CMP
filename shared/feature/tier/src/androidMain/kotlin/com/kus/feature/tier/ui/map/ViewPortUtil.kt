@@ -17,6 +17,7 @@ fun expandedContentBounds(
     bounds: LatLngBounds,
     extraRatio: Double = 0.15,
 ): LatLngBounds {
+    require(extraRatio > 0) { "extraRatio must be >= 0" }
     val south = bounds.southWest.latitude
     val west = bounds.southWest.longitude
     val north = bounds.northEast.latitude
@@ -32,6 +33,7 @@ fun expandedContentBounds(
 }
 
 fun LatLngBounds.toViewportKey(precision: Int = 4): String {
+    require(precision > 0) { "precision must be >= 0" }
     fun Double.q(): String = "%.${precision}f".format(Locale.US, this)
 
     return listOf(

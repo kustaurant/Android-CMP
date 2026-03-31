@@ -34,8 +34,8 @@ fun rememberMarkerSizes(): MarkerSizes {
             val defaultWidth = (tierWidth * (15f / 25f)).toInt()
             val defaultHeight = (tierHeight * (20f / 25f)).toInt()
 
-            val savedWidth = (tierWidth * (18.5f / 25f)).toInt()
-            val savedHeight = (tierHeight * (22.5f / 25f)).toInt()
+            val savedWidth = (tierWidth * (25f / 25f)).toInt()
+            val savedHeight = (tierHeight * (27f / 25f)).toInt()
 
             MarkerSizes(
                 defaultWidth = defaultWidth,
