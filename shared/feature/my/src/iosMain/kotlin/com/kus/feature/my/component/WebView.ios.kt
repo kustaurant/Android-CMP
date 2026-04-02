@@ -1,6 +1,10 @@
 package com.kus.feature.my.component
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitView
 import kotlinx.cinterop.ObjCSignatureOverride
@@ -17,47 +21,46 @@ actual fun WebView(
     onLoadingChanged: (Boolean) -> Unit,
     modifier: Modifier,
 ) {
-    var webViewRef: WKWebView? = null
+    val webView = remember {
+        WKWebView().apply {
+            navigationDelegate = object : NSObject(), WKNavigationDelegateProtocol {
 
-    UIKitView(
-        modifier = modifier,
-        factory = {
-            WKWebView().apply {
-                webViewRef = this
-
-                navigationDelegate = object : NSObject(), WKNavigationDelegateProtocol {
-
-                    @ObjCSignatureOverride
-                    override fun webView(
-                        webView: WKWebView,
-                        didStartProvisionalNavigation: WKNavigation?
-                    ) {
-                        onLoadingChanged(true)
-                    }
-
-                    @ObjCSignatureOverride
-                    override fun webView(
-                        webView: WKWebView,
-                        didFinishNavigation: WKNavigation?
-                    ) {
-                        onLoadingChanged(false)
-                    }
+                @ObjCSignatureOverride
+                override fun webView(
+                    webView: WKWebView,
+                    didStartProvisionalNavigation: WKNavigation?
+                ) {
+                    onLoadingChanged(true)
                 }
 
-                loadRequest(
-                    NSURLRequest.requestWithURL(NSURL.URLWithString(url)!!)
-                )
-            }
-        },
-        update = {
-            webViewRef?.let {
-                val currentUrl = it.URL?.absoluteString
-                if (currentUrl != url) {
-                    it.loadRequest(
-                        NSURLRequest.requestWithURL(NSURL.URLWithString(url)!!)
-                    )
+                @ObjCSignatureOverride
+                override fun webView(
+                    webView: WKWebView,
+                    didFinishNavigation: WKNavigation?
+                ) {
+                    onLoadingChanged(false)
                 }
             }
         }
+    }
+
+    LaunchedEffect(url) {
+        webView.loadRequest(
+            NSURLRequest.requestWithURL(NSURL.URLWithString(url)!!)
+        )
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            webView.stopLoading()
+            webView.navigationDelegate = null
+            webView.removeFromSuperview()
+        }
+    }
+
+    UIKitView(
+        modifier = modifier.fillMaxSize(),
+        factory = { webView },
+        update = { }
     )
 }
