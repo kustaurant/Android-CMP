@@ -69,12 +69,12 @@ internal fun FavoriteRestaurantScreen(
                     }
 
                     item {
-                        Spacer(Modifier.height(30.dp))
+                        Spacer(Modifier.height(10.dp))
                     }
 
                     itemsIndexed(restaurants) { index, item ->
                         Box(
-                            modifier = Modifier.padding(horizontal = 20.dp)
+                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 20.dp)
                         ) {
                             KusFavoriteResThumbnail(
                                 tier = item.mainTier,
@@ -85,6 +85,10 @@ internal fun FavoriteRestaurantScreen(
                                 onClick = { onItemClick(item.restaurantId.toLong()) },
                             )
                         }
+                    }
+
+                    item {
+                        Spacer(Modifier.height(20.dp))
                     }
                 }
             }

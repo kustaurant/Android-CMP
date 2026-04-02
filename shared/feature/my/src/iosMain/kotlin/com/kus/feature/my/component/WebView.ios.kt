@@ -1,6 +1,10 @@
 package com.kus.feature.my.component
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitView
 import kotlinx.cinterop.ObjCSignatureOverride
@@ -17,12 +21,9 @@ actual fun WebView(
     onLoadingChanged: (Boolean) -> Unit,
     modifier: Modifier,
 ) {
-    UIKitView(
-        modifier = modifier,
-        factory = {
-            val webView = WKWebView()
-
-            webView.navigationDelegate = object : NSObject(), WKNavigationDelegateProtocol {
+    val webView = remember {
+        WKWebView().apply {
+            navigationDelegate = object : NSObject(), WKNavigationDelegateProtocol {
 
                 @ObjCSignatureOverride
                 override fun webView(
@@ -40,14 +41,26 @@ actual fun WebView(
                     onLoadingChanged(false)
                 }
             }
-
-            val request = NSURLRequest.requestWithURL(
-                NSURL.URLWithString(url)!!
-            )
-
-            webView.loadRequest(request)
-
-            webView
         }
+    }
+
+    LaunchedEffect(url) {
+        webView.loadRequest(
+            NSURLRequest.requestWithURL(NSURL.URLWithString(url)!!)
+        )
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            webView.stopLoading()
+            webView.navigationDelegate = null
+            webView.removeFromSuperview()
+        }
+    }
+
+    UIKitView(
+        modifier = modifier.fillMaxSize(),
+        factory = { webView },
+        update = { }
     )
 }

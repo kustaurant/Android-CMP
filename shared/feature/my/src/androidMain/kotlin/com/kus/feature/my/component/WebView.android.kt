@@ -13,10 +13,13 @@ actual fun WebView(
     onLoadingChanged: (Boolean) -> Unit,
     modifier: Modifier,
 ) {
+    var webView: WebView? = null
+
     AndroidView(
         modifier = modifier,
         factory = { context ->
             WebView(context).apply {
+                webView = this
 
                 settings.javaScriptEnabled = true
 
@@ -39,6 +42,7 @@ actual fun WebView(
 
                 loadUrl(url)
             }
-        }
+        },
+        update = { if (it.url != url) it.loadUrl(url) },
     )
 }

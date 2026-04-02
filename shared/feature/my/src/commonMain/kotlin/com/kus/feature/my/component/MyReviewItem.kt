@@ -51,8 +51,8 @@ internal fun MyReviewItem(
     restaurantName: String,
     restaurantImgURL: String,
     evaluationScore: Float,
-    evaluationBody: String,
-    evaluationItemScores: List<String>,
+    evaluationBody: String?,
+    evaluationItemScores: List<String>?,
     imgUrl: String? = null,
     onItemClick: () -> Unit,
 ) {
@@ -124,23 +124,27 @@ internal fun MyReviewItem(
             )
         }
 
-        ExpandableSeeMoreText(
-            text = evaluationBody,
-            textStyle = bodyTextStyle,
-            moreTextStyle = bodyMoreTextStyle,
-            isExpanded = isBodyExpanded,
-            maxCollapsedLines = 4,
-            onExpandedChange = { isBodyExpanded = it },
-            modifier = Modifier.padding(top = 10.dp),
-        )
+        if (!evaluationBody.isNullOrBlank()) {
+            ExpandableSeeMoreText(
+                text = evaluationBody,
+                textStyle = bodyTextStyle,
+                moreTextStyle = bodyMoreTextStyle,
+                isExpanded = isBodyExpanded,
+                maxCollapsedLines = 4,
+                onExpandedChange = { isBodyExpanded = it },
+                modifier = Modifier.padding(top = 10.dp),
+            )
 
-        Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(6.dp))
+        }
+
+        Spacer(Modifier.height(4.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            evaluationItemScores.forEach { item ->
+            evaluationItemScores?.forEach { item ->
                 KusChip(
                     chipName = item,
                     isSelected = false,
