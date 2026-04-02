@@ -169,12 +169,12 @@ fun DetailRestInfo(
                 modifier = Modifier.padding(top = 20.dp)
             )
 
-            DetailRestInfoMore(
-                title = "제휴정보",
-                content = partnershipInfo,
-                enableSeeMore = true,
-                modifier = Modifier.padding(top = 12.dp)
-            )
+//            DetailRestInfoMore(
+//                title = "제휴정보",
+//                content = partnershipInfo,
+//                enableSeeMore = true,
+//                modifier = Modifier.padding(top = 12.dp)
+//            )
         }
 
         Text(

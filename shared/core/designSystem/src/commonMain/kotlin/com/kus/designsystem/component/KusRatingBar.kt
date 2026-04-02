@@ -1,6 +1,7 @@
 package com.kus.designsystem.component
 
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -49,6 +50,16 @@ fun KusRatingBar(
     var currentRating by remember { mutableFloatStateOf(rating.coerceIn(0f, 5f)) }
     var containerWidth by remember { mutableIntStateOf(0) }
 
+    fun updateRatingFromPosition(x: Float) {
+        if (containerWidth <= 0) return
+        val newRating = (x / containerWidth * 5).coerceIn(0.5f, 5f)
+        val roundedRating = (round(newRating * 2) / 2).coerceIn(0.5f, 5f)
+        if (roundedRating != currentRating) {
+            currentRating = roundedRating
+            onRatingChange(roundedRating)
+        }
+    }
+
     LaunchedEffect(rating, isEnabled) {
         if (!isEnabled) {
             currentRating = rating.coerceIn(0f, 5f)
@@ -63,18 +74,13 @@ fun KusRatingBar(
             .then(
                 if (isEnabled) {
                     Modifier.pointerInput(isEnabled) {
+                        detectTapGestures { offset ->
+                            updateRatingFromPosition(offset.x)
+                        }
+                    }.pointerInput(isEnabled) {
                         detectDragGestures(
                             onDrag = { change, _ ->
-                                val x = change.position.x
-                                if (containerWidth > 0) {
-                                    val newRating = (x / containerWidth * 5).coerceIn(0.5f, 5f)
-                                    // 0.5 단위 반올림
-                                    val roundedRating = (round(newRating * 2) / 2).coerceIn(0.5f, 5f)
-                                    if (roundedRating != currentRating) {
-                                        currentRating = roundedRating
-                                        onRatingChange(roundedRating)
-                                    }
-                                }
+                                updateRatingFromPosition(change.position.x)
                             }
                         )
                     }

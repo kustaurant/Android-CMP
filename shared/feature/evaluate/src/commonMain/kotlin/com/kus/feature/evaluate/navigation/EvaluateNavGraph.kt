@@ -21,6 +21,7 @@ data class Evaluate(
 )
 
 fun NavGraphBuilder.evaluateNavGraph(
+    onShowMessage: (String) -> Unit,
     onBackClick: () -> Unit,
     onSubmitSuccess: () -> Unit,
 ) {
@@ -39,6 +40,7 @@ fun NavGraphBuilder.evaluateNavGraph(
                 situationList = ArrayList(evaluate.situationList),
                 partnershipInfo = evaluate.partnershipInfo,
             ),
+            onShowMessage = onShowMessage,
             onBackClick = onBackClick,
             onSubmitSuccess = onSubmitSuccess,
         )

@@ -53,32 +53,33 @@ fun KusFavoriteResThumbnail(
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(8.dp)
-            .noRippleClickable { onClick() }
+            .noRippleClickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(11.dp))
+                .size(60.dp)
+                .clip(RoundedCornerShape(11.dp)),
         ) {
             if (restThumbnail.isNullOrBlank()) {
                 Image(
                     painter = painterResource(Res.drawable.ic_kus_blank),
                     contentDescription = "음식점 사진이 없을 시, 표시되는 사진입니다.",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(60.dp)
                 )
             } else {
                 KamelImage(
                     resource = asyncPainterResource(restThumbnail),
                     contentDescription = "음식점 사진입니다.",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(80.dp),
+                    modifier = Modifier.size(60.dp),
                     onFailure = {
                         Image(
                             painter = painterResource(Res.drawable.ic_kus_blank),
                             contentDescription = "음식점 사진이 없을 시, 표시되는 사진입니다.",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(80.dp)
+                            modifier = Modifier.size(60.dp)
                         )
                     }
                 )
@@ -97,7 +98,7 @@ fun KusFavoriteResThumbnail(
         Column(
             modifier = Modifier
                 .padding(start = 17.dp, end = 8.dp)
-                .weight(1f)
+                .weight(1f),
         ) {
             Text(
                 text = restName,
@@ -107,8 +108,8 @@ fun KusFavoriteResThumbnail(
             )
 
             Row(
-                modifier = Modifier.padding(top = 5.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.padding(top = 3.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     painterResource(Res.drawable.ic_location),

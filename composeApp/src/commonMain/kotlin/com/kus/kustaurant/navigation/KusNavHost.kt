@@ -215,9 +215,11 @@ fun KusNavHost(
                     )
                 )
             },
+            onShowMessage = onShowMessage,
         )
 
         evaluateNavGraph(
+            onShowMessage = onShowMessage,
             onBackClick = { navController.popBackStack() },
             onSubmitSuccess = {
                 navController.previousBackStackEntry

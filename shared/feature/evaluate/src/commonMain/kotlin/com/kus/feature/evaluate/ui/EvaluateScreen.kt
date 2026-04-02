@@ -59,6 +59,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun EvaluateRoute(
     restaurantId: Long,
     restaurant: EvaluateRestaurant,
+    onShowMessage: (String) -> Unit,
     onBackClick: () -> Unit,
     onSubmitSuccess: () -> Unit,
     viewModel: EvaluateViewModel = koinViewModel(),
@@ -72,6 +73,7 @@ fun EvaluateRoute(
 
     LaunchedEffect(uiState.submitState) {
         if (uiState.submitState is UiState.Success) {
+            onShowMessage("평가를 완료했어요.")
             onSubmitSuccess()
         }
     }

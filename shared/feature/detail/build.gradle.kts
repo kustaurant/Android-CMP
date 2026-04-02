@@ -57,6 +57,7 @@ kotlin {
                 implementation(project(":shared:core:presentation"))
                 implementation(project(":shared:domain:detail"))
                 implementation(project(":shared:domain:model"))
+                implementation(project(":shared:domain:auth"))
             }
             resources.srcDirs("src/commonMain/composeResources")
         }
