@@ -211,6 +211,9 @@ fun MainScreen(
 
             drawNavGraph(
                 navigateToDrawResult = { route -> mainNavController.navigate(route) },
+                navigateToDetail = { restaurantId ->
+                    rootNavController.navigateToDetail(restaurantId)
+                },
                 onBackClick = { mainNavController.popBackStack() },
             )
 

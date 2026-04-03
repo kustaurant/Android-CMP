@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kus.designsystem.component.KusButton
+import com.kus.designsystem.util.noRippleClickable
 import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.component.KusRatingBar
 import com.kus.designsystem.component.KusTopBar
@@ -52,6 +53,7 @@ fun DrawResultScreen(
     initialLocations: Set<Location>,
     initialCuisines: Set<Cuisine>,
     onBackClick: () -> Unit,
+    onDetailClick: (Long) -> Unit,
     viewModel: DrawResultViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -219,6 +221,11 @@ fun DrawResultScreen(
                             onAnimationFinished = {
                                 currentDisplayIndex = randomIndex
                                 viewModel.markDrawAnimationPlayed()
+                            },
+                            onCardClick = {
+                                if (uiState.hasPlayedDrawAnimation) {
+                                    onDetailClick(displayRestaurant.restaurantId.toLong())
+                                }
                             }
                         )
 
@@ -235,7 +242,14 @@ fun DrawResultScreen(
                         Text(
                             text = displayRestaurant.restaurantName,
                             style = KusTheme.typography.type20b,
-                            color = KusTheme.colors.c_323232
+                            color = KusTheme.colors.c_323232,
+                            modifier = if (uiState.hasPlayedDrawAnimation) {
+                                Modifier.noRippleClickable {
+                                    onDetailClick(displayRestaurant.restaurantId.toLong())
+                                }
+                            } else {
+                                Modifier
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
