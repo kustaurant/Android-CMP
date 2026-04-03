@@ -20,6 +20,7 @@ data class DrawResult(
 
 fun NavGraphBuilder.drawNavGraph(
     navigateToDrawResult: (DrawResult) -> Unit,
+    navigateToDetail: (Long) -> Unit,
     onBackClick: () -> Unit,
 ) {
     composable<Draw> {
@@ -54,6 +55,7 @@ fun NavGraphBuilder.drawNavGraph(
             initialLocations = payload.locations.toSet(),
             initialCuisines = payload.cuisines.toSet(),
             onBackClick = onBackClick,
+            onDetailClick = navigateToDetail,
         )
     }
 }

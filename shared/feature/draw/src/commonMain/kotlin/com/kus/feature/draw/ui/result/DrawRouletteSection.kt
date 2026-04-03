@@ -34,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.kus.designsystem.component.KusLoadingAnimation
+import com.kus.designsystem.util.noRippleClickable
 import com.kus.designsystem.theme.KusTheme
 import com.kus.domain.draw.model.DrawRestaurant
 import io.kamel.core.Resource
@@ -52,6 +53,7 @@ fun DrawRouletteSection(
     onCurrentIndexChanged: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
     onAnimationFinished: () -> Unit = {},
+    onCardClick: () -> Unit = {},
 ) {
     val preloadedResources = items.map { item ->
         key(item.restaurantImgUrl) {
@@ -214,6 +216,7 @@ fun DrawRouletteSection(
                         scaleX = 0.96f + (0.04f * selectedAlpha.value)
                         scaleY = 0.96f + (0.04f * selectedAlpha.value)
                     }
+                    .noRippleClickable { onCardClick() }
             ) {
                 DrawRestaurantCard(
                     item = items[targetIndex],
