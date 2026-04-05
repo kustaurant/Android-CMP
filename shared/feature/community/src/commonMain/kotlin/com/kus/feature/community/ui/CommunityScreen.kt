@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -28,7 +27,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -42,14 +44,13 @@ import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import rememberFabVisibleOnScrollUp
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CommunityScreen(
     modifier: Modifier = Modifier,
     onShowMessage: (String) -> Unit = {},
     onPostClick: (Long) -> Unit = {},
     onBackClick: () -> Unit = {},
-    onSearchClick: () -> Unit = {},
-    onAlarmClick: () -> Unit = {},
     onWriteClick: () -> Unit = {},
 ) {
     val viewModel: CommunityViewModel = koinViewModel()
@@ -64,6 +65,8 @@ fun CommunityScreen(
         CommunityTab.entries.indexOf(uiState.selectedTab).coerceAtLeast(0)
     }
 
+    BackHandler { onBackClick() }
+
     LaunchedEffect(uiState.toastMessage) {
         uiState.toastMessage?.let {
             onShowMessage(it)
@@ -71,12 +74,14 @@ fun CommunityScreen(
         }
     }
 
-    Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
-        topBar = {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             Column(
-                modifier.background(KusTheme.colors.c_FFFFFF)
+                modifier = Modifier.background(KusTheme.colors.c_FFFFFF)
             ) {
                 KusTopBar(
                     modifier = Modifier
@@ -98,56 +103,62 @@ fun CommunityScreen(
                     }
                 )
             }
-        },
-        floatingActionButton = {
-            val visible = (uiState.selectedTab == CommunityTab.POSTS) && showWriteFab
 
-            AnimatedVisibility(
-                visible = visible,
-                enter = fadeIn(animationSpec = tween(150)) +
-                        scaleIn(
-                            initialScale = 0.85f,
-                            animationSpec = tween(180, easing = FastOutSlowInEasing)
-                        ),
-                exit = fadeOut(animationSpec = tween(120)) +
-                        scaleOut(
-                            targetScale = 0.85f,
-                            animationSpec = tween(160, easing = FastOutSlowInEasing)
-                        )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
             ) {
-                WriteFab(onClick = {
+                when (uiState.selectedTab) {
+                    CommunityTab.POSTS -> CommunityListContent(
+                        uiState = uiState,
+                        boardExpanded = boardExpanded,
+                        onBoardExpandedChange = { boardExpanded = it },
+                        onPostClick = onPostClick,
+                        onBoardSelect = viewModel::changePostCategory,
+                        onSortChange = viewModel::changeListSortOrder,
+                        onLoadNext = viewModel::loadNextPosts,
+                        onRefresh = viewModel::fetchFirstPosts,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .nestedScroll(fabScrollConnection)
+                    )
+
+                    CommunityTab.RANKING -> RankingContent(
+                        uiState = uiState,
+                        onSortChange = viewModel::changeRankingSortType,
+                    )
+                }
+            }
+        }
+
+        val visible = (uiState.selectedTab == CommunityTab.POSTS) && showWriteFab
+
+        AnimatedVisibility(
+            visible = visible,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 16.dp),
+            enter = fadeIn(animationSpec = tween(150)) +
+                    scaleIn(
+                        initialScale = 0.85f,
+                        animationSpec = tween(180, easing = FastOutSlowInEasing)
+                    ),
+            exit = fadeOut(animationSpec = tween(120)) +
+                    scaleOut(
+                        targetScale = 0.85f,
+                        animationSpec = tween(160, easing = FastOutSlowInEasing)
+                    )
+        ) {
+            WriteFab(
+                onClick = {
                     scope.launch {
                         if (viewModel.requireLogin()) {
                             onWriteClick()
                         }
                     }
-                })
-            }
-        }
-    ) { inner ->
-        Box(
-            modifier = Modifier
-                .padding(inner)
-                .fillMaxSize()
-        ) {
-            when (uiState.selectedTab) {
-                CommunityTab.POSTS -> CommunityListContent(
-                    uiState = uiState,
-                    boardExpanded = boardExpanded,
-                    onBoardExpandedChange = { boardExpanded = it },
-                    onPostClick = onPostClick,
-                    onBoardSelect = viewModel::changePostCategory,
-                    onSortChange = viewModel::changeListSortOrder,
-                    onLoadNext = viewModel::loadNextPosts,
-                    onRefresh = viewModel::fetchFirstPosts,
-                    modifier = Modifier.nestedScroll(fabScrollConnection)
-                )
-
-                CommunityTab.RANKING -> RankingContent(
-                    uiState = uiState,
-                    onSortChange = viewModel::changeRankingSortType,
-                )
-            }
+                }
+            )
         }
     }
 }
