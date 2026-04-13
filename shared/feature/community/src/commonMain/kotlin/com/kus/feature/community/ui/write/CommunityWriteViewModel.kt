@@ -150,20 +150,22 @@ class CommunityWriteViewModel(
         }
     }
 
-    suspend fun uploadImageAndGetUrl(imagePath: String): String? {
+    suspend fun uploadImageAndGetUrl(imageBytes: ByteArray): String? {
         _uiState.update { it.copy(isImageUploading = true) }
 
         return runCatching {
-            postUploadImageUseCase(imagePath)
+            postUploadImageUseCase(imageBytes)
         }.onSuccess {
             _uiState.update { it.copy(isImageUploading = false) }
         }.onFailure { e ->
             _uiState.update { it.copy(isImageUploading = false) }
+
             val msg = when (e) {
-                is UploadImageException.TooLarge -> "이미지는 1MB 이하만 업로드 가능합니다."
+                is UploadImageException.TooLarge -> "이미지는 10MB 이하만 업로드 가능합니다."
                 is UploadImageException.ReadFailed -> "이미지를 읽을 수 없습니다."
                 else -> e.message ?: "업로드 중 오류가 발생했습니다."
             }
+
             _uiState.update { it.copy(toastMessage = msg) }
         }.getOrNull()
     }
