@@ -3,7 +3,6 @@ package com.kus.kustaurant
 import android.app.Application
 import com.kus.core.config.BuildKonfig
 import com.kus.data.auth.di.androidDataAuthModule
-import com.kus.data.community.di.androidDataCommunityModule
 import com.kus.data.firstLaunch.di.androidFirstLaunchModule
 import com.kus.feature.community.ui.di.androidFeatureCommunityModule
 import com.kus.kustaurant.di.initKoin
@@ -39,7 +38,7 @@ class KusApplication : Application() {
                 androidDataAuthModule,
                 androidTierMapPlatformModule,
                 androidFeatureCommunityModule,
-                androidDataCommunityModule)
+                )
         )
     }
 }

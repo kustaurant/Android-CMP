@@ -1,6 +1,5 @@
 package com.kus.data.community.repository
 
-import com.kus.data.community.PlatformImageResolver
 import com.kus.data.community.api.CommunityApi
 import com.kus.data.community.mapper.toDomain
 import com.kus.data.community.remote.request.PostCommentRequest
@@ -25,14 +24,12 @@ import com.kus.domain.community.repository.CommunityRepository
 class CommunityRepositoryImpl(
     private val communityApi: CommunityApi,
     private val deviceIdManager: DeviceIdManager,
-    private val resolver: PlatformImageResolver,
 ) : CommunityRepository {
 
-    override suspend fun postUploadImage(imagePath: String): String {
-        val resolved = resolver.resolve(imagePath)
+    override suspend fun postUploadImage(imageBytes: ByteArray): String {
         return communityApi.postCommunityUploadImage(
-            imageBytes = resolved.bytes,
-            fileName = resolved.fileName,
+            imageBytes = imageBytes,
+            fileName = "image.jpg"
         ).imgUrl
     }
 

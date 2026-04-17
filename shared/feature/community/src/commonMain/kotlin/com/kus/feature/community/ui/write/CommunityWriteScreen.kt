@@ -48,7 +48,7 @@ import com.kus.designsystem.theme.KusTheme
 import com.kus.designsystem.util.noRippleClickable
 import com.kus.domain.community.model.PostCategory
 import com.kus.feature.community.model.CommunityPostModifyPayload
-import com.kus.feature.community.ui.write.image.PlatformImagePicker
+import com.kus.feature.community.ui.write.image.rememberImagePicker
 import kotlinx.coroutines.launch
 import kustaurant.shared.core.designsystem.generated.resources.ic_arrow_back
 import org.jetbrains.compose.resources.painterResource
@@ -69,7 +69,6 @@ fun CommunityWriteScreen(
     onFinishModify: (CommunityPostModifyPayload) -> Unit,
     onShowMessage: (String) -> Unit,
     editorRenderer: CommunityEditorRenderer,
-    imagePicker: PlatformImagePicker,
 ) {
     val viewModel: CommunityWriteViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -128,14 +127,15 @@ fun CommunityWriteScreen(
 
     val scope = rememberCoroutineScope()
 
-    val onPickImageClick = {
-        imagePicker.pickImage { imagePath ->
-            if (imagePath == null) return@pickImage
-            scope.launch {
-                val url = viewModel.uploadImageAndGetUrl(imagePath) ?: return@launch
-                controller.insertImage(url)
-            }
+    val imagePicker = rememberImagePicker { bytes ->
+        scope.launch {
+            val url = viewModel.uploadImageAndGetUrl(bytes) ?: return@launch
+            controller.insertImage(url)
         }
+    }
+
+    val onPickImageClick = {
+        imagePicker.launch()
     }
 
     val titleText = if (uiState.isEditMode) "게시글 수정" else "게시글 작성"

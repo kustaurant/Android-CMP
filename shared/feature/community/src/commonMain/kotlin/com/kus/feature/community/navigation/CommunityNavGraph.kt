@@ -21,7 +21,6 @@ import com.kus.feature.community.ui.detail.CommunityDetailScreen
 import com.kus.feature.community.ui.detail.CommunityDetailViewModel
 import com.kus.feature.community.ui.write.CommunityEditorRenderer
 import com.kus.feature.community.ui.write.CommunityWriteScreen
-import com.kus.feature.community.ui.write.image.PlatformImagePickerFactory
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -109,8 +108,6 @@ fun NavGraphBuilder.communityFullscreenNavGraph(
 ) {
     composable<CommunityWrite> {
         val editorRenderer: CommunityEditorRenderer = koinInject()
-        val imagePickerFactory: PlatformImagePickerFactory = koinInject()
-        val imagePicker = imagePickerFactory.rememberPicker()
 
         CommunityWriteScreen(
             initial = null,
@@ -119,7 +116,6 @@ fun NavGraphBuilder.communityFullscreenNavGraph(
             onFinishModify = {},
             onShowMessage = onShowMessage,
             editorRenderer = editorRenderer,
-            imagePicker = imagePicker
         )
     }
 
@@ -130,8 +126,6 @@ fun NavGraphBuilder.communityFullscreenNavGraph(
         val payload = KusJson.json.decodeFromString<CommunityPostModifyPayload>(payloadJson)
 
         val editorRenderer: CommunityEditorRenderer = koinInject()
-        val imagePickerFactory: PlatformImagePickerFactory = koinInject()
-        val imagePicker = imagePickerFactory.rememberPicker()
 
         CommunityWriteScreen(
             initial = payload,
@@ -140,7 +134,6 @@ fun NavGraphBuilder.communityFullscreenNavGraph(
             onFinishModify = onPostModified,
             onShowMessage = onShowMessage,
             editorRenderer = editorRenderer,
-            imagePicker = imagePicker
         )
     }
 

@@ -37,7 +37,7 @@ interface CommunityRepository {
     ) : CommunityPost
 
     suspend fun postUploadImage(
-        imagePath : String
+        imageBytes: ByteArray
     ) : String
 
     suspend fun postPostDetailScrap(

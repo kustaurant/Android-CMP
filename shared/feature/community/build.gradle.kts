@@ -38,8 +38,6 @@ kotlin {
 
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.compose.ui.backhandler)
-
-
                 implementation(project(":shared:core:designSystem"))
                 implementation(project(":shared:core:presentation"))
                 implementation(project(":shared:core:logging"))
@@ -66,12 +64,16 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.koin.android)
                 implementation(libs.androidx.webkit)
+                implementation(libs.peekaboo.image.picker)
+
             }
         }
 
         iosMain {
             dependencies {
                 implementation(project(":shared:core:designSystem"))
+                implementation(libs.peekaboo.image.picker)
+
             }
         }
     }
