@@ -24,7 +24,7 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-fun creatApiHttpClient(
+fun createApiHttpClient(
     engine: HttpClientEngine,
     tokenManager: TokenManager,
     isDebug: Boolean = true,
@@ -38,7 +38,7 @@ fun creatApiHttpClient(
         expectSuccess = false
 
         if (isDebug) {
-            install(Logging) { logger = Logger.SIMPLE; level = LogLevel.BODY }
+            install(Logging) { logger = Logger.SIMPLE; level = LogLevel.ALL }
         }
 
         install(ContentNegotiation) {

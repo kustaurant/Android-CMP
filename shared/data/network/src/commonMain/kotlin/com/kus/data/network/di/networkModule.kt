@@ -1,6 +1,6 @@
 package com.kus.data.network.di
 
-import com.kus.data.network.creatApiHttpClient
+import com.kus.data.network.ApiClientProvider
 import com.kus.data.network.createBasicHttpClient
 import com.kus.data.network.provideEngine
 import io.ktor.client.HttpClient
@@ -15,8 +15,8 @@ val networkModule = module {
         )
     }
 
-    single(named("apiClient")) {
-        creatApiHttpClient(
+    single {
+        ApiClientProvider(
             engine = provideEngine(),
             tokenManager = get(),
             sessionEvents = get(),
@@ -25,5 +25,9 @@ val networkModule = module {
         )
     }
 
-    single<HttpClient> { get(named("apiClient")) }
+    factory(named("apiClient")) {
+        get<ApiClientProvider>().client
+    }
+
+    factory<HttpClient> { get(named("apiClient")) }
 }

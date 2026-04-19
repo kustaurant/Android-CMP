@@ -60,6 +60,7 @@ kotlin {
             implementation(project(":shared:core:config"))
             implementation(project(":shared:core:logging"))
             implementation(project(":shared:core:serialization"))
+            implementation(project(":shared:core:startup"))
 
             implementation(project(":shared:data:network"))
             implementation(project(":shared:data:firstLaunch"))

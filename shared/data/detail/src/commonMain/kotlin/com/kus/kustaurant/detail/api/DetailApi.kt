@@ -1,5 +1,6 @@
 package com.kus.kustaurant.detail.api
 
+import com.kus.data.network.ApiClientProvider
 import com.kus.kustaurant.detail.remote.response.CommentReactionResponse
 import com.kus.kustaurant.detail.remote.response.DetailResponse
 import com.kus.kustaurant.detail.remote.response.EvaluationReactionResponse
@@ -7,7 +8,6 @@ import com.kus.kustaurant.detail.remote.response.FavoriteResponse
 import com.kus.kustaurant.detail.remote.response.ReviewCommentResponse
 import com.kus.kustaurant.detail.remote.response.ReviewResponse
 import com.kus.kustaurant.detail.remote.request.PostCommentRequest
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -19,8 +19,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
 class DetailApi(
-    private val client: HttpClient,
+    private val apiClientProvider: ApiClientProvider,
 ) {
+    private val client get() = apiClientProvider.client
+
     suspend fun getRestaurantDetail(restaurantId: Long): DetailResponse {
         return client.get("/api/v2/restaurants/$restaurantId").body()
     }

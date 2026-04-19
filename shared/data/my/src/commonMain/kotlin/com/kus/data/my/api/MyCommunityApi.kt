@@ -2,13 +2,15 @@ package com.kus.data.my.api
 
 import com.kus.data.my.remote.response.MyCommentResponse
 import com.kus.data.my.remote.response.MyPostResponse
-import io.ktor.client.HttpClient
+import com.kus.data.network.ApiClientProvider
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 
 class MyCommunityApi(
-    private val client: HttpClient,
+    private val apiClientProvider: ApiClientProvider,
 ) {
+    private val client get() = apiClientProvider.client
+
     suspend fun getMyCommunityComments(): List<MyCommentResponse> {
         return client.get("/api/v2/auth/mypage/community/comments").body()
     }

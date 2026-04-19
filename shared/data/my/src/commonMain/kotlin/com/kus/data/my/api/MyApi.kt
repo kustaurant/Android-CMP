@@ -4,7 +4,7 @@ import com.kus.data.my.remote.response.MyInfoResponse
 import com.kus.data.my.remote.response.PatchProfileResponse
 import com.kus.data.my.remote.response.request.FeedbackRequest
 import com.kus.data.my.remote.response.request.PatchProfileInfoRequest
-import io.ktor.client.HttpClient
+import com.kus.data.network.ApiClientProvider
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
@@ -14,8 +14,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
 class MyApi(
-    private val client: HttpClient,
+    private val apiClientProvider: ApiClientProvider,
 ) {
+    private val client get() = apiClientProvider.client
+
     suspend fun getMyInfo(): MyInfoResponse {
         return client.get("/api/v2/mypage").body()
     }

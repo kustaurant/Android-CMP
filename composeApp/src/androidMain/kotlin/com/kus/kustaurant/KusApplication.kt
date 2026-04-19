@@ -2,6 +2,7 @@ package com.kus.kustaurant
 
 import android.app.Application
 import com.kus.core.config.BuildKonfig
+import com.kus.core.startup.AppInitializer
 import com.kus.data.auth.di.androidDataAuthModule
 import com.kus.data.community.di.androidDataCommunityModule
 import com.kus.data.firstLaunch.di.androidFirstLaunchModule
@@ -13,21 +14,23 @@ import com.navercorp.nid.NidOAuth
 import com.navercorp.nid.core.data.datastore.NidOAuthInitializingCallback
 import di.androidTierMapPlatformModule
 import org.koin.android.ext.koin.androidContext
+import org.koin.mp.KoinPlatform
 
 class KusApplication : Application() {
+
     override fun onCreate() {
         super.onCreate()
         initLogger()
         NaverMapSdk.getInstance(this).client =
             NaverMapSdk.NaverCloudPlatformClient(BuildKonfig.NAVER_MAP_CLIENT_ID)
- 
+
         NidOAuth.initialize(
             context = this,
             clientId = BuildKonfig.NAVER_CLIENT_ID,
             clientSecret = BuildKonfig.NAVER_CLIENT_SECRET,
             clientName = getString(R.string.app_name),
             callback = object : NidOAuthInitializingCallback {
-                override fun onSuccess() {  }
+                override fun onSuccess() {}
                 override fun onFailure(e: Exception) {}
             }
         )
@@ -39,7 +42,10 @@ class KusApplication : Application() {
                 androidDataAuthModule,
                 androidTierMapPlatformModule,
                 androidFeatureCommunityModule,
-                androidDataCommunityModule)
+                androidDataCommunityModule
+            )
         )
+
+        KoinPlatform.getKoin().get<AppInitializer>().initialize()
     }
 }
