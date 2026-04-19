@@ -22,14 +22,14 @@ class DetailApi(
     private val client: HttpClient,
 ) {
     suspend fun getRestaurantDetail(restaurantId: Long): DetailResponse {
-        return client.get("/api/v2/restaurants/$restaurantId").body()
+        return client.get("/api/v3/restaurants/$restaurantId").body()
     }
 
     suspend fun getRestaurantReviews(
         restaurantId: Long,
         sort: String = "POPULARITY"
     ): List<ReviewResponse> {
-        return client.get("/api/v2/restaurants/$restaurantId/comments") {
+        return client.get("/api/v3/restaurants/$restaurantId/comments") {
             parameter("sort", sort)
         }.body()
     }
@@ -38,7 +38,7 @@ class DetailApi(
         evaluationId: Int,
         reaction: String?,
     ): EvaluationReactionResponse {
-        return client.put("/api/v2/auth/restaurants/evaluations/$evaluationId/reaction") {
+        return client.put("/api/v3/auth/restaurants/evaluations/$evaluationId/reaction") {
             reaction?.let { parameter("reaction", it) }
         }.body()
     }
@@ -47,17 +47,17 @@ class DetailApi(
         evalCommentId: Int,
         reaction: String?,
     ): CommentReactionResponse {
-        return client.put("/api/v2/auth/eval-comments/$evalCommentId") {
+        return client.put("/api/v3/auth/eval-comments/$evalCommentId") {
             reaction?.let { parameter("reaction", it) }
         }.body()
     }
 
     suspend fun putRestaurantFavorite(restaurantId: Long): FavoriteResponse {
-        return client.put("/api/v2/auth/restaurants/$restaurantId/favorite").body()
+        return client.put("/api/v3/auth/restaurants/$restaurantId/favorite").body()
     }
 
     suspend fun deleteRestaurantFavorite(restaurantId: Long): FavoriteResponse {
-        return client.delete("/api/v2/auth/restaurants/$restaurantId/favorite").body()
+        return client.delete("/api/v3/auth/restaurants/$restaurantId/favorite").body()
     }
 
     suspend fun postComment(
@@ -65,7 +65,7 @@ class DetailApi(
         evalId: Int,
         body: String,
     ): ReviewCommentResponse {
-        return client.post("/api/v2/auth/restaurants/$restaurantId/comments/$evalId") {
+        return client.post("/api/v3/auth/restaurants/$restaurantId/comments/$evalId") {
             contentType(ContentType.Application.Json)
             setBody(PostCommentRequest(body))
         }.body()
@@ -75,6 +75,6 @@ class DetailApi(
         restaurantId: Long,
         evalCommentId: Int,
     ) {
-        client.delete("/api/v2/auth/restaurants/$restaurantId/comments/$evalCommentId").body<Unit>()
+        client.delete("/api/v3/auth/restaurants/$restaurantId/comments/$evalCommentId").body<Unit>()
     }
 }
