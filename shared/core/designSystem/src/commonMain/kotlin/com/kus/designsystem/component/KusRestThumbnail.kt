@@ -176,7 +176,6 @@ fun KusRestThumbnail(
                 }
             }
 
-            /* 제휴 임시 삭제
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(top = 8.dp)
@@ -209,7 +208,6 @@ fun KusRestThumbnail(
                 )
 
             }
-             */
 
         }
 

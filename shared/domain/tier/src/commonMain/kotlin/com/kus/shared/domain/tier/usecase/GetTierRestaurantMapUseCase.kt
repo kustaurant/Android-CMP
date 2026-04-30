@@ -13,7 +13,8 @@ class GetTierRestaurantMapUseCase(
         cuisines: Set<Cuisine>,
         situations: Set<Situation>,
         locations: Set<Location>,
+        isAiTier: Boolean,
     ): TierMapData {
-        return tierRepository.getRestaurantMapList(cuisines, situations, locations)
+        return tierRepository.getRestaurantMapList(cuisines, situations, locations, isAiTier)
     }
 }

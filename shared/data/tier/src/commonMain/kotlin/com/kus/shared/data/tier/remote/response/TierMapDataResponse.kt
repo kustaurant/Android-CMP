@@ -10,7 +10,7 @@ data class TierMapDataResponse(
     val tieredRestaurants: List<RestaurantResponse> = emptyList(),
     val nonTieredRestaurants: List<NonTieredRestaurantsResponse> = emptyList(),
     val minZoom: Int = 0,
-    val visibleBounds: List<Double> = emptyList(),
+    val visibleBounds: VisibleBoundsResponse? = null,
 )
 
 

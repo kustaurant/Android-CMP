@@ -14,7 +14,7 @@ data class RestaurantResponse(
     val mainTier: Int,
     val latitude: Double,
     val longitude: Double,
-    val partnershipInfo: String? = null,
+    val partnerships: List<String>? = null,
     val restaurantScore: Double? = null,
     val isEvaluated: Boolean,
     val isFavorite: Boolean,

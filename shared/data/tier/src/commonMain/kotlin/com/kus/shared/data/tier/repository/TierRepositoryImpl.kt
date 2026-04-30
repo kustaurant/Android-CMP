@@ -36,11 +36,13 @@ class TierRepositoryImpl(
         cuisines: Set<Cuisine>,
         situations: Set<Situation>,
         locations: Set<Location>,
+        isAiTier: Boolean,
     ): TierMapData {
         return api.getTierMapList(
             cuisines = cuisines.toCuisineQuery(),
             situations = situations.toSituationQuery(),
             locations = locations.toLocationQuery(),
+            isAiTier = isAiTier,
         ).toDomain()
     }
 }

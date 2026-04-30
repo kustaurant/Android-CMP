@@ -415,7 +415,7 @@ private fun applyMarkerSize(
     isSelected: Boolean,
     markerSizes: MarkerSizes,
 ) {
-    val isTierMarker = restaurant.mainTier in 1..4 && restaurant.partnershipInfo.isEmpty()
+    val isTierMarker = restaurant.mainTier in 1..4 && restaurant.partnershipInfo.isNullOrEmpty()
     val isSavedMarker = restaurant.isFavorite
 
     when {
@@ -628,7 +628,7 @@ private fun drawPolygonAndPolylineOverlays(
 private fun getSelectedMarkerIcon(restaurant: TierRestaurant): OverlayImage {
     return if (restaurant.isFavorite) {
         OverlayImage.fromResource(CoreRes.drawable.ic_saved)
-    } else if (restaurant.partnershipInfo.isNotEmpty()) {
+    } else if (!restaurant.partnershipInfo.isNullOrEmpty()) {
         OverlayImage.fromResource(R.drawable.ic_tier_partnership_selected)
     } else {
         if (restaurant.isTempTier) {
@@ -654,7 +654,7 @@ private fun getSelectedMarkerIcon(restaurant: TierRestaurant): OverlayImage {
 private fun getMarkerIcon(restaurant: TierRestaurant): OverlayImage {
     return if (restaurant.isFavorite) {
         OverlayImage.fromResource(CoreRes.drawable.ic_saved)
-    } else if (restaurant.partnershipInfo.isNotEmpty()) {
+    } else if (!restaurant.partnershipInfo.isNullOrEmpty()) {
         OverlayImage.fromResource(R.drawable.ic_marker_partnership)
     } else {
         if (restaurant.isTempTier) {

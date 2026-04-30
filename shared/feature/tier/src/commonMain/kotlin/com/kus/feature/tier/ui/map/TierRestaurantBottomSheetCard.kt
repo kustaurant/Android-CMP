@@ -1,6 +1,16 @@
 package com.kus.feature.tier.ui.map
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,16 +31,16 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kustaurant.shared.core.designsystem.generated.resources.Res
 import kustaurant.shared.core.designsystem.generated.resources.ic_check
-import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
-import kustaurant.shared.core.designsystem.generated.resources.ic_tier_2
-import kustaurant.shared.core.designsystem.generated.resources.ic_tier_3
-import kustaurant.shared.core.designsystem.generated.resources.ic_tier_4
 import kustaurant.shared.core.designsystem.generated.resources.ic_rank_none
 import kustaurant.shared.core.designsystem.generated.resources.ic_saved
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_1
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_2
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_3
 import kustaurant.shared.core.designsystem.generated.resources.ic_temp_tier_4
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_1
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_2
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_3
+import kustaurant.shared.core.designsystem.generated.resources.ic_tier_4
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
@@ -160,9 +170,11 @@ fun TierRestaurantBottomSheetCard(
                     overflow = TextOverflow.Ellipsis,
                 )
 
-                val benefit = restaurant.partnershipInfo.trim()
+                val benefit =
+                    restaurant.partnershipInfo?.trim()?.takeIf { it.isNotEmpty() } ?: "제휴 해당 사항 없음"
+
                 Text(
-                    text = benefit.ifEmpty { "제휴 해당 사항 없음" },
+                    text = benefit,
                     style = KusTheme.typography.type14r,
                     color = KusTheme.colors.c_AAAAAA,
                     maxLines = 1,

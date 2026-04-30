@@ -76,7 +76,7 @@ fun RestaurantResponse.toDomain(): TierRestaurant =
         isFavorite = isFavorite,
         longitude = longitude,
         latitude = latitude,
-        partnershipInfo = partnershipInfo ?: "",
+        partnershipInfo = partnerships?.joinToString("\n")?.takeIf { it.isNotEmpty() },
         restaurantScore = restaurantScore?.takeIf { s -> !s.isNaN() } ?: 0.0,
         isTempTier = isTempTier,
     )
@@ -97,7 +97,7 @@ fun NonTieredRestaurantsResponse.toDomain(): NonTieredRestaurantGroup =
                 isFavorite = it.isFavorite,
                 longitude = it.longitude,
                 latitude = it.latitude,
-                partnershipInfo = it.partnershipInfo ?: "",
+                partnershipInfo = it.partnerships?.joinToString("\n")?.takeIf { it.isNotEmpty() },
                 restaurantScore = it.restaurantScore?.takeIf { s -> !s.isNaN() } ?: 0.0,
                 isTempTier = it.isTempTier,
             )
@@ -114,7 +114,9 @@ fun TierMapDataResponse.toDomain(): TierMapData {
         nonTieredRestaurants = nonTieredRestaurants.map { it.toDomain() },
 
         minZoom = minZoom,
-        visibleBounds = visibleBounds,
+        visibleBounds = visibleBounds?.let {
+            listOf(it.minLng, it.maxLng, it.minLat, it.maxLat)
+        } ?: emptyList(),
     )
 }
 

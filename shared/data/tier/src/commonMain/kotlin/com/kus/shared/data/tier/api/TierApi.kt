@@ -20,13 +20,13 @@ class TierApi(
         isAiTier: Boolean,
         limit: Int = 30,
     ): TierListResponse {
-        return client.get("/api/v2/tier") {
+        return client.get("/api/v3/tier") {
             parameter("cuisines", cuisines)
             parameter("situations", situations)
             parameter("locations", locations)
             parameter("page", page)
-            parameter("ai", isAiTier)
             parameter("limit", limit)
+            parameter("ai", isAiTier)
         }.body()
     }
 
@@ -34,11 +34,13 @@ class TierApi(
         cuisines: String,
         situations: String,
         locations: String,
+        isAiTier: Boolean,
     ): TierMapDataResponse {
-        return client.get("/api/v2/tier/map") {
+        return client.get("/api/v3/tier/map") {
             parameter("cuisines", cuisines)
             parameter("situations", situations)
             parameter("locations", locations)
+            parameter("ai", isAiTier)
         }.body()
     }
 }

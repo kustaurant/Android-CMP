@@ -11,7 +11,7 @@ data class TierRestaurant(
     val isTempTier: Boolean,
     val longitude: Double,
     val latitude: Double,
-    val partnershipInfo: String,
+    val partnershipInfo: String? = null,
     val restaurantScore: Double,
     val isEvaluated: Boolean,
     val isFavorite: Boolean,

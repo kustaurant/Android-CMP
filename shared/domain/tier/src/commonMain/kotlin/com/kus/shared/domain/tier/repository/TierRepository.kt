@@ -19,5 +19,6 @@ interface TierRepository {
         cuisines: Set<Cuisine>,
         situations: Set<Situation>,
         locations: Set<Location>,
+        isAiTier: Boolean,
     ): TierMapData
 }

@@ -87,7 +87,8 @@ class TierViewModel(
     }
 
     private fun fetchMap() {
-        val filter = _uiState.value.filterState.normalized()
+        val snapshot = _uiState.value
+        val filter = snapshot.filterState.normalized()
 
         _uiState.update { cur ->
             cur.copy(
@@ -102,7 +103,7 @@ class TierViewModel(
 
         viewModelScope.launch {
             val data =
-                getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations)
+                getTierRestaurantMapUseCase(filter.cuisines, filter.situations, filter.locations, snapshot.isAITier)
             _uiState.update { cur ->
                 cur.copy(
                     mapUiState = cur.mapUiState.copy(map = UiState.Success(data))
