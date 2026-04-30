@@ -94,7 +94,7 @@ fun applyMarkerAppearanceIos(
     tierMarkerSize: Double,
 ) {
     val isSaved = restaurant.isFavorite
-    val isTier = restaurant.mainTier in 1..4 && restaurant.partnershipInfo.isEmpty()
+    val isTier = restaurant.mainTier in 1..4 && restaurant.partnershipInfo.isNullOrEmpty()
     val scale = if (isSelected) SELECTED_TIER_MARKER_SCALE else 1.0
 
     marker.iconImage = if (isSelected) {
@@ -288,7 +288,7 @@ fun getSelectedMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
     val imageName = if (restaurant.isTempTier) {
         when {
             restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership_selected"
+            !restaurant.partnershipInfo.isNullOrEmpty() -> "ic_marker_partnership_selected"
             restaurant.mainTier == 1 -> "ic_temp_tier_1_selected"
             restaurant.mainTier == 2 -> "ic_temp_tier_2_selected"
             restaurant.mainTier == 3 -> "ic_temp_tier_3_selected"
@@ -298,7 +298,7 @@ fun getSelectedMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
     } else {
         when {
             restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership_selected"
+            !restaurant.partnershipInfo.isNullOrEmpty() -> "ic_marker_partnership_selected"
             restaurant.mainTier == 1 -> "ic_tier_1_selected"
             restaurant.mainTier == 2 -> "ic_tier_2_selected"
             restaurant.mainTier == 3 -> "ic_tier_3_selected"
@@ -314,7 +314,7 @@ fun getMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
     val imageName = if (restaurant.isTempTier) {
         when {
             restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership"
+            !restaurant.partnershipInfo.isNullOrEmpty() -> "ic_marker_partnership"
             restaurant.mainTier == 1 -> "ic_temp_tier_1"
             restaurant.mainTier == 2 -> "ic_temp_tier_2"
             restaurant.mainTier == 3 -> "ic_temp_tier_3"
@@ -324,7 +324,7 @@ fun getMarkerIconIos(restaurant: TierRestaurant): NMFOverlayImage {
     } else {
         when {
             restaurant.isFavorite -> "ic_saved"
-            restaurant.partnershipInfo.isNotEmpty() -> "ic_marker_partnership"
+            !restaurant.partnershipInfo.isNullOrEmpty() -> "ic_marker_partnership"
             restaurant.mainTier == 1 -> "ic_tier_1"
             restaurant.mainTier == 2 -> "ic_tier_2"
             restaurant.mainTier == 3 -> "ic_tier_3"

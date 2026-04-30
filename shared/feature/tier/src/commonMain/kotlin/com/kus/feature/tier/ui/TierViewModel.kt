@@ -186,6 +186,7 @@ class TierViewModel(
                 scrollToTopTrigger = it.scrollToTopTrigger + 1,
                 tierListLastPosition = 0,
                 categoryChangeList = false,
+                categoryChangeMap = true,
                 pageState = it.pageState.copy(
                     phase = TierPhase.Refreshing,
                     page = 1,
