@@ -4,6 +4,7 @@ import com.kus.kustaurant.evaluate.remote.request.EvaluationRequest
 import com.kus.kustaurant.evaluate.remote.response.EvaluationResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.forms.InputProvider
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
@@ -11,6 +12,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import io.ktor.utils.io.core.ByteReadPacket
 
 class EvaluateApi(
     private val client: HttpClient,
@@ -38,13 +40,13 @@ class EvaluateApi(
                             append("evaluationComment", it)
                         }
 
-                        imageBytes?.let {
+                        imageBytes?.let { bytes ->
                             append(
                                 key = "newImage",
-                                value = it,
+                                value = InputProvider(bytes.size.toLong()) { ByteReadPacket(bytes) },
                                 headers = Headers.build {
                                     append(HttpHeaders.ContentType, "image/jpeg")
-                                    append(HttpHeaders.ContentDisposition, "filename=evaluation.jpg")
+                                    append(HttpHeaders.ContentDisposition, "filename=\"evaluation.jpg\"")
                                 }
                             )
                         }
