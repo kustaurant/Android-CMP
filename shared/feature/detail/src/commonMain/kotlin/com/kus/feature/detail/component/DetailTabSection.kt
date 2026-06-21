@@ -22,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import UiState
+import com.kus.designsystem.component.KusLoadingAnimation
 import com.kus.designsystem.theme.KusTheme
 import com.kus.feature.detail.model.ReviewSort
 import com.kus.shared.domain.model.detail.RestaurantMenu
@@ -31,7 +33,7 @@ import com.kus.shared.domain.model.detail.RestaurantReview
 fun DetailTabSection(
     reviewCount: Int,
     menuList: List<RestaurantMenu>,
-    reviewList: List<RestaurantReview>,
+    reviewsState: UiState<List<RestaurantReview>>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
     onReviewTabSelected: () -> Unit = {},
@@ -109,7 +111,7 @@ fun DetailTabSection(
             when (index) {
                 0 -> DetailMenuContent(menuList = menuList)
                 1 -> DetailReviewContent(
-                    reviewList = reviewList,
+                    reviewsState = reviewsState,
                     selectedSort = selectedSort,
                     onSortSelected = onSortSelected,
                     onReviewLikeClick = onReviewLikeClick,
@@ -129,6 +131,14 @@ private fun DetailMenuContent(
     menuList: List<RestaurantMenu>,
     modifier: Modifier = Modifier,
 ) {
+    if (menuList.isEmpty()) {
+        DetailEmptyContent(
+            text = "식당에서 제공한 정보가 없어요",
+            modifier = modifier
+        )
+        return
+    }
+
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -151,7 +161,7 @@ private fun DetailMenuContent(
 
 @Composable
 private fun DetailReviewContent(
-    reviewList: List<RestaurantReview>,
+    reviewsState: UiState<List<RestaurantReview>>,
     selectedSort: ReviewSort,
     onSortSelected: (ReviewSort) -> Unit,
     onReviewLikeClick: (Int) -> Unit,
@@ -162,8 +172,38 @@ private fun DetailReviewContent(
     onCommentDeleteClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    println("DEBUG: DetailReviewContent - reviewList.size=${reviewList.size}")
-    if (reviewList.isEmpty()) return
+    when (reviewsState) {
+        is UiState.Loading, is UiState.Idle -> {
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 60.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                KusLoadingAnimation()
+            }
+            return
+        }
+
+        is UiState.Failure -> {
+            DetailEmptyContent(
+                text = "서버 연결이 불안정합니다. 다시 시도해주세요.",
+                modifier = modifier
+            )
+            return
+        }
+
+        is UiState.Success -> Unit
+    }
+
+    val reviewList = reviewsState.data
+    if (reviewList.isEmpty()) {
+        DetailEmptyContent(
+            text = "해당 식당에 대한 평가가 없어요",
+            modifier = modifier
+        )
+        return
+    }
 
     Column(
         modifier = modifier.fillMaxWidth()
@@ -191,6 +231,24 @@ private fun DetailReviewContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun DetailEmptyContent(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 60.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = KusTheme.typography.type17sb.copy(color = KusTheme.colors.c_AAAAAA)
+        )
     }
 }
 

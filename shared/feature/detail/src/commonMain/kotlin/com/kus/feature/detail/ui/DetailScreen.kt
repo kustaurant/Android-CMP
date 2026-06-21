@@ -269,14 +269,10 @@ private fun DetailSuccessScreen(
             }
 
             item {
-                val reviewList = when (reviewsState) {
-                    is UiState.Success -> reviewsState.data
-                    else -> emptyList()
-                }
                 DetailTabSection(
                     reviewCount = restaurant.evaluationCount,
                     menuList = restaurant.restaurantMenuList,
-                    reviewList = reviewList,
+                    reviewsState = reviewsState,
                     selectedSort = reviewSort,
                     onSortSelected = onSortSelected,
                     onReviewTabSelected = onReviewTabSelected,
