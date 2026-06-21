@@ -35,17 +35,19 @@ fun DetailResponse.toDomain(): RestaurantDetail =
         isEvaluated = isEvaluated,
         isFavorite = isFavorite,
         favoriteCount = favoriteCount,
-        restaurantMenuList = restaurantMenuList?.map { it.toDomain() } ?: emptyList(),
+        restaurantMenuList = restaurantMenuList
+            ?.filter { it.menuId != null }
+            ?.map { it.toDomain() }
+            ?: emptyList(),
     )
 
 fun MenuResponse.toDomain(): RestaurantMenu =
     RestaurantMenu(
-        menuId = menuId,
-        restaurantId = restaurantId,
-        menuName = menuName,
-        menuPrice = menuPrice,
-        naverType = naverType,
-        menuImgUrl = menuImgUrl
+        menuId = menuId ?: 0L,
+        restaurantId = restaurantId ?: 0L,
+        menuName = menuName ?: "",
+        menuPrice = menuPrice ?: "",
+        menuImgUrl = menuImgUrl ?: ""
     )
 
 fun ReviewResponse.toDomain(): RestaurantReview =
