@@ -31,7 +31,7 @@ class DetailApi(
         restaurantId: Long,
         sort: String = "POPULARITY"
     ): List<ReviewResponse> {
-        return client.get("/api/v3/restaurants/$restaurantId/comments") {
+        return client.get("/api/v2/restaurants/$restaurantId/comments") {
             parameter("sort", sort)
         }.body()
     }
