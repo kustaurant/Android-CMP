@@ -1,21 +1,23 @@
 package com.kus.shared.data.tier.api
 
+import com.kus.data.network.ApiClientProvider
 import com.kus.shared.data.tier.remote.response.TierListResponse
 import com.kus.shared.data.tier.remote.response.TierMapDataResponse
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 class TierApi(
-    private val client: HttpClient,
+    private val apiClientProvider: ApiClientProvider,
 ) {
+    private val client get() = apiClientProvider.client
+
     suspend fun getRestaurantList(
         cuisines: String,
         situations: String,
         locations: String,
         page: Int,
-        isAiTier : Boolean,
+        isAiTier: Boolean,
         limit: Int = 30,
     ): TierListResponse {
         return client.get("/api/v2/tier") {

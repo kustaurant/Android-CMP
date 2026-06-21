@@ -32,7 +32,7 @@ import com.kus.feature.community.navigation.Community
 import com.kus.feature.community.navigation.CommunityDetail
 import com.kus.feature.community.navigation.CommunityWrite
 import com.kus.feature.community.navigation.communityMainNavGraph
-import com.kus.feature.detail.navigation.Detail
+import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.feature.draw.navigation.Draw
 import com.kus.feature.draw.navigation.drawNavGraph
 import com.kus.feature.home.navigation.Home
@@ -55,7 +55,6 @@ import com.kus.feature.tier.navigation.Tier
 import com.kus.feature.tier.navigation.TierCategorySelect
 import com.kus.feature.tier.navigation.tierMainNavGraph
 import com.kus.feature.tier.ui.TierFilterState
-import com.kus.feature.detail.navigation.navigateToDetail
 import com.kus.shared.domain.model.tier.filter.Cuisine
 import com.kus.feature.tier.TierKeys as TierResultKeys
 
@@ -151,11 +150,11 @@ fun MainScreen(
         contentWindowInsets = WindowInsets.statusBars,
         containerColor = KusTheme.colors.c_FFFFFF,
         bottomBar = {
-                KusBottomBar(
-                    modifier = Modifier.zIndex(2f),
-                    selectedKey = selectedKey,
-                    onNavigateToTab = { key -> mainNavController.navigateToTab(key) },
-                )
+            KusBottomBar(
+                modifier = Modifier.zIndex(2f),
+                selectedKey = selectedKey,
+                onNavigateToTab = { key -> mainNavController.navigateToTab(key) },
+            )
         },
     ) { padding ->
         NavHost(
@@ -163,31 +162,31 @@ fun MainScreen(
             startDestination = Home,
             enterTransition = {
                 fadeIn(animationSpec = tween(durationMillis)) +
-                    scaleIn(
-                        initialScale = 0.98f,
-                        animationSpec = tween(durationMillis)
-                    )
+                        scaleIn(
+                            initialScale = 0.98f,
+                            animationSpec = tween(durationMillis)
+                        )
             },
             exitTransition = {
                 fadeOut(animationSpec = tween(durationMillis)) +
-                    scaleOut(
-                        targetScale = 0.98f,
-                        animationSpec = tween(durationMillis)
-                    )
+                        scaleOut(
+                            targetScale = 0.98f,
+                            animationSpec = tween(durationMillis)
+                        )
             },
             popEnterTransition = {
                 fadeIn(animationSpec = tween(durationMillis)) +
-                    scaleIn(
-                        initialScale = 0.98f,
-                        animationSpec = tween(durationMillis)
-                    )
+                        scaleIn(
+                            initialScale = 0.98f,
+                            animationSpec = tween(durationMillis)
+                        )
             },
             popExitTransition = {
                 fadeOut(animationSpec = tween(durationMillis)) +
-                    scaleOut(
-                        targetScale = 0.98f,
-                        animationSpec = tween(durationMillis)
-                    )
+                        scaleOut(
+                            targetScale = 0.98f,
+                            animationSpec = tween(durationMillis)
+                        )
             },
             modifier = Modifier
                 .fillMaxSize()

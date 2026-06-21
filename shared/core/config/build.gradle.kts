@@ -48,7 +48,7 @@ extensions.configure<BuildKonfigExtension>("buildkonfig") {
         buildConfigField(
             Type.STRING,
             "NAVER_CLIENT_SECRET",
-            resolveKey("NAVER_CLIENT_SECRET", required = true) // 가능하면 서버로 빼는 게 원칙
+            resolveKey("NAVER_CLIENT_SECRET", required = true)
         )
 
         buildConfigField(

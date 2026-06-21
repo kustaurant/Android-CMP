@@ -12,8 +12,8 @@ import com.kus.data.community.remote.response.CommunityPostScrapResponse
 import com.kus.data.community.remote.response.CommunityPostUploadImageResponse
 import com.kus.data.community.remote.response.CommunityRankingResponse
 import com.kus.data.community.remote.response.PostResponse
+import com.kus.data.network.ApiClientProvider
 import com.kus.domain.community.model.AuthUserInfo
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
@@ -33,8 +33,10 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 
 class CommunityApi(
-    private val client: HttpClient,
+    private val apiClientProvider: ApiClientProvider,
 ) {
+    private val client get() = apiClientProvider.client
+
     suspend fun getCommunityPostDetailData(
         postId: Long,
         deviceId: String?

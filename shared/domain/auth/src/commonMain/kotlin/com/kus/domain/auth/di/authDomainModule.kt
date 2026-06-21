@@ -17,6 +17,5 @@ var authDomainModule = module {
     singleOf(::DeleteUserTokensUseCase)
     singleOf(::LogoutUseCase)
     singleOf(::GetSessionAvailabilityUseCase)
-    single { SessionEventBus() }
     singleOf(::SessionEventBus) bind SessionEventEmitter::class
 }

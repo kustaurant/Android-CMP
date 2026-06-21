@@ -9,11 +9,13 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.kus.appkit.di.iosAuthModule
 import com.kus.appkit.di.iosCommunityModule
 import com.kus.appkit.di.iosTierMapPlatformModule
+import com.kus.core.startup.AppInitializer
 import com.kus.data.auth.di.iosAuthLocalModule
 import com.kus.data.firstLaunch.di.iosFirstLaunchModule
 import com.kus.kustaurant.di.initKoin
 import com.kus.logging.initLogger
 import org.koin.core.KoinApplication
+import org.koin.mp.KoinPlatform
 
 private var koinStarted = false
 private var koinApp: KoinApplication? = null
@@ -33,6 +35,8 @@ fun MainViewController() = ComposeUIViewController {
         )
         koinStarted = true
     }
+
+    KoinPlatform.getKoin().get<AppInitializer>().initialize()
 
     val koin = koinApp!!.koin
     //resolveOrLog(koin, PostNaverLoginUseCase::class)

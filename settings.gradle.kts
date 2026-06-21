@@ -46,6 +46,7 @@ include(
     ":shared:core:config",
     ":shared:core:serialization",
     ":shared:core:presentation",
+    ":shared:core:startup",
 )
 
 include(

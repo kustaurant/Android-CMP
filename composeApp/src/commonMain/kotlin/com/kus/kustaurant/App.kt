@@ -102,6 +102,8 @@ fun SetNavigation(
                 SessionEvent.LoginRequired -> {
                     showRequireLoginPopup = true
                 }
+
+                else -> {}
             }
         }
     }

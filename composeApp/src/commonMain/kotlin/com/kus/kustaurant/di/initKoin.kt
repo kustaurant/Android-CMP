@@ -1,6 +1,7 @@
 package com.kus.kustaurant.di
 
 import com.kus.core.config.di.configModule
+import com.kus.core.di.startupModule
 import com.kus.data.auth.di.authDataModule
 import com.kus.data.community.di.communityDataModule
 import com.kus.data.draw.di.drawDataModule
@@ -41,13 +42,14 @@ import org.koin.dsl.KoinAppDeclaration
 fun initKoin(
     config: KoinAppDeclaration? = null,
     additionalModules: List<Module> = emptyList(),
-) : KoinApplication {
+): KoinApplication {
     return startKoin {
         config?.invoke(this)
 
         modules(
             //core
             configModule,
+            startupModule,
 
             // domain
             firstLaunchDomainModule,

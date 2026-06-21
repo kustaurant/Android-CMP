@@ -26,7 +26,7 @@ val authDataModule = module {
     single {
         AuthApi(
             basicClient = get(named("basicClient")),
-            apiClient = get(named("apiClient")),
+            apiClientProvider = get(),
             baseUrl = get(named("BASE_URL"))
         )
     }
