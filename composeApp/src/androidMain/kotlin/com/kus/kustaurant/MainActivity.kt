@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        var keepSplashOnScreen = true
+        var keepSplashOnScreen = savedInstanceState == null
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { keepSplashOnScreen }
         enableEdgeToEdge(
