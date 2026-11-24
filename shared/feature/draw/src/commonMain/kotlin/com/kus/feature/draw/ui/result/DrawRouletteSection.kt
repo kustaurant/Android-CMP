@@ -3,6 +3,7 @@ package com.kus.feature.draw.ui.result
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.scrollBy
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -42,6 +42,9 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kustaurant.shared.core.designsystem.generated.resources.Res
+import kustaurant.shared.core.designsystem.generated.resources.ic_kus_draw_restaurant_blank
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 
 
@@ -55,15 +58,17 @@ fun DrawRouletteSection(
     onAnimationFinished: () -> Unit = {},
     onCardClick: () -> Unit = {},
 ) {
-    val preloadedResources = items.map { item ->
-        key(item.restaurantImgUrl) {
-            asyncPainterResource(item.restaurantImgUrl)
+    // 빈 주소는 요청하지 않고 null로 두어 카드에서 기본 이미지를 보여준다.
+    val preloadedResources: List<Resource<Painter>?> = items.map { item ->
+        key(item.restaurantId) {
+            item.restaurantImgUrl
+                .takeIf { it.isNotBlank() }
+                ?.let { asyncPainterResource(it) }
         }
     }
 
-    val allImagesLoaded =
-        preloadedResources.all { it is Resource.Success || it is Resource.Failure }
-    val hasAnyFailure = preloadedResources.any { it is Resource.Failure }
+    // 성공이든 실패든 모든 요청이 끝나면 룰렛을 시작한다. 실패한 카드는 기본 이미지로 대체된다.
+    val allImagesLoaded = preloadedResources.none { it is Resource.Loading }
 
     BoxWithConstraints(
         modifier = modifier
@@ -72,16 +77,12 @@ fun DrawRouletteSection(
     ) {
         if (items.isEmpty()) return@BoxWithConstraints
 
-        if (!allImagesLoaded || hasAnyFailure) {
+        if (!allImagesLoaded) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                if (hasAnyFailure) {
-                    Text("이미지 로딩 실패했어요.")
-                } else {
-                    KusLoadingAnimation()
-                }
+                KusLoadingAnimation()
             }
             return@BoxWithConstraints
         }
@@ -229,7 +230,7 @@ fun DrawRouletteSection(
 
 @Composable
 private fun DrawPanoramaCard(
-    resource: Resource<Painter>,
+    resource: Resource<Painter>?,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -264,7 +265,9 @@ private fun DrawRestaurantCard(
             )
     ) {
         DrawRestaurantImage(
-            resource = asyncPainterResource(item.restaurantImgUrl),
+            resource = item.restaurantImgUrl
+                .takeIf { it.isNotBlank() }
+                ?.let { asyncPainterResource(it) },
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -272,19 +275,33 @@ private fun DrawRestaurantCard(
 
 @Composable
 private fun DrawRestaurantImage(
-    resource: Resource<Painter>,
+    resource: Resource<Painter>?,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        KamelImage(
-            resource = resource,
-            contentDescription = "음식점 사진입니다.",
-            modifier = Modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.Crop,
-        )
+        if (resource == null) {
+            DrawBlankImage()
+        } else {
+            KamelImage(
+                resource = resource,
+                contentDescription = "음식점 사진입니다.",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                onFailure = { DrawBlankImage() },
+            )
+        }
     }
+}
+
+@Composable
+private fun DrawBlankImage() {
+    Image(
+        painter = painterResource(Res.drawable.ic_kus_draw_restaurant_blank),
+        contentDescription = "음식점 사진이 없을 시, 표시되는 사진입니다.",
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop,
+    )
 }
