@@ -58,7 +58,6 @@ fun DrawRouletteSection(
     onAnimationFinished: () -> Unit = {},
     onCardClick: () -> Unit = {},
 ) {
-    // 빈 주소는 요청하지 않고 null로 두어 카드에서 기본 이미지를 보여준다.
     val preloadedResources: List<Resource<Painter>?> = items.map { item ->
         key(item.restaurantId) {
             item.restaurantImgUrl
@@ -67,8 +66,7 @@ fun DrawRouletteSection(
         }
     }
 
-    // 성공이든 실패든 모든 요청이 끝나면 룰렛을 시작한다. 실패한 카드는 기본 이미지로 대체된다.
-    val allImagesLoaded = preloadedResources.none { it is Resource.Loading }
+    val isReadyToAnimate = preloadedResources.none { it is Resource.Loading }
 
     BoxWithConstraints(
         modifier = modifier
@@ -77,7 +75,7 @@ fun DrawRouletteSection(
     ) {
         if (items.isEmpty()) return@BoxWithConstraints
 
-        if (!allImagesLoaded) {
+        if (!isReadyToAnimate) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
